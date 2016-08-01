@@ -2,8 +2,8 @@ package buildcraft.api.items;
 
 import net.minecraft.item.ItemStack;
 
-import buildcraft.api.enums.EnumBlueprintType;
+import buildcraft.api.enums.EnumSnapshotType;
 
 public interface IBlueprintItem extends INamedItem {
-    EnumBlueprintType getType(ItemStack stack);
+    EnumSnapshotType getType(ItemStack stack);
 }

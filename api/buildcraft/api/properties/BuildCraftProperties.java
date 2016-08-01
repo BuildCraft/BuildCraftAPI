@@ -19,7 +19,7 @@ public final class BuildCraftProperties {
     public static final BuildCraftProperty<EnumLaserTableType> LASER_TABLE_TYPE = BuildCraftProperty.create("type", EnumLaserTableType.class);
     public static final BuildCraftProperty<EnumMachineState> MACHINE_STATE = BuildCraftProperty.create("state", EnumMachineState.class);
     public static final BuildCraftProperty<EnumEnergyStage> ENERGY_STAGE = BuildCraftProperty.create("stage", EnumEnergyStage.class);
-    public static final BuildCraftProperty<EnumBlueprintType> BLUEPRINT_TYPE = BuildCraftProperty.create("blueprint_type", EnumBlueprintType.class);
+    public static final BuildCraftProperty<EnumSnapshotType> BLUEPRINT_TYPE = BuildCraftProperty.create("blueprint_type", EnumSnapshotType.class);
     public static final BuildCraftProperty<EnumDecoratedBlock> DECORATED_BLOCK = BuildCraftProperty.create("decoration_type", EnumDecoratedBlock.class);
 
     public static final BuildCraftProperty<Integer> GENERIC_PIPE_DATA = BuildCraftProperty.create("pipe_data", 0, 15);
