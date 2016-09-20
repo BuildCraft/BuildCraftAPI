@@ -2,15 +2,15 @@ package buildcraft.api.gates;
 
 import java.util.Arrays;
 
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.BlockRenderLayer;
 
 public class GateExpansionModelKey<K extends GateExpansionModelKey<K>> {
-    public final EnumWorldBlockLayer layer;
+    public final BlockRenderLayer layer;
     public final IExpansionBaker<K> baker;
     private final int hash;
 
-    public GateExpansionModelKey(EnumWorldBlockLayer layer, IExpansionBaker<K> baker) {
-        if (layer != EnumWorldBlockLayer.CUTOUT && layer != EnumWorldBlockLayer.TRANSLUCENT) {
+    public GateExpansionModelKey(BlockRenderLayer layer, IExpansionBaker<K> baker) {
+        if (layer != BlockRenderLayer.CUTOUT && layer != BlockRenderLayer.TRANSLUCENT) {
             throw new IllegalArgumentException("Unsuported layer! Was " + layer + ", wanted CUTOUT or TRANSLUCENT");
         }
         if (baker == null) throw new NullPointerException("baker");

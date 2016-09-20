@@ -3,21 +3,18 @@ package buildcraft.api.transport.pluggable;
 import java.util.Arrays;
 import java.util.Objects;
 
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
-
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class PluggableModelKey<K extends PluggableModelKey<K>> {
-    public final EnumWorldBlockLayer layer;
+    public final BlockRenderLayer layer;
     public final IPluggableModelBaker<K> baker;
     public final EnumFacing side;
     private final int hash;
 
-    public PluggableModelKey(EnumWorldBlockLayer layer, IPluggableModelBaker<K> baker, EnumFacing side) {
+    public PluggableModelKey(BlockRenderLayer layer, IPluggableModelBaker<K> baker, EnumFacing side) {
         this.layer = layer;
-        if (layer != EnumWorldBlockLayer.CUTOUT && layer != EnumWorldBlockLayer.TRANSLUCENT) {
+        if (layer != BlockRenderLayer.CUTOUT && layer != BlockRenderLayer.TRANSLUCENT) {
             throw new IllegalArgumentException("Can only use CUTOUT or TRANSLUCENT at the moment (was " + layer + ")");
         }
         if (baker == null) throw new NullPointerException("baker");

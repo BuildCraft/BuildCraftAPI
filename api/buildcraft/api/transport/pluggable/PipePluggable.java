@@ -5,10 +5,9 @@
 package buildcraft.api.transport.pluggable;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
-
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -54,7 +53,7 @@ public abstract class PipePluggable implements INBTStoreable, ISerializable {
     }
 
     @SideOnly(Side.CLIENT)
-    public abstract PluggableModelKey<?> getModelRenderKey(EnumWorldBlockLayer layer, EnumFacing side);
+    public abstract PluggableModelKey<?> getModelRenderKey(BlockRenderLayer layer, EnumFacing side);
 
     public boolean requiresRenderUpdate(PipePluggable old) {
         return true;

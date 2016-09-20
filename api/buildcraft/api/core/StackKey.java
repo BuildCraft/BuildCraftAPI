@@ -80,7 +80,7 @@ public final class StackKey {
             }
         }
         if (fluidStack != null) {
-            if (fluidStack.getFluid().getID() != k.fluidStack.getFluid().getID() || fluidStack.amount != k.fluidStack.amount || !objectsEqual(
+            if (!fluidStack.isFluidEqual(k.fluidStack) || fluidStack.amount != k.fluidStack.amount || !objectsEqual(
                     fluidStack.tag, k.fluidStack.tag)) {
                 return false;
             }
@@ -98,7 +98,7 @@ public final class StackKey {
         }
         result = 31 * result + 7;
         if (fluidStack != null) {
-            result = 31 * result + fluidStack.getFluid().getID();
+            result = 31 * result + fluidStack.getFluid().getName().hashCode();
             result = 31 * result + fluidStack.amount;
             result = 31 * result + objectHashCode(fluidStack.tag);
         }
