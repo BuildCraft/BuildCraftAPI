@@ -4,7 +4,9 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.blueprints;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
@@ -13,6 +15,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 
@@ -21,22 +24,21 @@ import net.minecraftforge.fluids.BlockFluidBase;
 
 import buildcraft.api.core.BCLog;
 
-@Deprecated
 public class SchematicBlock extends SchematicBlockBase {
     public IBlockState state = null;
     public BuildingPermission defaultPermission = BuildingPermission.ALL;
 
     /** This field contains requirements for a given block when stored in the blueprint. Modders can either rely on this
      * list or compute their own int Schematic. */
-    public ItemStack[] storedRequirements = new ItemStack[0];
+    public NonNullList<ItemStack> storedRequirements = NonNullList.create();
 
     private boolean doNotUse = false;
 
     @Override
-    public void getRequirementsForPlacement(IBuilderContext context, List<ItemStack> requirements) {
+    public void getRequirementsForPlacement(IBuilderContext context, NonNullList<ItemStack> requirements) {
         if (state != null) {
-            if (storedRequirements.length != 0) {
-                Collections.addAll(requirements, storedRequirements);
+            if (storedRequirements.size() != 0) {
+                requirements.addAll(storedRequirements);
             } else {
                 requirements.add(getItemStack(state));
             }
@@ -54,7 +56,7 @@ public class SchematicBlock extends SchematicBlockBase {
     }
 
     @Override
-    public void placeInWorld(IBuilderContext context, BlockPos pos, List<ItemStack> stacks) {
+    public void placeInWorld(IBuilderContext context, BlockPos pos, NonNullList<ItemStack> stacks) {
         super.placeInWorld(context, pos, stacks);
 
         this.setBlockInWorld(context, pos);
@@ -65,11 +67,10 @@ public class SchematicBlock extends SchematicBlockBase {
         super.storeRequirements(context, pos);
 
         if (state != null) {
-            List<ItemStack> req = state.getBlock().getDrops(context.world(), pos, state, 0);
-
-            if (req != null) {
-                storedRequirements = new ItemStack[req.size()];
-                req.toArray(storedRequirements);
+            storedRequirements = NonNullList.create();
+            List<ItemStack> drops = state.getBlock().getDrops(context.world(), pos, state, 0);
+            if (drops != null) {
+                storedRequirements.addAll(drops);
             }
         }
     }
@@ -136,15 +137,15 @@ public class SchematicBlock extends SchematicBlockBase {
     }
 
     protected void readRequirementsFromNBT(NBTTagCompound nbt, MappingRegistry registry) {
+        storedRequirements = NonNullList.create();
         if (nbt.hasKey("rq")) {
             NBTTagList rq = nbt.getTagList("rq", Constants.NBT.TAG_COMPOUND);
 
-            ArrayList<ItemStack> rqs = new ArrayList<ItemStack>();
             for (int i = 0; i < rq.tagCount(); ++i) {
                 try {
                     NBTTagCompound sub = rq.getCompoundTagAt(i);
                     registry.stackToWorld(sub);
-                    rqs.add(ItemStack.loadItemStackFromNBT(sub));
+                    storedRequirements.add(new ItemStack(sub));
                 } catch (MappingNotFoundException e) {
                     defaultPermission = BuildingPermission.CREATIVE_ONLY;
                 } catch (Throwable t) {
@@ -152,10 +153,6 @@ public class SchematicBlock extends SchematicBlockBase {
                     defaultPermission = BuildingPermission.CREATIVE_ONLY;
                 }
             }
-
-            storedRequirements = rqs.toArray(new ItemStack[rqs.size()]);
-        } else {
-            storedRequirements = new ItemStack[0];
         }
     }
 
@@ -165,7 +162,7 @@ public class SchematicBlock extends SchematicBlockBase {
     }
 
     protected void writeRequirementsToNBT(NBTTagCompound nbt, MappingRegistry registry) {
-        if (storedRequirements.length > 0) {
+        if (storedRequirements.size() > 0) {
             NBTTagList rq = new NBTTagList();
 
             for (ItemStack stack : storedRequirements) {

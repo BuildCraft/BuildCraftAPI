@@ -4,12 +4,16 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.statements;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 public interface IStatementParameter extends IGuiSlot {
 
-    /** @return An itemstack to render for this parameter, or null if this should not render an itemstack. */
+    /** @return An itemstack to render for this parameter, or {@link ItemStack#EMPTY} if this should not render an
+     *         itemstack. */
+    @Nonnull
     ItemStack getItemStack();
 
     /** Return true if you handled the mouse click and do not want all possible values to be shown, or false if you

@@ -2,6 +2,8 @@ package buildcraft.api.transport;
 
 import java.util.*;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
@@ -38,27 +40,29 @@ public abstract class PipeEventItem extends PipeEvent {
         public final EnumDyeColor colour;
         public final EnumFacing from;
         /** The itemstack that is attempting to be inserted. NEVER CHANGE THIS! */
+        @Nonnull
         public final ItemStack attempting;
         /** The count of items that are being accepted into this pipe. Starts off at the stack count of
          * {@link #attempting} */
         public int accepted;
 
-        public TryInsert(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, EnumFacing from, ItemStack attempting) {
+        public TryInsert(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, EnumFacing from, @Nonnull ItemStack attempting) {
             super(true, holder, flow);
             this.colour = colour;
             this.from = from;
             this.attempting = attempting;
-            this.accepted = attempting.stackSize;
+            this.accepted = attempting.getCount();
         }
     }
 
     /** Fired whenever an item reaches the centre of a pipe. Note that you *can* change the itemstack or the colour. */
     public static class ReachCenter extends PipeEventItem {
+        @Nonnull
         public final ItemStack stack;
         public final EnumFacing from;
         public EnumDyeColor colour;
 
-        public ReachCenter(IPipeHolder holder, IFlowItems flow, ItemStack stack, EnumFacing from, EnumDyeColor colour) {
+        public ReachCenter(IPipeHolder holder, IFlowItems flow, @Nonnull ItemStack stack, EnumFacing from, EnumDyeColor colour) {
             super(holder, flow);
             this.stack = stack;
             this.from = from;
@@ -68,11 +72,12 @@ public abstract class PipeEventItem extends PipeEvent {
 
     /** Fired whenever an item reaches the end of a pipe. Note that you *can* change the itemstack or the colour. */
     public static class ReachEnd extends PipeEventItem {
+        @Nonnull
         public final ItemStack stack;
         public final EnumFacing from, to;
         public EnumDyeColor colour;
 
-        public ReachEnd(IPipeHolder holder, IFlowItems flow, ItemStack stack, EnumFacing from, EnumFacing to, EnumDyeColor colour) {
+        public ReachEnd(IPipeHolder holder, IFlowItems flow, @Nonnull ItemStack stack, EnumFacing from, EnumFacing to, EnumDyeColor colour) {
             super(holder, flow);
             this.stack = stack;
             this.from = from;
@@ -92,12 +97,13 @@ public abstract class PipeEventItem extends PipeEvent {
     public static class SideCheck extends PipeEventItem {
         public final EnumDyeColor colour;
         public final EnumFacing from;
+        @Nonnull
         public final ItemStack stack;
 
         private final int[] precedence = new int[6];
         private final EnumSet<EnumFacing> allowed = EnumSet.allOf(EnumFacing.class);
 
-        public SideCheck(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, EnumFacing from, ItemStack stack) {
+        public SideCheck(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, EnumFacing from, @Nonnull ItemStack stack) {
             super(holder, flow);
             this.colour = colour;
             this.from = from;
@@ -194,10 +200,11 @@ public abstract class PipeEventItem extends PipeEvent {
     public static class TryBounce extends PipeEventItem {
         public final EnumDyeColor colour;
         public final EnumFacing from;
+        @Nonnull
         public final ItemStack stack;
         public boolean canBounce = false;
 
-        public TryBounce(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, EnumFacing from, ItemStack stack) {
+        public TryBounce(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, EnumFacing from, @Nonnull ItemStack stack) {
             super(holder, flow);
             this.colour = colour;
             this.from = from;
@@ -272,12 +279,13 @@ public abstract class PipeEventItem extends PipeEvent {
     /** Mostly immutable holding class for item stacks. */
     public static class ItemEntry {
         public final EnumDyeColor colour;
+        @Nonnull
         public final ItemStack stack;
         public final EnumFacing from;
         /** An list of the destinations to try, in order. */
         public List<EnumFacing> to;
 
-        public ItemEntry(EnumDyeColor colour, ItemStack stack, EnumFacing from) {
+        public ItemEntry(EnumDyeColor colour, @Nonnull ItemStack stack, EnumFacing from) {
             this.colour = colour;
             this.stack = stack;
             this.from = from;

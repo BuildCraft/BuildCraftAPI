@@ -4,14 +4,14 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.blueprints;
 
-import java.util.List;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
 
@@ -31,13 +31,13 @@ public class SchematicMask extends SchematicBlockBase {
     }
 
     @Override
-    public void placeInWorld(IBuilderContext context, BlockPos pos, List<ItemStack> stacks) {
+    public void placeInWorld(IBuilderContext context, BlockPos pos, NonNullList<ItemStack> stacks) {
         if (isConcrete) {
             if (stacks.size() == 0 || !BuildCraftAPI.isSoftBlock(context.world(), pos)) {
                 return;
             } else {
                 ItemStack stack = stacks.get(0);
-                EntityPlayer player = BuildCraftAPI.fakePlayerProvider.getBuildCraftPlayer((WorldServer) context.world()).get();
+                EntityPlayer player = BuildCraftAPI.fakePlayerProvider.getBuildCraftPlayer((WorldServer) context.world());
 
                 // force the block to be air block, in case it's just a soft
                 // block which replacement is not straightforward
@@ -53,9 +53,9 @@ public class SchematicMask extends SchematicBlockBase {
                     }
                 }
                 ItemBlock itemBlock = (ItemBlock) stack.getItem();
-                IBlockState state = itemBlock.block.onBlockPlaced(context.world(), pos, solidFace, 0, 0, 0, stack.getMetadata(), player);
-                itemBlock.placeBlockAt(stack, player, context.world(), pos, solidFace, 0, 0, 0, state);
 
+                IBlockState state = itemBlock.block.getStateForPlacement(context.world(), pos, solidFace, 0, 0, 0, stack.getMetadata(), player, EnumHand.MAIN_HAND);
+                itemBlock.placeBlockAt(stack, player, context.world(), pos, solidFace, 0, 0, 0, state);
             }
         } else {
             context.world().setBlockToAir(pos);

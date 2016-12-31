@@ -1,22 +1,25 @@
 package buildcraft.api.recipes;
 
-import com.google.common.collect.ImmutableList;
+import java.io.IOException;
+import java.util.Iterator;
+
+import javax.annotation.Nonnull;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.util.NonNullList;
 
-import java.io.IOException;
-import java.util.Iterator;
+import net.minecraftforge.common.util.Constants;
 
 public final class IntegrationRecipe {
     public final long requiredMicroJoules;
-    public final ItemStack target;
-    public final ImmutableList<ItemStack> toIntegrate;
+    public final @Nonnull ItemStack target;
+    public final NonNullList<ItemStack> toIntegrate;
     public final ItemStack output;
 
-    public IntegrationRecipe(long requiredMicroJoules, ItemStack target, ImmutableList<ItemStack> toIntegrate, ItemStack output) {
+    public IntegrationRecipe(long requiredMicroJoules, @Nonnull ItemStack target, NonNullList<ItemStack> toIntegrate, ItemStack output) {
         this.requiredMicroJoules = requiredMicroJoules;
         this.target = target;
         this.toIntegrate = toIntegrate;
@@ -25,25 +28,26 @@ public final class IntegrationRecipe {
 
     public IntegrationRecipe(NBTTagCompound nbt) {
         requiredMicroJoules = nbt.getLong("required_micro_joules");
-        target = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("target"));
+        target = new ItemStack(nbt.getCompoundTag("target"));
         NBTTagList toIntegrateTag = nbt.getTagList("to_integrate", Constants.NBT.TAG_COMPOUND);
-        ItemStack[] toIntegrateArray = new ItemStack[toIntegrateTag.tagCount()];
-        for(int i = 0; i < toIntegrateArray.length; i++) {
-            toIntegrateArray[i] = ItemStack.loadItemStackFromNBT(toIntegrateTag.getCompoundTagAt(i));
+        toIntegrate = NonNullList.withSize(toIntegrateTag.tagCount(), ItemStack.EMPTY);
+        for (int i = 0; i < toIntegrateTag.tagCount(); i++) {
+            toIntegrate.set(i, new ItemStack(toIntegrateTag.getCompoundTagAt(i)));
         }
-        toIntegrate = ImmutableList.copyOf(toIntegrateArray);
-        output = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("output"));
+        output = new ItemStack(nbt.getCompoundTag("output"));
     }
 
     public IntegrationRecipe(PacketBuffer buffer) throws IOException {
         requiredMicroJoules = buffer.readLong();
-        target = buffer.readItemStackFromBuffer();
-        ItemStack[] toIntegrateArray = new ItemStack[buffer.readInt()];
-        for(int i = 0; i < toIntegrateArray.length; i++) {
-            toIntegrateArray[i] = buffer.readItemStackFromBuffer();
+        ItemStack stack = buffer.readItemStack();
+        if (stack == null) throw new NullPointerException("stack");// should never happen
+        target = stack;
+        int count = buffer.readInt();
+        toIntegrate = NonNullList.withSize(count, ItemStack.EMPTY);
+        for (int i = 0; i < count; i++) {
+            toIntegrate.set(i, buffer.readItemStack());
         }
-        toIntegrate = ImmutableList.copyOf(toIntegrateArray);
-        output = buffer.readItemStackFromBuffer();
+        output = buffer.readItemStack();
     }
 
     public NBTTagCompound writeToNBT() {
@@ -51,7 +55,7 @@ public final class IntegrationRecipe {
         nbt.setLong("required_micro_joules", requiredMicroJoules);
         nbt.setTag("target", target.serializeNBT());
         NBTTagList toIntegrateTag = new NBTTagList();
-        for(ItemStack toIntegrateElement : toIntegrate) {
+        for (ItemStack toIntegrateElement : toIntegrate) {
             toIntegrateTag.appendTag(toIntegrateElement.serializeNBT());
         }
         nbt.setTag("to_integrate", toIntegrateTag);
@@ -61,33 +65,35 @@ public final class IntegrationRecipe {
 
     public void writeToBuffer(PacketBuffer buffer) {
         buffer.writeLong(requiredMicroJoules);
-        buffer.writeItemStackToBuffer(target);
+        buffer.writeItemStack(target);
         buffer.writeInt(toIntegrate.size());
-        toIntegrate.forEach(buffer::writeItemStackToBuffer);
-        buffer.writeItemStackToBuffer(output);
+        for (ItemStack stack : toIntegrate) {
+            buffer.writeItemStack(stack);
+        }
+        buffer.writeItemStack(output);
     }
 
     @Override
     public boolean equals(Object o) {
-        if(this == o) {
+        if (this == o) {
             return true;
         }
-        if(o == null || getClass() != o.getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
         IntegrationRecipe that = (IntegrationRecipe) o;
 
-        if(requiredMicroJoules != that.requiredMicroJoules) {
+        if (requiredMicroJoules != that.requiredMicroJoules) {
             return false;
         }
-        if(target != null ? !ItemStack.areItemStacksEqual(target, that.target) : that.target != null) {
+        if (!ItemStack.areItemStacksEqual(target, that.target)) {
             return false;
         }
-        if(toIntegrate != null && that.toIntegrate != null) {
+        if (toIntegrate != null && that.toIntegrate != null) {
             Iterator<ItemStack> iterator1 = toIntegrate.iterator();
             Iterator<ItemStack> iterator2 = that.toIntegrate.iterator();
-            while(iterator1.hasNext()) {
+            while (iterator1.hasNext()) {
                 if (!iterator2.hasNext()) {
                     return false;
                 }

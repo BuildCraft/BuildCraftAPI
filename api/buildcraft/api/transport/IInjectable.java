@@ -1,5 +1,7 @@
 package buildcraft.api.transport;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -19,5 +21,6 @@ public interface IInjectable {
      * @param color The color of the item to be added to the pipe, or null for no color.
      * @param speed The speed of the item to be added (in blocks per tick) or {@code <=0} if a default should be used.
      * @return The left over stack that was not accepted. */
-    ItemStack injectItem(ItemStack stack, boolean doAdd, EnumFacing from, EnumDyeColor color, double speed);
+    @Nonnull
+    ItemStack injectItem(@Nonnull ItemStack stack, boolean doAdd, EnumFacing from, EnumDyeColor color, double speed);
 }

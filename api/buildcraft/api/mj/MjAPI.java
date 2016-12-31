@@ -3,6 +3,8 @@ package buildcraft.api.mj;
 import java.text.DecimalFormat;
 import java.util.concurrent.Callable;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
@@ -38,20 +40,20 @@ public class MjAPI {
     //
     // ###############
 
-    @CapabilityInject(IMjConnector.class)
-    public static final Capability<IMjConnector> CAP_CONNECTOR = null;
+    @Nonnull
+    public static final Capability<IMjConnector> CAP_CONNECTOR;
 
-    @CapabilityInject(IMjReceiver.class)
-    public static final Capability<IMjReceiver> CAP_RECEIVER = null;
+    @Nonnull
+    public static final Capability<IMjReceiver> CAP_RECEIVER;
 
-    @CapabilityInject(IMjRedstoneReceiver.class)
-    public static final Capability<IMjRedstoneReceiver> CAP_REDSTONE_RECEIVER = null;
+    @Nonnull
+    public static final Capability<IMjRedstoneReceiver> CAP_REDSTONE_RECEIVER;
 
-    @CapabilityInject(IMjReadable.class)
-    public static final Capability<IMjReadable> CAP_READABLE = null;
+    @Nonnull
+    public static final Capability<IMjReadable> CAP_READABLE;
 
-    @CapabilityInject(IMjPassiveProvider.class)
-    public static final Capability<IMjPassiveProvider> CAP_PASSIVE_PROVIDER = null;
+    @Nonnull
+    public static final Capability<IMjPassiveProvider> CAP_PASSIVE_PROVIDER;
 
     // ###############
     //
@@ -98,28 +100,9 @@ public class MjAPI {
 
     // ########################################
     //
-    // Null based classes of the capabilities
+    // Null based classes
     //
     // ########################################
-
-    // @formatter:off
-    public enum NullaryConductor implements IMjConnector {
-        INSTANCE;
-        @Override public boolean canConnect(IMjConnector other) {return false;}
-    }
-
-    public enum NullaryRequestor implements IMjReceiver {
-        INSTANCE;
-        @Override public boolean canConnect(IMjConnector other) {return false;}
-        @Override public long getPowerRequested() {return 0;}
-        @Override public long receivePower(long microJoules, boolean simulate) {return microJoules;}
-    }
-
-    public enum NullaryPassiveProvider implements IMjPassiveProvider {
-        INSTANCE;
-        @Override public boolean canConnect(IMjConnector other) {return false;}
-        @Override public long extractPower(long min, long max, boolean simulate) {return 0;}
-    }
 
     public enum NullaryEffectManager implements IMjEffectManager {
         INSTANCE;
@@ -135,6 +118,22 @@ public class MjAPI {
     //
     // ###################
 
+    // Private fields for the registrations -- this allows us to make the actual fields @Nonnull as we check later
+    @CapabilityInject(IMjConnector.class)
+    private static final Capability<IMjConnector> CAP_CONNECTOR_FIRST = null;
+
+    @CapabilityInject(IMjReceiver.class)
+    private static final Capability<IMjReceiver> CAP_RECEIVER_FIRST = null;
+
+    @CapabilityInject(IMjRedstoneReceiver.class)
+    private static final Capability<IMjRedstoneReceiver> CAP_REDSTONE_RECEIVER_FIRST = null;
+
+    @CapabilityInject(IMjReadable.class)
+    private static final Capability<IMjReadable> CAP_READABLE_FIRST = null;
+
+    @CapabilityInject(IMjPassiveProvider.class)
+    private static final Capability<IMjPassiveProvider> CAP_PASSIVE_PROVIDER_FIRST = null;
+
     static {
         registerCapability(IMjConnector.class);
         registerCapability(IMjReceiver.class);
@@ -142,11 +141,11 @@ public class MjAPI {
         registerCapability(IMjReadable.class);
         registerCapability(IMjPassiveProvider.class);
 
-        ensureRegistration(CAP_CONNECTOR, "connector");
-        ensureRegistration(CAP_RECEIVER, "receiver");
-        ensureRegistration(CAP_REDSTONE_RECEIVER, "rs_receiver");
-        ensureRegistration(CAP_READABLE, "readable");
-        ensureRegistration(CAP_PASSIVE_PROVIDER, "passive provider");
+        CAP_CONNECTOR = ensureRegistration(CAP_CONNECTOR_FIRST, IMjConnector.class);
+        CAP_RECEIVER = ensureRegistration(CAP_RECEIVER_FIRST, IMjReceiver.class);
+        CAP_REDSTONE_RECEIVER = ensureRegistration(CAP_REDSTONE_RECEIVER_FIRST, IMjRedstoneReceiver.class);
+        CAP_READABLE = ensureRegistration(CAP_READABLE_FIRST, IMjReadable.class);
+        CAP_PASSIVE_PROVIDER = ensureRegistration(CAP_PASSIVE_PROVIDER_FIRST, IMjPassiveProvider.class);
     }
 
     private static <T> void registerCapability(Class<T> clazz) {
@@ -159,10 +158,12 @@ public class MjAPI {
         });
     }
 
-    private static void ensureRegistration(Capability<?> capReceiver, String name) {
-        if (capReceiver == null) {
-            throw new Error("Capability registration failed for " + name);
+    @Nonnull
+    private static <T> Capability<T> ensureRegistration(Capability<T> cap, Class<T> clazz) {
+        if (cap == null) {
+            throw new Error("Capability registration failed for " + clazz);
         }
+        return cap;
     }
 
     private static class VoidStorage<T> implements Capability.IStorage<T> {

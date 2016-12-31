@@ -7,6 +7,7 @@ package buildcraft.api.transport.pluggable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -19,7 +20,7 @@ import buildcraft.api.transport.IPipeTile;
 @Deprecated
 /** An IPipePluggable MUST have an empty constructor for client-side rendering! */
 public abstract class PipePluggable implements INBTStoreable, ISerializable {
-    public abstract ItemStack[] getDropItems(IPipeTile pipe);
+    public abstract NonNullList<ItemStack> getDropItems(IPipeTile pipe);
 
     public void update(IPipeTile pipe, EnumFacing direction) {
 

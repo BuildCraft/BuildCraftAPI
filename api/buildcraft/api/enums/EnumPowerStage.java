@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import net.minecraft.util.IStringSerializable;
 
-public enum EnumEnergyStage implements IStringSerializable {
+public enum EnumPowerStage implements IStringSerializable {
     BLUE,
     GREEN,
     YELLOW,
@@ -12,7 +12,7 @@ public enum EnumEnergyStage implements IStringSerializable {
     OVERHEAT,
     BLACK;
 
-    public static final EnumEnergyStage[] VALUES = values();
+    public static final EnumPowerStage[] VALUES = values();
 
     private final String modelName = name().toLowerCase(Locale.ROOT);
 

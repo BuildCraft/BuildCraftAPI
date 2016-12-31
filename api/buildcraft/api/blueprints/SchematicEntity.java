@@ -4,9 +4,7 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.blueprints;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -16,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagDouble;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
 
 import net.minecraftforge.common.util.Constants;
@@ -30,17 +29,17 @@ public class SchematicEntity extends Schematic {
 
     /** This field contains requirements for a given block when stored in the blueprint. Modders can either rely on this
      * list or compute their own int Schematic. */
-    public ItemStack[] storedRequirements = new ItemStack[0];
+    public NonNullList<ItemStack> storedRequirements = NonNullList.withSize(0, null);
     public BuildingPermission defaultPermission = BuildingPermission.ALL;
 
     @Override
-    public void getRequirementsForPlacement(IBuilderContext context, List<ItemStack> requirements) {
-        Collections.addAll(requirements, storedRequirements);
+    public void getRequirementsForPlacement(IBuilderContext context, NonNullList<ItemStack> requirements) {
+        requirements.addAll(storedRequirements);
     }
 
     public void writeToWorld(IBuilderContext context) {
         Entity e = EntityList.createEntityFromNBT(entityNBT, context.world());
-        context.world().spawnEntityInWorld(e);
+        context.world().spawnEntity(e);
     }
 
     public void readFromWorld(IBuilderContext context, Entity entity) {
@@ -116,7 +115,7 @@ public class SchematicEntity extends Schematic {
 
         NBTTagList rq = nbt.getTagList("rq", Constants.NBT.TAG_COMPOUND);
 
-        ArrayList<ItemStack> rqs = new ArrayList<ItemStack>();
+        NonNullList<ItemStack> rqs = NonNullList.create();
 
         for (int i = 0; i < rq.tagCount(); ++i) {
             try {
@@ -126,7 +125,7 @@ public class SchematicEntity extends Schematic {
                     // Maps the id in the blueprint to the id in the world
                     sub.setInteger("id", Item.REGISTRY.getIDForObject(registry.getItemForId(sub.getInteger("id"))));
 
-                    rqs.add(ItemStack.loadItemStackFromNBT(sub));
+                    rqs.add(new ItemStack(sub));
                 } else {
                     defaultPermission = BuildingPermission.CREATIVE_ONLY;
                 }
@@ -136,7 +135,7 @@ public class SchematicEntity extends Schematic {
             }
         }
 
-        storedRequirements = rqs.toArray(new ItemStack[rqs.size()]);
+        storedRequirements = rqs;
     }
 
     protected NBTTagList newDoubleNBTList(double... par1ArrayOfDouble) {

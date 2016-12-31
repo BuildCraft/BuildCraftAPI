@@ -4,11 +4,9 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.blueprints;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 
 import net.minecraftforge.fluids.FluidStack;
@@ -23,7 +21,7 @@ public class SchematicFluid extends SchematicBlock {
     }
 
     @Override
-    public void getRequirementsForPlacement(IBuilderContext context, List<ItemStack> requirements) {
+    public void getRequirementsForPlacement(IBuilderContext context, NonNullList<ItemStack> requirements) {
         if (getLevel() == 0) {
             requirements.add(fluidItem);
         }
@@ -37,7 +35,7 @@ public class SchematicFluid extends SchematicBlock {
     @Override
     public boolean isAlreadyBuilt(IBuilderContext context, BlockPos pos) {
         if (getLevel() == 0) {
-            return state == context.world().getBlockState(pos) && ((Integer) context.world().getBlockState(pos).getValue(BlockLiquid.LEVEL)) == 0;
+            return state == context.world().getBlockState(pos) && (context.world().getBlockState(pos).getValue(BlockLiquid.LEVEL)) == 0;
         } else {
             return state == context.world().getBlockState(pos);
         }
@@ -54,7 +52,7 @@ public class SchematicFluid extends SchematicBlock {
     }
 
     @Override
-    public void placeInWorld(IBuilderContext context, BlockPos pos, List<ItemStack> stacks) {
+    public void placeInWorld(IBuilderContext context, BlockPos pos, NonNullList<ItemStack> stacks) {
         if (getLevel() == 0) {
             context.world().setBlockState(pos, state, 3);
         }
@@ -68,18 +66,18 @@ public class SchematicFluid extends SchematicBlock {
     }
 
     @Override
-    public List<ItemStack> getStacksToDisplay(List<ItemStack> stackConsumed) {
-        List<ItemStack> result = new ArrayList<ItemStack>();
+    public NonNullList<ItemStack> getStacksToDisplay(NonNullList<ItemStack> stackConsumed) {
+        NonNullList<ItemStack> result = NonNullList.create();
         result.add(fluidItem);
         return result;
     }
 
     @Override
-    public int getEnergyRequirement(List<ItemStack> stacksUsed) {
+    public int getEnergyRequirement(NonNullList<ItemStack> stacksUsed) {
         return 1;// * BuilderAPI.BUILD_ENERGY;
     }
 
     public int getLevel() {
-        return (Integer) state.getValue(BlockLiquid.LEVEL);
+        return state.getValue(BlockLiquid.LEVEL);
     }
 }

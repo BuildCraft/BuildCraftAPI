@@ -6,20 +6,20 @@ package buildcraft.api.robots;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.items.IItemHandler;
 
 import buildcraft.api.boards.RedstoneBoardRobot;
+import buildcraft.api.core.IFluidHandlerAdv;
 import buildcraft.api.core.IZone;
 import buildcraft.api.mj.MjAPI;
 import buildcraft.api.mj.MjBattery;
 
-public abstract class EntityRobotBase extends EntityLiving implements IInventory, IFluidHandler {
+public abstract class EntityRobotBase extends EntityLiving implements IItemHandler, IFluidHandlerAdv {
 
     public static final long MAX_POWER =  5000 * MjAPI.MJ;
     public static final long SAFETY_POWER = MAX_POWER / 5;

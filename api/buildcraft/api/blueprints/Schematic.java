@@ -4,10 +4,9 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.blueprints;
 
-import java.util.List;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
@@ -27,7 +26,6 @@ import buildcraft.api.core.IInvSlot;
  * Example of schematics for minecraft blocks are available in the package buildcraft.core.schematics. */
 // is being replaced by a different schematic implementation
 // a simalir styled one to this might be made ontop of the other one though
-@Deprecated
 public abstract class Schematic {
     /** Blocks are build in various stages, in order to make sure that a block can indeed be placed, and that it's
      * unlikely to disturb other blocks. */
@@ -65,25 +63,25 @@ public abstract class Schematic {
             if (req.getItemDamage() + stack.getItemDamage() <= stack.getMaxDamage()) {
                 stack.setItemDamage(req.getItemDamage() + stack.getItemDamage());
                 result.setItemDamage(req.getItemDamage());
-                req.stackSize = 0;
+                req.setCount(0);
             }
 
             if (stack.getItemDamage() >= stack.getMaxDamage()) {
                 slot.decreaseStackInSlot(1);
             }
         } else {
-            if (stack.stackSize >= req.stackSize) {
-                result.stackSize = req.stackSize;
-                stack.stackSize -= req.stackSize;
-                req.stackSize = 0;
+            if (stack.getCount() >= req.getCount()) {
+                result.setCount(req.getCount());
+                stack.setCount(stack.getCount() - req.getCount());
+                req.setCount(0);
             } else {
-                req.stackSize -= stack.stackSize;
-                stack.stackSize = 0;
+                req.setCount(req.getCount() - stack.getCount());
+                stack.setCount(0);
             }
         }
 
-        if (stack.stackSize == 0) {
-            stack.stackSize = 1;
+        if (stack.getCount() == 0) {
+            stack.setCount(1);
             if (stack.getItem().hasContainerItem(stack)) {
                 ItemStack newStack = stack.getItem().getContainerItem(stack);
                 slot.setStackInSlot(newStack);
@@ -119,22 +117,22 @@ public abstract class Schematic {
     public void initializeFromObjectAt(IBuilderContext context, BlockPos pos) {}
 
     /** Places the block in the world, at the location specified in the slot, using the stack in parameters */
-    public void placeInWorld(IBuilderContext context, BlockPos pos, List<ItemStack> stacks) {}
+    public void placeInWorld(IBuilderContext context, BlockPos pos, NonNullList<ItemStack> stacks) {}
 
     /** Write specific requirements coming from the world to the blueprint. */
     public void storeRequirements(IBuilderContext context, BlockPos pos) {}
 
     /** Returns the requirements needed to build this block. When the requirements are met, they will be removed all at
      * once from the builder, before calling writeToWorld. */
-    public void getRequirementsForPlacement(IBuilderContext context, List<ItemStack> requirements) {}
+    public void getRequirementsForPlacement(IBuilderContext context, NonNullList<ItemStack> requirements) {}
 
     /** Returns the amount of energy required to build this slot, depends on the stacks selected for the build. */
-    public int getEnergyRequirement(List<ItemStack> stacksUsed) {
+    public int getEnergyRequirement(NonNullList<ItemStack> stacksUsed) {
         int result = 0;
 
         if (stacksUsed != null) {
             for (ItemStack s : stacksUsed) {
-                result += s.stackSize ;//* BuilderAPI.BUILD_ENERGY;
+                result += s.getCount() ;//* BuilderAPI.BUILD_ENERGY;
             }
         }
 
@@ -142,7 +140,7 @@ public abstract class Schematic {
     }
 
     /** Returns the flying stacks to display in the builder animation. */
-    public List<ItemStack> getStacksToDisplay(List<ItemStack> stackConsumed) {
+    public NonNullList<ItemStack> getStacksToDisplay(NonNullList<ItemStack> stackConsumed) {
         return stackConsumed;
     }
 

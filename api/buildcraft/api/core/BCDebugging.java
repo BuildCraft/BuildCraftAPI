@@ -68,10 +68,10 @@ public class BCDebugging {
         return shouldDebug(string, "log", DEBUG_LOGGING);
     }
 
-    private static boolean shouldDebug(String string, String type, boolean isAll) {
-        String prop = getProp(string);
+    private static boolean shouldDebug(String option, String type, boolean isAll) {
+        String prop = getProp(option);
         if (isAll) {
-            BCLog.logger.info("[debugger] Debugging automatically enabled for \"" + string + "\" (" + type + ").");
+            BCLog.logger.info("[debugger] Debugging automatically enabled for \"" + option + "\" (" + type + ").");
             return true;
         }
         if (DEBUG_STATUS == DebugStatus.NONE) {
@@ -79,12 +79,12 @@ public class BCDebugging {
         }
         boolean enabled = getRaw(prop);
         if (enabled) {
-            BCLog.logger.info("[debugger] Debugging enabled for \"" + string + "\" (" + type + ").");
+            BCLog.logger.info("[debugger] Debugging enabled for \"" + option + "\" (" + type + ").");
             return true;
         } else {
             StringBuilder log = new StringBuilder();
             log.append("[debugger] To enable debugging for ");
-            log.append(string);
+            log.append(option);
             log.append(" add the option \"-D");
             log.append(prop);
             log.append("=true\" to your launch config as a VM argument (" + type + ").");

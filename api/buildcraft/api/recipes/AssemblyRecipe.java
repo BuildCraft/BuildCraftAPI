@@ -1,14 +1,17 @@
 package buildcraft.api.recipes;
 
+import java.io.IOException;
+import java.util.Iterator;
+
 import com.google.common.collect.ImmutableSet;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.util.NonNullList;
 
-import java.io.IOException;
-import java.util.Iterator;
+import net.minecraftforge.common.util.Constants;
 
 /** Provides an immutable assembly recipe */
 public final class AssemblyRecipe {
@@ -25,22 +28,23 @@ public final class AssemblyRecipe {
     public AssemblyRecipe(NBTTagCompound nbt) {
         requiredMicroJoules = nbt.getLong("required_micro_joules");
         NBTTagList requiredStacksTag = nbt.getTagList("required_stacks", Constants.NBT.TAG_COMPOUND);
-        ItemStack[] requiredStacksArray = new ItemStack[requiredStacksTag.tagCount()];
-        for(int i = 0; i < requiredStacksArray.length; i++) {
-            requiredStacksArray[i] = ItemStack.loadItemStackFromNBT(requiredStacksTag.getCompoundTagAt(i));
+        NonNullList<ItemStack> requiredStacksArray = NonNullList.withSize(requiredStacksTag.tagCount(), ItemStack.EMPTY);
+        for(int i = 0; i < requiredStacksTag.tagCount(); i++) {
+            requiredStacksArray.set(i,  new ItemStack(requiredStacksTag.getCompoundTagAt(i)));
         }
         requiredStacks = ImmutableSet.copyOf(requiredStacksArray);
-        output = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("output"));
+        output = new ItemStack(nbt.getCompoundTag("output"));
     }
 
     public AssemblyRecipe(PacketBuffer buffer) throws IOException {
         requiredMicroJoules = buffer.readLong();
-        ItemStack[] requiredStacksArray = new ItemStack[buffer.readInt()];
-        for(int i = 0; i < requiredStacksArray.length; i++) {
-            requiredStacksArray[i] = buffer.readItemStackFromBuffer();
+        int count = buffer.readInt();
+        NonNullList<ItemStack> requiredStacksArray = NonNullList.withSize(count, ItemStack.EMPTY);
+        for(int i = 0; i < count; i++) {
+            requiredStacksArray.set(i, buffer.readItemStack());
         }
         requiredStacks = ImmutableSet.copyOf(requiredStacksArray);
-        output = buffer.readItemStackFromBuffer();
+        output = buffer.readItemStack();
     }
 
     public NBTTagCompound writeToNBT() {
@@ -58,8 +62,8 @@ public final class AssemblyRecipe {
     public void writeToBuffer(PacketBuffer buffer) {
         buffer.writeLong(requiredMicroJoules);
         buffer.writeInt(requiredStacks.size());
-        requiredStacks.forEach(buffer::writeItemStackToBuffer);
-        buffer.writeItemStackToBuffer(output);
+        requiredStacks.forEach(buffer::writeItemStack);
+        buffer.writeItemStack(output);
     }
 
     @Override

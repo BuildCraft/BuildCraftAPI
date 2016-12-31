@@ -9,8 +9,8 @@ public final class BuilderAPI {
     public static ISchematicHelper schematicHelper;
 
     private static final long MJ = 1000 * 1000;
-    public static final long BREAK_POWER = 16 * MJ;// ųMj
-    public static final long BUILD_POWER = 24 * MJ;// ųMj
+    public static final long BREAK_POWER = 16 * MJ;// micro Mj
+    public static final long BUILD_POWER = 24 * MJ;// micro Mj
 
     private BuilderAPI() {}
 }

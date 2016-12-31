@@ -26,6 +26,7 @@ public class ResourceIdRequest extends ResourceIdBlock {
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == null) return false;
         if (!super.equals(obj)) return false;
         ResourceIdRequest compareId = (ResourceIdRequest) obj;
 

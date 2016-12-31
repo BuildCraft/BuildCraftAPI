@@ -1,8 +1,9 @@
 package buildcraft.api.lists;
 
-import java.util.List;
+import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 public abstract class ListMatchHandler {
     public enum Type {
@@ -11,9 +12,9 @@ public abstract class ListMatchHandler {
         CLASS
     }
 
-    public abstract boolean matches(Type type, ItemStack stack, ItemStack target, boolean precise);
+    public abstract boolean matches(Type type, @Nonnull ItemStack stack, @Nonnull ItemStack target, boolean precise);
 
-    public abstract boolean isValidSource(Type type, ItemStack stack);
+    public abstract boolean isValidSource(Type type, @Nonnull ItemStack stack);
 
     /** Get custom client examples.
      * 
@@ -21,7 +22,7 @@ public abstract class ListMatchHandler {
      * @param stack
      * @return A List (even empty!) if the examples satisfy this handler, null if iteration and .matches should be used
      *         instead. */
-    public List<ItemStack> getClientExamples(Type type, ItemStack stack) {
+    public NonNullList<ItemStack> getClientExamples(Type type, @Nonnull ItemStack stack) {
         return null;
     }
 }

@@ -1,7 +1,8 @@
 package buildcraft.api.transport.neptune;
 
 import java.io.IOException;
-import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -9,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 
@@ -65,18 +67,14 @@ public abstract class PipePluggable {
         return false;
     }
 
-    public boolean hasCapability(Capability<?> cap) {
-        return false;
-    }
-
-    public <T> T getCapability(Capability<T> cap) {
+    public <T> T getCapability(@Nonnull Capability<T> cap) {
         return null;
     }
 
     /** Called whenever this pluggable is removed from the pipe.
      * 
      * @param toDrop A list containing all the items to drop (so you should add your items to this list) */
-    public void onRemove(List<ItemStack> toDrop) {}
+    public void onRemove(NonNullList<ItemStack> toDrop) {}
 
     /** Called whenever this pluggable is picked by the player (similar to Block.getPickBlock)
      * 

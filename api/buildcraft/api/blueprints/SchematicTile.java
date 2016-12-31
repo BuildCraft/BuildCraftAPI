@@ -4,17 +4,12 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.blueprints;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
-
-import buildcraft.api.core.JavaTools;
 
 public class SchematicTile extends SchematicBlock {
 
@@ -41,7 +36,7 @@ public class SchematicTile extends SchematicBlock {
 
     /** Places the block in the world, at the location specified in the slot. */
     @Override
-    public void placeInWorld(IBuilderContext context, BlockPos pos, List<ItemStack> stacks) {
+    public void placeInWorld(IBuilderContext context, BlockPos pos, NonNullList<ItemStack> stacks) {
         super.placeInWorld(context, pos, stacks);
 
         if (state.getBlock().hasTileEntity(state)) {
@@ -49,8 +44,10 @@ public class SchematicTile extends SchematicBlock {
             tileNBT.setInteger("y", pos.getY());
             tileNBT.setInteger("z", pos.getZ());
             TileEntity tile = TileEntity.create(context.world(), tileNBT);
-            tile.setWorldObj(context.world());
-            context.world().setTileEntity(pos, tile);
+            if (tile != null) {
+                tile.setWorld(context.world());
+                context.world().setTileEntity(pos, tile);
+            }
         }
     }
 
@@ -65,7 +62,7 @@ public class SchematicTile extends SchematicBlock {
                 tile.writeToNBT(tileNBT);
             }
 
-            tileNBT = (NBTTagCompound) tileNBT.copy();
+            tileNBT = tileNBT.copy();
             onNBTLoaded();
         }
     }
@@ -80,15 +77,12 @@ public class SchematicTile extends SchematicBlock {
             if (tile instanceof IInventory) {
                 IInventory inv = (IInventory) tile;
 
-                ArrayList<ItemStack> rqs = new ArrayList<ItemStack>();
-
                 for (int i = 0; i < inv.getSizeInventory(); ++i) {
-                    if (inv.getStackInSlot(i) != null) {
-                        rqs.add(inv.getStackInSlot(i));
+                    ItemStack stack = inv.getStackInSlot(i);
+                    if (!stack.isEmpty()) {
+                        storedRequirements.add(stack);
                     }
                 }
-
-                storedRequirements = JavaTools.concat(storedRequirements, rqs.toArray(new ItemStack[rqs.size()]));
             }
         }
     }

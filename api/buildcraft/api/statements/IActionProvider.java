@@ -6,13 +6,15 @@ package buildcraft.api.statements;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 
 public interface IActionProvider {
     void addInternalActions(Collection<IActionInternal> actions, IStatementContainer container);
 
-    void addInternalSidedActions(Collection<IActionInternalSided> actions, IStatementContainer container, EnumFacing side);
+    void addInternalSidedActions(Collection<IActionInternalSided> actions, IStatementContainer container, @Nonnull EnumFacing side);
 
-    void addExternalActions(Collection<IActionExternal> actions, EnumFacing side, TileEntity tile);
+    void addExternalActions(Collection<IActionExternal> actions, @Nonnull EnumFacing side, TileEntity tile);
 }

@@ -1,5 +1,7 @@
 package buildcraft.api.transport.neptune;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
@@ -13,5 +15,5 @@ public interface IItemPluggable {
      * @param holder The pipe holder
      * @param side The side that the pluggable should be placed on
      * @return A pluggable to place onto the pipe */
-    PipePluggable onPlace(ItemStack stack, IPipeHolder holder, EnumFacing side);
+    PipePluggable onPlace(@Nonnull ItemStack stack, IPipeHolder holder, EnumFacing side);
 }

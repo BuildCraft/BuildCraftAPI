@@ -163,7 +163,7 @@ public class MappingRegistry {
     public void stackToWorld(NBTTagCompound nbt) throws MappingNotFoundException {
         if (nbt.hasKey("id", Constants.NBT.TAG_SHORT)) {
             Item item = getItemForId(nbt.getShort("id"));
-            nbt.setString("id", (Item.REGISTRY.getNameForObject(item).toString()));
+            nbt.setString("id", (item.getRegistryName().toString()));
         }
     }
 

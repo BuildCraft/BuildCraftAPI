@@ -11,5 +11,5 @@ public interface IFuel {
 
     int getTotalBurningTime();
 
-    int getPowerPerCycle();
+    long getPowerPerCycle();
 }
