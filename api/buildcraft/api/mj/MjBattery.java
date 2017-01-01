@@ -109,6 +109,6 @@ public class MjBattery implements INBTSerializable<NBTTagCompound> {
     }
 
     public String getDebugString() {
-        return MjAPI.formatMj(microJoules) + " / " + MjAPI.formatMj(capacity) + " Mj";
+        return MjAPI.formatMj(microJoules) + " / " + MjAPI.formatMj(capacity) + " MJ";
     }
 }

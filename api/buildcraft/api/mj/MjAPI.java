@@ -61,12 +61,12 @@ public class MjAPI {
     //
     // ###############
 
-    /** Formats a given MJ value to a player-oriented string. Note that this does not append "Mj" to the value. */
+    /** Formats a given MJ value to a player-oriented string. Note that this does not append "MJ" to the value. */
     public static String formatMj(long microMj) {
         return formatMjInternal(microMj / (double) MJ);
     }
 
-    /** Formats a given MJ value to a player-oriented string. Note that this DOES append "*Mj" to the value. This does
+    /** Formats a given MJ value to a player-oriented string. Note that this DOES append "*MJ" to the value. This does
      * however shorten it down to a small length, and displays "µ", "m", "K" or "M" or "G" before the MJ depending on
      * how big or small the value is. */
     public static String formatMjShort(long microJoules) {
@@ -76,26 +76,26 @@ public class MjAPI {
         long limit = 1;
         final long nextUnitCap = 800;
         if (microJoules < nextUnitCap * limit) {// micro MJ
-            return formatMjInternal(microJoules) + " µMj";
+            return formatMjInternal(microJoules) + " µMJ";
         }
         limit *= 1000;
         if (microJoules < nextUnitCap * limit) { // milli MJ
-            return formatMjInternal(microJoules / (double) limit) + " mMj";
+            return formatMjInternal(microJoules / (double) limit) + " mMJ";
         }
         limit *= 1000;
         if (microJoules < nextUnitCap * limit) { // MJ
-            return formatMjInternal(microJoules / (double) limit) + " Mj";
+            return formatMjInternal(microJoules / (double) limit) + " MJ";
         }
         limit *= 1000;
         if (microJoules < nextUnitCap * limit) {// kilo MJ
-            return formatMjInternal(microJoules / (double) limit) + " KMj";
+            return formatMjInternal(microJoules / (double) limit) + " KMJ";
         }
         limit *= 1000;
         if (microJoules < nextUnitCap * limit) {// mega MJ
-            return formatMjInternal(microJoules / (double) limit) + " MMj";
+            return formatMjInternal(microJoules / (double) limit) + " MMJ";
         }
         limit *= 1000;
-        return formatMjInternal(microJoules / (double) limit) + " GMj";
+        return formatMjInternal(microJoules / (double) limit) + " GMJ";
     }
 
     // ########################################
