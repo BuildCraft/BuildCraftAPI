@@ -44,6 +44,11 @@ public abstract class PipeFlow implements ICapabilityProvider {
     /** Reads a payload with the specified id. Standard ID's are NET_ID_FULL_STATE and NET_ID_UPDATE. */
     public void readPayload(int id, PacketBuffer buffer, Side side) throws IOException {}
 
+    public void sendPayload(int id) {
+        final Side side = pipe.getHolder().getPipeWorld().isRemote ? Side.CLIENT : Side.SERVER;
+        sendCustomPayload(id, (buf) -> writePayload(id, buf, side));
+    }
+
     public final void sendCustomPayload(int id, IWriter writer) {
         pipe.getHolder().sendMessage(PipeMessageReceiver.FLOW, new IWriter() {
             @Override
