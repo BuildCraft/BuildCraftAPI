@@ -65,15 +65,15 @@ public enum EnumWirePart {
     public static EnumWirePart get(boolean x, boolean y, boolean z) {
         if (x) {
             if (y) {
-                return z ? WEST_UP_SOUTH : WEST_UP_NORTH;
-            } else {
-                return z ? WEST_DOWN_SOUTH : WEST_DOWN_NORTH;
-            }
-        } else {
-            if (y) {
                 return z ? EAST_UP_SOUTH : EAST_UP_NORTH;
             } else {
                 return z ? EAST_DOWN_SOUTH : EAST_DOWN_NORTH;
+            }
+        } else {
+            if (y) {
+                return z ? WEST_UP_SOUTH : WEST_UP_NORTH;
+            } else {
+                return z ? WEST_DOWN_SOUTH : WEST_DOWN_NORTH;
             }
         }
     }
