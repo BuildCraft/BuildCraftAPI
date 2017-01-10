@@ -78,9 +78,9 @@ public abstract class PipePluggable {
 
     /** Called whenever this pluggable is picked by the player (similar to Block.getPickBlock)
      * 
-     * @return The stack that should be picked, or null if no stack can be picked from this pluggable. */
+     * @return The stack that should be picked, or ItemStack.EMPTY if no stack can be picked from this pluggable. */
     public ItemStack getPickStack() {
-        return null;
+        return ItemStack.EMPTY;
     }
 
     public boolean onPluggableActivate(EntityPlayer player, RayTraceResult trace, float hitX, float hitY, float hitZ) {

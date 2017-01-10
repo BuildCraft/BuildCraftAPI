@@ -9,7 +9,8 @@ public enum EnumDecoratedBlock implements IStringSerializable {
     BLUEPRINT(10),
     TEMPLATE(10),
     PAPER(10),
-    LEATHER(10);
+    LEATHER(10),
+    LASER_BACK(0);
 
     public static final EnumDecoratedBlock[] VALUES = values();
 
