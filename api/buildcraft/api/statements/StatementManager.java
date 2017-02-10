@@ -18,6 +18,10 @@ public final class StatementManager {
     private static List<ITriggerProvider> triggerProviders = new LinkedList<ITriggerProvider>();
     private static List<IActionProvider> actionProviders = new LinkedList<IActionProvider>();
 
+    static {
+        registerParameterClass(StatementParameterItemStack.class);
+    }
+
     /** Deactivate constructor */
     private StatementManager() {}
 
@@ -39,11 +43,6 @@ public final class StatementManager {
 
     public static void registerParameterClass(Class<? extends IStatementParameter> param) {
         parameters.put(createParameter(param).getUniqueTag(), param);
-    }
-
-    @Deprecated
-    public static void registerParameterClass(String name, Class<? extends IStatementParameter> param) {
-        parameters.put(name, param);
     }
 
     public static List<ITriggerExternal> getExternalTriggers(EnumFacing side, TileEntity entity) {

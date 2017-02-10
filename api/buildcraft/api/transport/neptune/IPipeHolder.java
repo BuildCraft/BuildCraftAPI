@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import buildcraft.api.statements.containers.IRedstoneStatementContainer;
 import buildcraft.api.transport.PipeEvent;
 
-/** Designates a tile that can contain a pipe, up to 6 sided pluggables, and up to 4 different pipe wires. */
+/** Designates a tile that can contain a pipe, up to 6 sided pluggables. */
 public interface IPipeHolder extends IRedstoneStatementContainer {
     World getPipeWorld();
 

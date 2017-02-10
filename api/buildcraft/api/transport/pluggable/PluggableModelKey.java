@@ -1,6 +1,6 @@
 package buildcraft.api.transport.pluggable;
 
-import java.util.Arrays;
+import java.util.Objects;
 
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -20,8 +20,7 @@ public abstract class PluggableModelKey<K extends PluggableModelKey<K>> {
         this.layer = layer;
         this.baker = baker;
         this.side = side;
-        /* Don't include the block layer in the hash code as there are different caches for cutout and translucent */
-        this.hash = Arrays.hashCode(new int[] { System.identityHashCode(baker), side.hashCode() });
+        this.hash = Objects.hash(layer, baker, side);
     }
 
     @Override
@@ -30,8 +29,9 @@ public abstract class PluggableModelKey<K extends PluggableModelKey<K>> {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
         PluggableModelKey<?> other = (PluggableModelKey<?>) obj;
-        if (baker != other.baker) return false;
+        if (layer != other.layer) return false;
         if (side != other.side) return false;
+        if (baker != other.baker) return false;
         return true;
     }
 

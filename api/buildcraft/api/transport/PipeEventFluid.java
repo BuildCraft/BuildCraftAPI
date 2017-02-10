@@ -30,7 +30,9 @@ public abstract class PipeEventFluid extends PipeEvent {
     public static class SideCheck extends PipeEventFluid {
         public final FluidStack fluid;
 
-        private final int[] precedence = new int[6];
+        /** The priorities of each side. Stored inversely to the values given, so a higher priority will have a lower
+         * value than a lower priority. */
+        private final int[] priority = new int[6];
         private final EnumSet<EnumFacing> allowed = EnumSet.allOf(EnumFacing.class);
 
         public SideCheck(IPipeHolder holder, IFlowFluid flow, FluidStack fluid) {
@@ -45,6 +47,8 @@ public abstract class PipeEventFluid extends PipeEvent {
             return allowed.contains(side);
         }
 
+        /** Disallows the specific side(s) from being a destination for the item. If no sides are allowed, then the
+         * fluid will stay in the current pipe section. */
         public void disallow(EnumFacing... sides) {
             for (EnumFacing side : sides) {
                 allowed.remove(side);
@@ -67,20 +71,20 @@ public abstract class PipeEventFluid extends PipeEvent {
             allowed.clear();
         }
 
-        public void increasePrecedence(EnumFacing side) {
-            increasePrecedence(side, 1);
+        public void increasePriority(EnumFacing side) {
+            increasePriority(side, 1);
         }
 
-        public void increasePrecedence(EnumFacing side, int by) {
-            precedence[side.ordinal()] -= by;
+        public void increasePriority(EnumFacing side, int by) {
+            priority[side.ordinal()] -= by;
         }
 
-        public void decreasePrecedence(EnumFacing side) {
-            decreasePrecedence(side, 1);
+        public void decreasePriority(EnumFacing side) {
+            decreasePriority(side, 1);
         }
 
-        public void decreasePrecedence(EnumFacing side, int by) {
-            increasePrecedence(side, -by);
+        public void decreasePriority(EnumFacing side, int by) {
+            increasePriority(side, -by);
         }
 
         public EnumSet<EnumFacing> getOrder() {
@@ -91,17 +95,17 @@ public abstract class PipeEventFluid extends PipeEvent {
                 return allowed;
             }
             outer_loop: while (true) {
-                int val = precedence[0];
-                for (int i = 1; i < precedence.length; i++) {
-                    if (precedence[i] != val) {
+                int val = priority[0];
+                for (int i = 1; i < priority.length; i++) {
+                    if (priority[i] != val) {
                         break outer_loop;
                     }
                 }
-                // No need to work out the order when all destinations have the same precedence
+                // No need to work out the order when all destinations have the same priority
                 return allowed;
             }
 
-            int[] ordered = Arrays.copyOf(precedence, 6);
+            int[] ordered = Arrays.copyOf(priority, 6);
             Arrays.sort(ordered);
             int last = 0;
             for (int i = 0; i < 6; i++) {
@@ -113,7 +117,7 @@ public abstract class PipeEventFluid extends PipeEvent {
                 EnumSet<EnumFacing> set = EnumSet.noneOf(EnumFacing.class);
                 for (EnumFacing face : EnumFacing.VALUES) {
                     if (allowed.contains(face)) {
-                        if (precedence[face.ordinal()] == current) {
+                        if (priority[face.ordinal()] == current) {
                             set.add(face);
                         }
                     }
