@@ -14,6 +14,8 @@ public interface IInjectable {
     boolean canInjectItems(EnumFacing from);
 
     /** Offers an ItemStack for addition to the pipe. Will be rejected if the pipe doesn't accept items from that side.
+     * This should never be called on the client side! Implementors are free to throw an exception if be called on the
+     * client side.
      *
      * @param stack ItemStack offered for addition. Do not manipulate this!
      * @param doAdd If false no actual addition should take place. Implementors should simulate.

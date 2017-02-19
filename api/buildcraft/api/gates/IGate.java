@@ -10,7 +10,7 @@ import buildcraft.api.statements.IStatement;
 import buildcraft.api.statements.IStatementParameter;
 import buildcraft.api.statements.StatementSlot;
 import buildcraft.api.statements.containers.ISidedStatementContainer;
-import buildcraft.api.transport.neptune.IPipeHolder;
+import buildcraft.api.transport.pipe.IPipeHolder;
 
 public interface IGate extends ISidedStatementContainer {
 

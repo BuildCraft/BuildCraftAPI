@@ -49,13 +49,19 @@ public final class CropManager {
         return defaultHandler.isSeed(seed) && defaultHandler.canSustainPlant(world, seed, pos);
     }
 
+    /** Attempts to plant the crop given by the seed into the world. Also checks to make sure that
+     * {@link ICropHandler#isSeed(ItemStack)} is true, and
+     * {@link ICropHandler#canSustainPlant(World, ItemStack, BlockPos)} is true for the position. */
     public static boolean plantCrop(World world, EntityPlayer player, ItemStack seed, BlockPos pos) {
         for (ICropHandler cropHandler : handlers) {
             if (cropHandler.isSeed(seed) && cropHandler.canSustainPlant(world, seed, pos) && cropHandler.plantCrop(world, player, seed, pos)) {
                 return true;
             }
         }
-        return defaultHandler.plantCrop(world, player, seed, pos);
+        if (defaultHandler.isSeed(seed) && defaultHandler.canSustainPlant(world, seed, pos)) {
+            return defaultHandler.plantCrop(world, player, seed, pos);
+        }
+        return false;
     }
 
     public static boolean isMature(IBlockAccess blockAccess, IBlockState state, BlockPos pos) {
