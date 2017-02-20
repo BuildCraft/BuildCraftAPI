@@ -39,8 +39,10 @@ public class MjBattery implements INBTSerializable<NBTTagCompound> {
         microJoules = buffer.readLong();
     }
 
-    public long addPower(long microJoulesToAdd) {
-        this.microJoules += microJoulesToAdd;
+    public long addPower(long microJoulesToAdd, boolean simulate) {
+        if (!simulate) {
+            this.microJoules += microJoulesToAdd;
+        }
         return 0;
     }
 
@@ -48,11 +50,11 @@ public class MjBattery implements INBTSerializable<NBTTagCompound> {
      * 
      * @param microJoulesToAdd The power to add.
      * @return The excess power. */
-    public long addPowerChecking(long microJoulesToAdd) {
+    public long addPowerChecking(long microJoulesToAdd, boolean simulate) {
         if (isFull()) {
             return microJoulesToAdd;
         } else {
-            return addPower(microJoulesToAdd);
+            return addPower(microJoulesToAdd, simulate);
         }
     }
 
