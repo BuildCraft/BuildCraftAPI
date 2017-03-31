@@ -76,6 +76,14 @@ public abstract class PipePluggable {
         return null;
     }
 
+    /** Gets the {@link Capability} that is accessible from the pipe that this is attached to.
+     * 
+     * @param cap
+     * @return */
+    public <T> T getInternalCapability(@Nonnull Capability<T> cap) {
+        return null;
+    }
+
     /** Called whenever this pluggable is removed from the pipe.
      * 
      * @param toDrop A list containing all the items to drop (so you should add your items to this list) */

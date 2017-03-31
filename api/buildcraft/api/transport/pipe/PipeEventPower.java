@@ -1,6 +1,7 @@
 package buildcraft.api.transport.pipe;
 
 import buildcraft.api.mj.MjAPI;
+import buildcraft.api.transport.pipe.PipeApi.PowerTransferInfo;
 
 public abstract class PipeEventPower extends PipeEvent {
     public final IFlowPower flow;
