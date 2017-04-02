@@ -47,7 +47,7 @@ public final class BuildCraftProperties {
     // public static final PropertyDouble FLUID_HEIGHT_SW = new PropertyDouble("height_sw", 0, 1);
     // public static final PropertyDouble FLUID_FLOW_DIRECTION = new PropertyDouble("direction",
     // Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
-    public static final BuildCraftProperty<EnumFillerPattern> PATTERN = BuildCraftProperty.create("pattern", EnumFillerPattern.class);
+    public static final BuildCraftProperty<EnumFillerPattern> FILLER_PATTERN = BuildCraftProperty.create("pattern", EnumFillerPattern.class);
 
     // Block state setting flags -these are used by World.markAndNotifyBlock and World.setBlockState. These flags can be
     // added together to pass the additions
