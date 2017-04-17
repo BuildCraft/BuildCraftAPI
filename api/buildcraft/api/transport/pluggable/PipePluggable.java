@@ -22,6 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import buildcraft.api.transport.pipe.IPipeHolder;
 import buildcraft.api.transport.pipe.IPipeHolder.PipeMessageReceiver;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class PipePluggable {
     public final PluggableDefinition definition;
@@ -108,5 +109,10 @@ public abstract class PipePluggable {
     @Nullable
     public PluggableModelKey getModelRenderKey(BlockRenderLayer layer) {
         return null;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public int getBlockColor(int tintIndex) {
+        return 0;
     }
 }
