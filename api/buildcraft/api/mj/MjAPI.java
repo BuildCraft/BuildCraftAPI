@@ -30,7 +30,7 @@ public class MjAPI {
     public static final long MJ = ONE_MINECRAFT_JOULE;
 
     /** The decimal format used to display values of MJ to the player. Note that this */
-    public static final DecimalFormat MJ_DISPLAY_FORMAT = new DecimalFormat("###0.##");
+    public static final DecimalFormat MJ_DISPLAY_FORMAT = new DecimalFormat("#,##0.##");
 
     public static final IMjEffectManager EFFECT_MANAGER = APIHelper.getInstance("", IMjEffectManager.class, NullaryEffectManager.INSTANCE);
 

@@ -9,7 +9,7 @@ import net.minecraft.util.NonNullList;
 
 /** Provides a way of registering complex recipes without needing to register every possible variant. If you want the
  * recipes to be viewable in JEI and the guide book then you will *also* need to implement the bc lib class
- * IAssemblyRecipeViewable. */
+ * IRecipeViewable. */
 public interface IAssemblyRecipeProvider {
 
     /** Should return a list of all the valid recipes given the input items. The list may be empty, but must not be

@@ -26,8 +26,8 @@ version = config.mod_version
 group= "com.mod-buildcraft.api" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "buildcraft-api" // the name that all artifacts will use as a base. artifacts names follow this pattern: [baseName]-[appendix]-[version]-[classifier].[extension]
 
-sourceCompatibility = JavaVersion.VERSION_1_6
-targetCompatibility = JavaVersion.VERSION_1_6
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 minecraft {
     version = config.mc_version + "-" + config.forge_version
