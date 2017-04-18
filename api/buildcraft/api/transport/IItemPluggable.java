@@ -2,11 +2,13 @@ package buildcraft.api.transport;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
 import buildcraft.api.transport.pipe.IPipeHolder;
 import buildcraft.api.transport.pluggable.PipePluggable;
+import net.minecraft.util.EnumHand;
 
 /** Designates an item that can be placed onto a pipe as a {@link PipePluggable}. */
 public interface IItemPluggable {
@@ -18,5 +20,5 @@ public interface IItemPluggable {
      * @param holder The pipe holder
      * @param side The side that the pluggable should be placed on
      * @return A pluggable to place onto the pipe */
-    PipePluggable onPlace(@Nonnull ItemStack stack, IPipeHolder holder, EnumFacing side);
+    PipePluggable onPlace(@Nonnull ItemStack stack, IPipeHolder holder, EnumFacing side, EntityPlayer player, EnumHand hand);
 }
