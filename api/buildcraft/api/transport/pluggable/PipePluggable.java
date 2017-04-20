@@ -115,4 +115,8 @@ public abstract class PipePluggable {
     public int getBlockColor(int tintIndex) {
         return 0;
     }
+
+    public boolean canBeConnected() {
+        return false;
+    }
 }
