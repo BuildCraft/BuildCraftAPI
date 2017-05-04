@@ -90,6 +90,27 @@ public class MjAPI {
     }
     // @formatter:on
 
+    // ###############
+    //
+    // Capabilities
+    //
+    // ###############
+
+    @Nonnull
+    public static final Capability<IMjConnector> CAP_CONNECTOR;
+
+    @Nonnull
+    public static final Capability<IMjReceiver> CAP_RECEIVER;
+
+    @Nonnull
+    public static final Capability<IMjRedstoneReceiver> CAP_REDSTONE_RECEIVER;
+
+    @Nonnull
+    public static final Capability<IMjReadable> CAP_READABLE;
+
+    @Nonnull
+    public static final Capability<IMjPassiveProvider> CAP_PASSIVE_PROVIDER;
+
     // ####################
     //
     // Internal API logic
@@ -111,27 +132,6 @@ public class MjAPI {
 
     @CapabilityInject(IMjPassiveProvider.class)
     private static final Capability<IMjPassiveProvider> CAP_PASSIVE_PROVIDER_FIRST = null;
-
-    // ###############
-    //
-    // Capabilities
-    //
-    // ###############
-
-    @Nonnull
-    public static final Capability<IMjConnector> CAP_CONNECTOR;
-
-    @Nonnull
-    public static final Capability<IMjReceiver> CAP_RECEIVER;
-
-    @Nonnull
-    public static final Capability<IMjRedstoneReceiver> CAP_REDSTONE_RECEIVER;
-
-    @Nonnull
-    public static final Capability<IMjReadable> CAP_READABLE;
-
-    @Nonnull
-    public static final Capability<IMjPassiveProvider> CAP_PASSIVE_PROVIDER;
 
     static {
         CapabilitiesHelper.registerCapability(IMjConnector.class);

@@ -8,9 +8,9 @@ package buildcraft.api.tiles;
  * BuildCraft Gates, but also other mods which implement it, e.g. OpenComputers). */
 public interface IControllable {
     enum Mode {
-        On,
-        Off,
-        Loop;
+        ON,
+        OFF,
+        LOOP;
 
         public static final Mode[] VALUES = values();
     }

@@ -7,18 +7,6 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import javax.annotation.Nonnull;
 
 public class TilesAPI {
-    @CapabilityInject(IControllable.class)
-    private static final Capability<IControllable> CAP_CONTROLLABLE_FIRST = null;
-
-    @CapabilityInject(IHasWork.class)
-    private static final Capability<IHasWork> CAP_HAS_WORK_FIRST = null;
-
-    @CapabilityInject(IHeatable.class)
-    private static final Capability<IHeatable> CAP_HEATABLE_FIRST = null;
-
-    @CapabilityInject(ITileAreaProvider.class)
-    private static final Capability<ITileAreaProvider> CAP_TILE_AREA_PROVIDER_FIRST = null;
-
     @Nonnull
     public static final Capability<IControllable> CAP_CONTROLLABLE;
 
@@ -30,6 +18,18 @@ public class TilesAPI {
 
     @Nonnull
     public static final Capability<ITileAreaProvider> CAP_TILE_AREA_PROVIDER;
+
+    @CapabilityInject(IControllable.class)
+    private static final Capability<IControllable> CAP_CONTROLLABLE_FIRST = null;
+
+    @CapabilityInject(IHasWork.class)
+    private static final Capability<IHasWork> CAP_HAS_WORK_FIRST = null;
+
+    @CapabilityInject(IHeatable.class)
+    private static final Capability<IHeatable> CAP_HEATABLE_FIRST = null;
+
+    @CapabilityInject(ITileAreaProvider.class)
+    private static final Capability<ITileAreaProvider> CAP_TILE_AREA_PROVIDER_FIRST = null;
 
     static {
         CapabilitiesHelper.registerCapability(IControllable.class);
