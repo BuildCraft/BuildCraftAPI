@@ -3,6 +3,7 @@ package buildcraft.api.recipes;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import buildcraft.api.core.BuildCraftAPI;
 import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.item.ItemStack;
@@ -31,7 +32,7 @@ public final class AssemblyRecipe implements Comparable<AssemblyRecipe> {
     }
 
     public AssemblyRecipe(@Nonnull String name, long requiredMicroJoules, @Nonnull ImmutableSet<StackDefinition> requiredStacks, @Nonnull ItemStack output, @Nullable NBTTagCompound recipeTag) {
-        this(BuildcraftRecipeRegistry.parseRecipeName(name), requiredMicroJoules, requiredStacks, output, recipeTag);
+        this(BuildCraftAPI.nameToResourceLocation(name), requiredMicroJoules, requiredStacks, output, recipeTag);
     }
 
     public AssemblyRecipe(@Nonnull ResourceLocation name, long requiredMicroJoules, @Nonnull ImmutableSet<StackDefinition> requiredStacks, @Nonnull ItemStack output) {

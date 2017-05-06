@@ -3,6 +3,7 @@ package buildcraft.api.recipes;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import buildcraft.api.core.BuildCraftAPI;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.item.ItemStack;
@@ -32,7 +33,7 @@ public final class IntegrationRecipe {
     }
 
     public IntegrationRecipe(@Nonnull String name, long requiredMicroJoules, @Nonnull StackDefinition target, @Nonnull ImmutableList<StackDefinition> toIntegrate, @Nonnull ItemStack output, @Nullable NBTTagCompound recipeTag) {
-        this(BuildcraftRecipeRegistry.parseRecipeName(name), requiredMicroJoules, target, toIntegrate, output, recipeTag);
+        this(BuildCraftAPI.nameToResourceLocation(name), requiredMicroJoules, target, toIntegrate, output, recipeTag);
     }
 
     public IntegrationRecipe(@Nonnull ResourceLocation name, long requiredMicroJoules, @Nonnull StackDefinition target, @Nonnull ImmutableList<StackDefinition> toIntegrate, @Nonnull ItemStack output) {

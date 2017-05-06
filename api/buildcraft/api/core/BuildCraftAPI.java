@@ -12,8 +12,11 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import net.minecraft.block.Block;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 
 public final class BuildCraftAPI {
 
@@ -48,5 +51,14 @@ public final class BuildCraftAPI {
 
     public static boolean isSoftBlock(World world, BlockPos pos) {
         return worldProperties.get("soft").get(world, pos);
+    }
+
+    public static ResourceLocation nameToResourceLocation(String name) {
+        if (name.indexOf(':') > 0) return new ResourceLocation(name);
+        ModContainer modContainer = Loader.instance().activeModContainer();
+        if (modContainer == null) {
+            throw new IllegalStateException("Illegal recipe name " + name + ". Provide domain id to register it correctly.");
+        }
+        return new ResourceLocation(modContainer.getModId(), name);
     }
 }
