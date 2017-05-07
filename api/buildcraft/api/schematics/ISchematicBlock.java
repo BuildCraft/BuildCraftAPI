@@ -22,13 +22,13 @@ public interface ISchematicBlock<S extends ISchematicBlock<S>> extends INBTSeria
     @Nonnull
     Set<BlockPos> getRequiredBlockOffsets();
 
+    void computeRequiredItemsAndFluids(SchematicBlockContext context);
+
     @Nonnull
     List<ItemStack> getRequiredItems();
 
     @Nonnull
     List<FluidStack> getRequiredFluids();
-
-    void computeRequiredItemsAndFluids(SchematicBlockContext context);
 
     S getRotated(Rotation rotation);
 

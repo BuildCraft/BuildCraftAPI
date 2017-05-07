@@ -18,13 +18,13 @@ public interface ISchematicEntity<S extends ISchematicEntity<S>> extends INBTSer
 
     Vec3d getPos();
 
+    void computeRequiredItemsAndFluids(SchematicEntityContext context);
+
     @Nonnull
     List<ItemStack> getRequiredItems();
 
     @Nonnull
     List<FluidStack> getRequiredFluids();
-
-    void computeRequiredItemsAndFluids(SchematicEntityContext context);
 
     S getRotated(Rotation rotation);
 
