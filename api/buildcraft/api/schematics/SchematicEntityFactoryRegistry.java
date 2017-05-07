@@ -2,6 +2,7 @@ package buildcraft.api.schematics;
 
 import buildcraft.api.core.BuildCraftAPI;
 import com.google.common.collect.ImmutableList;
+import net.minecraft.entity.EntityList;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -25,6 +26,18 @@ public class SchematicEntityFactoryRegistry {
                 predicate,
                 supplier
         ));
+    }
+
+    public static <S extends ISchematicEntity<S>> void registerFactory(String name,
+                                                                      int priority,
+                                                                      List<ResourceLocation> entities,
+                                                                      Supplier<S> supplier) {
+        registerFactory(
+                name,
+                priority,
+                context -> entities.contains(EntityList.getKey(context.entity)),
+                supplier
+        );
     }
 
     public static List<SchematicEntityFactory<?>> getFactories() {

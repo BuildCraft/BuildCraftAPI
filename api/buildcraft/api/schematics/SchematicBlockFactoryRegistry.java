@@ -2,6 +2,7 @@ package buildcraft.api.schematics;
 
 import buildcraft.api.core.BuildCraftAPI;
 import com.google.common.collect.ImmutableList;
+import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -25,6 +26,18 @@ public class SchematicBlockFactoryRegistry {
                 predicate,
                 supplier
         ));
+    }
+
+    public static <S extends ISchematicBlock<S>> void registerFactory(String name,
+                                                                      int priority,
+                                                                      List<Block> blocks,
+                                                                      Supplier<S> supplier) {
+        registerFactory(
+                name,
+                priority,
+                context -> blocks.contains(context.block),
+                supplier
+        );
     }
 
     public static List<SchematicBlockFactory<?>> getFactories() {
