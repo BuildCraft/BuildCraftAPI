@@ -24,9 +24,9 @@ public interface ISchematicEntity<S extends ISchematicEntity<S>> extends INBTSer
     @Nonnull
     List<FluidStack> getRequiredFluids();
 
-    S getRotated(Rotation rotation);
+    void computeRequiredItemsAndFluids(SchematicEntityContext context);
 
-    void computeRequired(SchematicEntityContext context);
+    S getRotated(Rotation rotation);
 
     Entity build(World world, BlockPos basePos);
 

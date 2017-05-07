@@ -28,9 +28,9 @@ public interface ISchematicBlock<S extends ISchematicBlock<S>> extends INBTSeria
     @Nonnull
     List<FluidStack> getRequiredFluids();
 
-    S getRotated(Rotation rotation);
+    void computeRequiredItemsAndFluids(SchematicBlockContext context);
 
-    void computeRequired(SchematicBlockContext context);
+    S getRotated(Rotation rotation);
 
     boolean canBuild(World world, BlockPos blockPos);
 
