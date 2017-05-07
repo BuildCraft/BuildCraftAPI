@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Set;
 
 public interface ISchematicBlock<S extends ISchematicBlock<S>> extends INBTSerializable<NBTTagCompound> {
+    int BLOCK_LEVEL = 0;
+    int FLUID_LEVEL = 0;
+
     void init(SchematicBlockContext context);
 
     int getLevel();
