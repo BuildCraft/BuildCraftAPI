@@ -14,7 +14,10 @@ public class SchematicEntityFactory<S extends ISchematicEntity<S>> implements Co
     public final Predicate<SchematicEntityContext> predicate;
     @Nonnull
     public final Supplier<S> supplier;
+    @Nonnull
+    public final Class<S> clazz;
 
+    @SuppressWarnings("unchecked")
     public SchematicEntityFactory(@Nonnull ResourceLocation name,
                                   int priority,
                                   @Nonnull Predicate<SchematicEntityContext> predicate,
@@ -23,6 +26,7 @@ public class SchematicEntityFactory<S extends ISchematicEntity<S>> implements Co
         this.priority = priority;
         this.predicate = predicate;
         this.supplier = supplier;
+        clazz = (Class<S>) supplier.get().getClass();
     }
 
     @Override

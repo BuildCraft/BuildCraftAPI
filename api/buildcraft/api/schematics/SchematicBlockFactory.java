@@ -14,7 +14,10 @@ public class SchematicBlockFactory<S extends ISchematicBlock<S>> implements Comp
     public final Predicate<SchematicBlockContext> predicate;
     @Nonnull
     public final Supplier<S> supplier;
+    @Nonnull
+    public final Class<S> clazz;
 
+    @SuppressWarnings("unchecked")
     public SchematicBlockFactory(@Nonnull ResourceLocation name,
                                  int priority,
                                  @Nonnull Predicate<SchematicBlockContext> predicate,
@@ -23,6 +26,7 @@ public class SchematicBlockFactory<S extends ISchematicBlock<S>> implements Comp
         this.priority = priority;
         this.predicate = predicate;
         this.supplier = supplier;
+        clazz = (Class<S>) supplier.get().getClass();
     }
 
     @Override

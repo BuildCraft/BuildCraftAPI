@@ -34,7 +34,7 @@ public class SchematicEntityFactoryRegistry {
     @Nonnull
     public static SchematicEntityFactory<?> getFactoryByInstance(ISchematicEntity<?> instance) {
         return FACTORIES.stream()
-                .filter(schematicEntityFactory -> schematicEntityFactory.supplier.get().getClass() == instance.getClass())
+                .filter(schematicEntityFactory -> schematicEntityFactory.clazz == instance.getClass())
                 .findFirst()
                 .orElseThrow(NoSuchElementException::new);
     }
