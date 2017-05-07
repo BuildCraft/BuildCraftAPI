@@ -9,23 +9,21 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class SchematicEntityFactoryRegistry {
     private static final Set<SchematicEntityFactory<?>> FACTORIES = new TreeSet<>();
 
     public static <S extends ISchematicEntity<S>> void registerFactory(String name,
-                                                                      int priority,
-                                                                      Predicate<SchematicEntityContext> predicate,
-                                                                      Function<SchematicEntityContext, S> create,
-                                                                      Class<S> clazz) {
+                                                                       int priority,
+                                                                       Predicate<SchematicEntityContext> predicate,
+                                                                       Supplier<S> supplier) {
         FACTORIES.add(new SchematicEntityFactory<>(
                 BuildCraftAPI.nameToResourceLocation(name),
                 priority,
                 predicate,
-                create,
-                clazz
+                supplier
         ));
     }
 
@@ -36,7 +34,7 @@ public class SchematicEntityFactoryRegistry {
     @Nonnull
     public static SchematicEntityFactory<?> getFactoryByInstance(ISchematicEntity<?> instance) {
         return FACTORIES.stream()
-                .filter(schematicEntityFactory -> schematicEntityFactory.clazz == instance.getClass())
+                .filter(schematicEntityFactory -> schematicEntityFactory.supplier.get().getClass() == instance.getClass())
                 .findFirst()
                 .orElseThrow(NoSuchElementException::new);
     }

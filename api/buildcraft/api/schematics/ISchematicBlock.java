@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Set;
 
 public interface ISchematicBlock<S extends ISchematicBlock<S>> extends INBTSerializable<NBTTagCompound> {
+    void init(SchematicBlockContext context);
+
     int getLevel();
 
     boolean isAir();

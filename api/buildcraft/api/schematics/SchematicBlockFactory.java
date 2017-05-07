@@ -3,8 +3,8 @@ package buildcraft.api.schematics;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
-import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class SchematicBlockFactory<S extends ISchematicBlock<S>> implements Comparable<SchematicBlockFactory> {
     @Nonnull
@@ -13,20 +13,16 @@ public class SchematicBlockFactory<S extends ISchematicBlock<S>> implements Comp
     @Nonnull
     public final Predicate<SchematicBlockContext> predicate;
     @Nonnull
-    public final Function<SchematicBlockContext, S> create;
-    @Nonnull
-    public final Class<S> clazz;
+    public final Supplier<S> supplier;
 
     public SchematicBlockFactory(@Nonnull ResourceLocation name,
                                  int priority,
                                  @Nonnull Predicate<SchematicBlockContext> predicate,
-                                 @Nonnull Function<SchematicBlockContext, S> create,
-                                 @Nonnull Class<S> clazz) {
+                                 @Nonnull Supplier<S> supplier) {
         this.name = name;
         this.priority = priority;
         this.predicate = predicate;
-        this.create = create;
-        this.clazz = clazz;
+        this.supplier = supplier;
     }
 
     @Override

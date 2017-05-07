@@ -14,6 +14,8 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public interface ISchematicEntity<S extends ISchematicEntity<S>> extends INBTSerializable<NBTTagCompound> {
+    void init(SchematicEntityContext context);
+
     Vec3d getPos();
 
     @Nonnull
