@@ -23,7 +23,7 @@ public final class BuildCraftProperties {
     public static final IProperty<EnumLaserTableType> LASER_TABLE_TYPE = PropertyEnum.create("type", EnumLaserTableType.class);
     public static final IProperty<EnumMachineState> MACHINE_STATE = PropertyEnum.create("state", EnumMachineState.class);
     public static final IProperty<EnumPowerStage> ENERGY_STAGE = PropertyEnum.create("stage", EnumPowerStage.class);
-    public static final IProperty<EnumBlueprintType> BLUEPRINT_TYPE = PropertyEnum.create("blueprint_type", EnumBlueprintType.class);
+    public static final IProperty<EnumOptionalSnapshotType> SNAPSHOT_TYPE = PropertyEnum.create("snapshot_type", EnumOptionalSnapshotType.class);
     public static final IProperty<EnumDecoratedBlock> DECORATED_BLOCK = PropertyEnum.create("decoration_type", EnumDecoratedBlock.class);
 
     public static final IProperty<Integer> GENERIC_PIPE_DATA = PropertyInteger.create("pipe_data", 0, 15);
