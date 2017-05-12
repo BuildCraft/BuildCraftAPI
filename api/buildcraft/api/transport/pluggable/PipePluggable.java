@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,8 +15,11 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 
+import net.minecraft.world.Explosion;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -131,5 +135,12 @@ public abstract class PipePluggable {
      * {@link Block#isBlockSolid(net.minecraft.world.IBlockAccess, net.minecraft.util.math.BlockPos, EnumFacing)} */
     public boolean isSideSolid() {
         return false;
+    }
+
+
+    /** PipePluggable version of
+     * {@link Block#getExplosionResistance(World, BlockPos, Entity, Explosion)} */
+    public float getExplosionResistance(@Nullable Entity exploder, Explosion explosion) {
+        return 0;
     }
 }
