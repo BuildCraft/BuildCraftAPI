@@ -44,6 +44,7 @@ public class MjCapabilityHelper implements ICapabilityProvider {
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
         if (capability == MjAPI.CAP_CONNECTOR) return (T) connector;
@@ -53,5 +54,4 @@ public class MjCapabilityHelper implements ICapabilityProvider {
         if (capability == MjAPI.CAP_PASSIVE_PROVIDER) return (T) provider;
         return null;
     }
-
 }
