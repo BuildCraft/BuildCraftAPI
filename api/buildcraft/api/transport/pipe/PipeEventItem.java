@@ -262,10 +262,7 @@ public abstract class PipeEventItem extends PipeEvent {
         @Nonnull
         public ItemStack getStack() {
             ItemStack item = entity.getEntityItem();
-            if (!item.isEmpty()) {
-                return ItemStack.EMPTY;
-            }
-            return item;
+            return item.isEmpty() ? ItemStack.EMPTY : item;
         }
 
         public void setStack(ItemStack stack) {
