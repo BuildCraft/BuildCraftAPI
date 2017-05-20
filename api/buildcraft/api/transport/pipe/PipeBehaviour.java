@@ -15,6 +15,8 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import buildcraft.api.core.EnumPipePart;
 
+import javax.annotation.Nonnull;
+
 public abstract class PipeBehaviour implements ICapabilityProvider {
     public final IPipe pipe;
 
@@ -59,12 +61,12 @@ public abstract class PipeBehaviour implements ICapabilityProvider {
     public void onTick() {}
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
         return getCapability(capability, facing) != null;
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+    public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
         return null;
     }
 }

@@ -26,7 +26,7 @@ public enum BCModules {
     private static final String MODID_START = "buildcraft";
     private final String modid, part;
 
-    private BCModules() {
+    BCModules() {
         part = name().toLowerCase(Locale.ROOT);
         this.modid = MODID_START + part;
     }

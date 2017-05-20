@@ -13,10 +13,10 @@ import buildcraft.api.core.BCLog;
 
 public final class StatementManager {
 
-    public static Map<String, IStatement> statements = new HashMap<String, IStatement>();
-    public static Map<String, Class<? extends IStatementParameter>> parameters = new HashMap<String, Class<? extends IStatementParameter>>();
-    private static List<ITriggerProvider> triggerProviders = new LinkedList<ITriggerProvider>();
-    private static List<IActionProvider> actionProviders = new LinkedList<IActionProvider>();
+    public static Map<String, IStatement> statements = new HashMap<>();
+    public static Map<String, Class<? extends IStatementParameter>> parameters = new HashMap<>();
+    private static List<ITriggerProvider> triggerProviders = new LinkedList<>();
+    private static List<IActionProvider> actionProviders = new LinkedList<>();
 
     static {
         registerParameterClass(StatementParameterItemStack.class);
@@ -53,13 +53,13 @@ public final class StatementManager {
             }
         }
 
-        LinkedHashSet<ITriggerExternal> triggers = new LinkedHashSet<ITriggerExternal>();
+        LinkedHashSet<ITriggerExternal> triggers = new LinkedHashSet<>();
 
         for (ITriggerProvider provider : triggerProviders) {
             provider.addExternalTriggers(triggers, side, entity);
         }
 
-        return new ArrayList<ITriggerExternal>(triggers);
+        return new ArrayList<>(triggers);
     }
 
     public static List<IActionExternal> getExternalActions(EnumFacing side, TileEntity entity) {
@@ -70,53 +70,53 @@ public final class StatementManager {
             }
         }
 
-        LinkedHashSet<IActionExternal> actions = new LinkedHashSet<IActionExternal>();
+        LinkedHashSet<IActionExternal> actions = new LinkedHashSet<>();
 
         for (IActionProvider provider : actionProviders) {
             provider.addExternalActions(actions, side, entity);
         }
 
-        return new ArrayList<IActionExternal>(actions);
+        return new ArrayList<>(actions);
     }
 
     public static List<ITriggerInternal> getInternalTriggers(IStatementContainer container) {
-        LinkedHashSet<ITriggerInternal> triggers = new LinkedHashSet<ITriggerInternal>();
+        LinkedHashSet<ITriggerInternal> triggers = new LinkedHashSet<>();
 
         for (ITriggerProvider provider : triggerProviders) {
             provider.addInternalTriggers(triggers, container);
         }
 
-        return new ArrayList<ITriggerInternal>(triggers);
+        return new ArrayList<>(triggers);
     }
 
     public static List<IActionInternal> getInternalActions(IStatementContainer container) {
-        LinkedHashSet<IActionInternal> actions = new LinkedHashSet<IActionInternal>();
+        LinkedHashSet<IActionInternal> actions = new LinkedHashSet<>();
 
         for (IActionProvider provider : actionProviders) {
             provider.addInternalActions(actions, container);
         }
 
-        return new ArrayList<IActionInternal>(actions);
+        return new ArrayList<>(actions);
     }
 
     public static List<ITriggerInternalSided> getInternalSidedTriggers(IStatementContainer container, EnumFacing side) {
-        LinkedHashSet<ITriggerInternalSided> triggers = new LinkedHashSet<ITriggerInternalSided>();
+        LinkedHashSet<ITriggerInternalSided> triggers = new LinkedHashSet<>();
 
         for (ITriggerProvider provider : triggerProviders) {
             provider.addInternalSidedTriggers(triggers, container, side);
         }
 
-        return new ArrayList<ITriggerInternalSided>(triggers);
+        return new ArrayList<>(triggers);
     }
 
     public static List<IActionInternalSided> getInternalSidedActions(IStatementContainer container, EnumFacing side) {
-        LinkedHashSet<IActionInternalSided> actions = new LinkedHashSet<IActionInternalSided>();
+        LinkedHashSet<IActionInternalSided> actions = new LinkedHashSet<>();
 
         for (IActionProvider provider : actionProviders) {
             provider.addInternalSidedActions(actions, container, side);
         }
 
-        return new ArrayList<IActionInternalSided>(actions);
+        return new ArrayList<>(actions);
     }
 
     public static IStatementParameter createParameter(String kind) {
@@ -130,9 +130,7 @@ public final class StatementManager {
 
         try {
             return param.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         } catch (Error error) {
             BCLog.logErrorAPI(error, IStatementParameter.class);

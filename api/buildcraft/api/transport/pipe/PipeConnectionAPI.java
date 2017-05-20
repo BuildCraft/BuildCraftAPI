@@ -15,12 +15,7 @@ import net.minecraft.world.World;
  * version does not override your own implementation. */
 public final class PipeConnectionAPI {
     private static final Map<Block, ICustomPipeConnection> connections = Maps.newHashMap();
-    private static final ICustomPipeConnection NOTHING = new ICustomPipeConnection() {
-        @Override
-        public float getExtension(World world, BlockPos pos, EnumFacing face, IBlockState state) {
-            return 0;
-        }
-    };
+    private static final ICustomPipeConnection NOTHING = (world, pos, face, state) -> 0;
 
     /** Register a block with a custom connection. Useful if you don't own the block class or are adding it for some-one
      * else.

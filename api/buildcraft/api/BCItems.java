@@ -75,7 +75,7 @@ public class BCItems {
     public static final Item TRANSPORT_PIPE_DIAMOND_ITEM;
 
     // Set of items scanned
-    private static final Set<String> SCANNED = DEBUG ? new HashSet<String>() : null;
+    private static final Set<String> SCANNED = DEBUG ? new HashSet<>() : null;
 
     static {
         if (!Loader.instance().hasReachedState(LoaderState.INITIALIZATION)) {

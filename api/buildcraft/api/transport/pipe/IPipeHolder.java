@@ -72,7 +72,7 @@ public interface IPipeHolder extends IRedstoneStatementContainer {
     /** Called on the server whenever a gui container object is closed. */
     void onPlayerClose(EntityPlayer player);
 
-    public enum PipeMessageReceiver {
+    enum PipeMessageReceiver {
         BEHAVIOUR(null),
         FLOW(null),
         PLUGGABLE_DOWN(EnumFacing.DOWN),
@@ -102,7 +102,7 @@ public interface IPipeHolder extends IRedstoneStatementContainer {
         }
     }
 
-    public interface IWriter {
+    interface IWriter {
         void write(PacketBuffer buffer);
     }
 }

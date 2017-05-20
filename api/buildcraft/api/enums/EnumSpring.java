@@ -18,7 +18,7 @@ public enum EnumSpring implements IStringSerializable {
     public boolean canGen = true;
     private final String lowerCaseName = name().toLowerCase(Locale.ROOT);
 
-    private EnumSpring(int tickRate, int chance, IBlockState liquidBlock) {
+    EnumSpring(int tickRate, int chance, IBlockState liquidBlock) {
         this.tickRate = tickRate;
         this.chance = chance;
         this.liquidBlock = liquidBlock;

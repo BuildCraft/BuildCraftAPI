@@ -21,7 +21,7 @@ public interface IFuelManager {
 
     IFuel getFuel(Fluid fluid);
 
-    public interface IDirtyFuel extends IFuel {
+    interface IDirtyFuel extends IFuel {
         /** @return The residue fluidstack, per bucket of original fuel. */
         FluidStack getResidue();
     }

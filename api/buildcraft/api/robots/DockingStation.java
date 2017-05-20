@@ -17,6 +17,8 @@ import buildcraft.api.core.EnumPipePart;
 import buildcraft.api.statements.StatementSlot;
 import buildcraft.api.transport.IInjectable;
 
+import java.util.Arrays;
+
 public abstract class DockingStation {
     public EnumFacing side;
     public World world;
@@ -134,7 +136,7 @@ public abstract class DockingStation {
             if (array.length == 3) {
                 pos = new BlockPos(array[0], array[1], array[2]);
             } else if (array.length != 0) {
-                BCLog.logger.warn("Found an integer array that wwas not the right length! (" + array + ")");
+                BCLog.logger.warn("Found an integer array that wwas not the right length! (" + Arrays.toString(array) + ")");
             } else {
                 BCLog.logger.warn("Did not find any integer positions! This is a bug!");
             }

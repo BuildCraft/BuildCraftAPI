@@ -1,13 +1,11 @@
 package buildcraft.api.recipes;
 
-import java.util.Collection;
-import java.util.stream.Stream;
+import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
-
-import com.google.common.base.Predicate;
-
-import net.minecraftforge.fluids.FluidStack;
+import java.util.Collection;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public interface IRefineryRecipeManager {
     IHeatableRecipe createHeatingRecipe(FluidStack in, FluidStack out, int heatFrom, int heatTo, int ticks);
@@ -34,7 +32,7 @@ public interface IRefineryRecipeManager {
 
     IRefineryRegistry<IDistillationRecipe> getDistilationRegistry();
 
-    public interface IRefineryRegistry<R extends IRefineryRecipe> {
+    interface IRefineryRegistry<R extends IRefineryRecipe> {
         /** @return an unmodifiable collection containing all of the distillation recipes that satisfy the given
          *         predicate. All of the recipe objects are guaranteed to never be null. */
         Stream<R> getRecipes(Predicate<R> toReturn);
@@ -55,11 +53,11 @@ public interface IRefineryRecipeManager {
         R addRecipe(R recipe);
     }
 
-    public interface IRefineryRecipe {
+    interface IRefineryRecipe {
         FluidStack in();
     }
 
-    public interface IHeatExchangerRecipe extends IRefineryRecipe {
+    interface IHeatExchangerRecipe extends IRefineryRecipe {
         int ticks();
 
         @Nullable
@@ -70,11 +68,11 @@ public interface IRefineryRecipeManager {
         int heatTo();
     }
 
-    public interface IHeatableRecipe extends IHeatExchangerRecipe {}
+    interface IHeatableRecipe extends IHeatExchangerRecipe {}
 
-    public interface ICoolableRecipe extends IHeatExchangerRecipe {}
+    interface ICoolableRecipe extends IHeatExchangerRecipe {}
 
-    public interface IDistillationRecipe extends IRefineryRecipe {
+    interface IDistillationRecipe extends IRefineryRecipe {
         long powerRequired();
 
         FluidStack outGas();

@@ -17,6 +17,8 @@ import buildcraft.api.core.EnumPipePart;
 import buildcraft.api.transport.pipe.IPipeHolder.IWriter;
 import buildcraft.api.transport.pipe.IPipeHolder.PipeMessageReceiver;
 
+import javax.annotation.Nonnull;
+
 public abstract class PipeFlow implements ICapabilityProvider {
     /** The ID for completely refreshing the state of this flow. */
     public static final int NET_ID_FULL_STATE = 0;
@@ -50,13 +52,10 @@ public abstract class PipeFlow implements ICapabilityProvider {
     }
 
     public final void sendCustomPayload(int id, IWriter writer) {
-        pipe.getHolder().sendMessage(PipeMessageReceiver.FLOW, new IWriter() {
-            @Override
-            public void write(PacketBuffer buffer) {
-                buffer.writeBoolean(true);
-                buffer.writeShort(id);
-                writer.write(buffer);
-            }
+        pipe.getHolder().sendMessage(PipeMessageReceiver.FLOW, buffer -> {
+            buffer.writeBoolean(true);
+            buffer.writeShort(id);
+            writer.write(buffer);
         });
     }
 
@@ -71,12 +70,12 @@ public abstract class PipeFlow implements ICapabilityProvider {
     }
 
     @Override
-    public final boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public final boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
         return getCapability(capability, facing) != null;
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+    public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
         return null;
     }
 }

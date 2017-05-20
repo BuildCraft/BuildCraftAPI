@@ -26,7 +26,7 @@ public interface IStripesRegistry {
     boolean handleBlock(World world, BlockPos pos, EnumFacing direction, EntityPlayer player, IStripesActivator activator);
 
     // TODO: Ensure that this method really will work better than an integer for priorities.
-    public enum HandlerPriority {
+    enum HandlerPriority {
         HIGHEST,
         HIGH,
         NORMAL,

@@ -66,7 +66,7 @@ public enum EnumPipePart implements IStringSerializable {
         return VALUES[meta];
     }
 
-    private EnumPipePart(EnumFacing face) {
+    EnumPipePart(EnumFacing face) {
         this.face = face;
     }
 
@@ -109,7 +109,7 @@ public enum EnumPipePart implements IStringSerializable {
         if (base instanceof NBTTagString) {
             NBTTagString nbtString = (NBTTagString) base;
             String string = nbtString.getString();
-            return nameMap.containsKey(string) ? nameMap.get(string) : CENTER;
+            return nameMap.getOrDefault(string, CENTER);
         } else {
             byte ord = ((NBTPrimitive) base).getByte();
             if (ord < 0 || ord > 6) return CENTER;

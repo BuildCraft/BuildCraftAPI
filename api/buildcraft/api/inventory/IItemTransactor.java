@@ -25,8 +25,7 @@ public interface IItemTransactor {
      * @return The overflow stacks. Will be an empty list if all of it was accepted. */
     default NonNullList<ItemStack> insert(NonNullList<ItemStack> stacks, boolean simulate) {
         NonNullList<ItemStack> leftOver = NonNullList.create();
-        for (int i = 0; i < stacks.size(); i++) {
-            ItemStack stack = stacks.get(i);
+        for (ItemStack stack : stacks) {
             ItemStack leftOverStack = insert(stack, false, simulate);
             if (!leftOverStack.isEmpty()) {
                 leftOver.add(leftOverStack);
@@ -54,7 +53,8 @@ public interface IItemTransactor {
     }
 
     @FunctionalInterface
-    public interface IItemInsertable extends IItemTransactor {
+    interface IItemInsertable extends IItemTransactor {
+        @Nonnull
         @Override
         default ItemStack extract(IStackFilter filter, int min, int max, boolean simulate) {
             return ItemStack.EMPTY;
@@ -62,9 +62,10 @@ public interface IItemTransactor {
     }
 
     @FunctionalInterface
-    public interface IItemExtractable extends IItemTransactor {
+    interface IItemExtractable extends IItemTransactor {
+        @Nonnull
         @Override
-        default ItemStack insert(ItemStack stack, boolean allOrNone, boolean simulate) {
+        default ItemStack insert(@Nonnull ItemStack stack, boolean allOrNone, boolean simulate) {
             return stack;
         }
     }

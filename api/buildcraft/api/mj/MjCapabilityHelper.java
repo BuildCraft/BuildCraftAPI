@@ -35,7 +35,7 @@ public class MjCapabilityHelper implements ICapabilityProvider {
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
         if (capability == MjAPI.CAP_CONNECTOR) return true;
         if (capability == MjAPI.CAP_RECEIVER) return receiver != null;
         if (capability == MjAPI.CAP_REDSTONE_RECEIVER) return rsReceiver != null;
@@ -45,7 +45,7 @@ public class MjCapabilityHelper implements ICapabilityProvider {
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+    public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
         if (capability == MjAPI.CAP_CONNECTOR) return (T) connector;
         if (capability == MjAPI.CAP_RECEIVER) return (T) receiver;
         if (capability == MjAPI.CAP_REDSTONE_RECEIVER) return (T) rsReceiver;

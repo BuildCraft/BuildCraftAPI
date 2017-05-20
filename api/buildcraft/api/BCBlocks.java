@@ -53,7 +53,7 @@ public class BCBlocks {
     // BC Transport
 
     // Set of items scanned
-    private static final Set<String> SCANNED = DEBUG ? new HashSet<String>() : null;
+    private static final Set<String> SCANNED = DEBUG ? new HashSet<>() : null;
 
     static {
         if (!Loader.instance().hasReachedState(LoaderState.INITIALIZATION)) {
