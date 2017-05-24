@@ -7,13 +7,12 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public interface ISchematicEntity<S extends ISchematicEntity<S>> extends INBTSerializable<NBTTagCompound> {
+public interface ISchematicEntity<S extends ISchematicEntity<S>> {
     void init(SchematicEntityContext context);
 
     Vec3d getPos();
@@ -29,4 +28,9 @@ public interface ISchematicEntity<S extends ISchematicEntity<S>> extends INBTSer
     Entity build(World world, BlockPos basePos);
 
     Entity buildWithoutChecks(World world, BlockPos basePos);
+
+    NBTTagCompound serializeNBT();
+
+    /** @throws Exception If the input data wasn't correct or didn't make sense. */
+    void deserializeNBT(NBTTagCompound nbt) throws Exception;
 }

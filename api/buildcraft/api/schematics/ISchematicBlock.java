@@ -1,17 +1,15 @@
 package buildcraft.api.schematics;
 
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
 import net.minecraftforge.fluids.FluidStack;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Set;
 
 public interface ISchematicBlock<S extends ISchematicBlock<S>> {
     int BLOCK_LEVEL = 0;

@@ -6,8 +6,8 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Predicate;
@@ -49,14 +49,14 @@ public class SchematicEntityFactoryRegistry {
         return FACTORIES.stream()
                 .filter(schematicEntityFactory -> schematicEntityFactory.clazz == instance.getClass())
                 .findFirst()
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new IllegalStateException("Didn't find a factory for " + instance.getClass()));
     }
 
-    @Nonnull
+    @Nullable
     public static SchematicEntityFactory<?> getFactoryByName(ResourceLocation name) {
         return FACTORIES.stream()
                 .filter(schematicEntityFactory -> schematicEntityFactory.name.equals(name))
                 .findFirst()
-                .orElseThrow(NoSuchElementException::new);
+                .orElse(null);
     }
 }

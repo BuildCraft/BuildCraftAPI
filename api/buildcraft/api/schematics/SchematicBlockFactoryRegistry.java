@@ -1,18 +1,13 @@
 package buildcraft.api.schematics;
 
 import buildcraft.api.core.BuildCraftAPI;
-
-import buildcraft.lib.misc.data.InvalidInputDataException;
-
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Predicate;
