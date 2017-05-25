@@ -1,5 +1,6 @@
 package buildcraft.api.schematics;
 
+import buildcraft.api.core.InvalidInputDataException;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Rotation;
@@ -42,6 +43,6 @@ public interface ISchematicBlock<S extends ISchematicBlock<S>> {
 
     NBTTagCompound serializeNBT();
 
-    /** @throws Exception If the input data wasn't correct or didn't make sense. */
-    void deserializeNBT(NBTTagCompound nbt) throws Exception;
+    /** @throws InvalidInputDataException If the input data wasn't correct or didn't make sense. */
+    void deserializeNBT(NBTTagCompound nbt) throws InvalidInputDataException;
 }
