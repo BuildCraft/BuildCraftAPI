@@ -34,4 +34,11 @@ public interface ILaserTarget {
      *                    Shouldn't be greater then <code>getTargetLaserPower() - getLaserPower()</code>
      */
     void receiveLaserPower(long microJoules);
+
+    /**
+     * Return true if the Tile Entity object is no longer a valid target. For example, if its been invalidated.
+     *
+     * @return true if no longer a valid target object
+     */
+    boolean isInvalidLaserTarget();
 }
