@@ -30,7 +30,8 @@ public interface ILaserTarget {
     /**
      * Transfers power from the laser to the target
      *
-     * @param microJoules The number of micro Minecraft Joules to accept
+     * @param microJoules The number of micro Minecraft Joules to accept.
+     *                    Shouldn't be greater then <code>getTargetLaserPower() - getLaserPower()</code>
      */
     void receiveLaserPower(long microJoules);
 }
