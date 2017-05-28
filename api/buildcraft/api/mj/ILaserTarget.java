@@ -13,14 +13,22 @@ package buildcraft.api.mj;
  */
 public interface ILaserTarget {
     /**
-     * Returns power that the target currently needs. Returns 0 if no power is needed (tile has nothing to do)
+     * Returns power that the target currently has
      *
      * @return The number of micro Minecraft Joules
      */
-    long getRequiredLaserPower();
+    long getLaserPower();
 
     /**
-     * Transfers power from the laser to the target.
+     * Returns power that the target currently needs to make whole recipe.
+     * Returns 0 if no power is needed (tile has nothing to do)
+     *
+     * @return The number of micro Minecraft Joules
+     */
+    long getTargetLaserPower();
+
+    /**
+     * Transfers power from the laser to the target
      *
      * @param microJoules The number of micro Minecraft Joules to accept
      */
