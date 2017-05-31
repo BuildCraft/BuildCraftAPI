@@ -13,12 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface ISchematicBlock<S extends ISchematicBlock<S>> {
-    int BLOCK_LEVEL = 0;
-    int FLUID_LEVEL = 1;
-
     void init(SchematicBlockContext context);
-
-    int getLevel();
 
     boolean isAir();
 
