@@ -6,8 +6,6 @@
 
 package buildcraft.api.template;
 
-import buildcraft.api.transport.pipe.IPipeRegistry;
-
 public class TemplateApi {
-    public static IPipeRegistry pipeRegistry;
+    public static ITemplateRegistry templateRegistry;
 }

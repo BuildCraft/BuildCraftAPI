@@ -6,8 +6,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 
-import buildcraft.api.template.TemplateApi;
-
 public final class PipeDefinition {
     public final ResourceLocation identifier;
     public final IPipeCreator logicConstructor;
@@ -154,7 +152,7 @@ public final class PipeDefinition {
 
         public PipeDefinition define() {
             PipeDefinition def = new PipeDefinition(this);
-            TemplateApi.pipeRegistry.registerPipe(def);
+            PipeApi.pipeRegistry.registerPipe(def);
             return def;
         }
     }
