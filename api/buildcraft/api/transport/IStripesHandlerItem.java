@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public interface IStripesHandlerItem {
+
     /** Called to handle the given {@link ItemStack} within the world. Note that the player's inventory will be empty,
      * except that the target stack will be set into its {@link EnumHand#MAIN_HAND}. Any items left in the players
      * inventory will be returned back through the activator with
@@ -25,10 +26,5 @@ public interface IStripesHandlerItem {
      * @param activator
      * @return True if this used the item, false otherwise (note that this handler MUST NOT return false if it has
      *         changed the world in any way) */
-    boolean handle(World world,
-                   BlockPos pos,
-                   EnumFacing direction,
-                   ItemStack stack,
-                   EntityPlayer player,
-                   IStripesActivator activator);
+    boolean handle(World world, BlockPos pos, EnumFacing direction, ItemStack stack, EntityPlayer player, IStripesActivator activator);
 }

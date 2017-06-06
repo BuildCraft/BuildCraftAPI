@@ -10,11 +10,17 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 
 import buildcraft.api.core.CapabilitiesHelper;
 import buildcraft.api.mj.MjAPI;
+import buildcraft.api.template.ITemplateRegistry;
 import buildcraft.api.transport.IInjectable;
+import buildcraft.api.transport.IStripesRegistry;
+import buildcraft.api.transport.pluggable.IPluggableRegistry;
 import buildcraft.api.transport.pluggable.PipePluggable;
 
 /** The central holding class for all pipe related registers and methods. */
 public final class PipeApi {
+    public static IPluggableRegistry pluggableRegistry;
+    public static IStripesRegistry stripeRegistry;
+    public static ITemplateRegistry templateRegistry;
     public static PipeFlowType flowStructure;
     public static PipeFlowType flowItems;
     public static PipeFlowType flowFluids;

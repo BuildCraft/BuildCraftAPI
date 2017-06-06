@@ -6,7 +6,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import buildcraft.api.enums.EnumHandlerPriority;
+import buildcraft.api.core.EnumHandlerPriority;
 
 public interface IStripesRegistry {
     /** Adds a handler with a {@link EnumHandlerPriority} of {@linkplain EnumHandlerPriority#NORMAL} */

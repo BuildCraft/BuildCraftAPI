@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2017 SpaceToad and the BuildCraft team
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
- * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ * The BuildCraft API is distributed under the terms of the MIT License. Please check the contents of the license, which
+ * should be located as "LICENSE.API" in the BuildCraft source code distribution.
  */
 
 package buildcraft.api.template;
@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import buildcraft.api.enums.EnumHandlerPriority;
+import buildcraft.api.core.EnumHandlerPriority;
 
 public interface ITemplateRegistry {
     /** Adds a handler with a {@link EnumHandlerPriority} of {@linkplain EnumHandlerPriority#NORMAL} */

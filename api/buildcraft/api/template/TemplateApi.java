@@ -6,11 +6,8 @@
 
 package buildcraft.api.template;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import buildcraft.api.transport.pipe.IPipeRegistry;
 
-public interface ITemplateHandler {
-    boolean handle(World world, BlockPos pos, EntityPlayer player, ItemStack stack);
+public class TemplateApi {
+    public static IPipeRegistry pipeRegistry;
 }

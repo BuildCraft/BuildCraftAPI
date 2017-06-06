@@ -18,17 +18,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 
-import buildcraft.api.template.ITemplateRegistry;
-import buildcraft.api.transport.IStripesRegistry;
-import buildcraft.api.transport.pipe.IPipeRegistry;
-import buildcraft.api.transport.pluggable.IPluggableRegistry;
-
 public final class BuildCraftAPI {
     public static IFakePlayerProvider fakePlayerProvider;
-    public static IPipeRegistry pipeRegistry;
-    public static IPluggableRegistry pluggableRegistry;
-    public static IStripesRegistry stripeRegistry;
-    public static ITemplateRegistry templateRegistry;
 
     public static final Set<Block> softBlocks = Sets.newHashSet();
     public static final HashMap<String, IWorldProperty> worldProperties = Maps.newHashMap();
