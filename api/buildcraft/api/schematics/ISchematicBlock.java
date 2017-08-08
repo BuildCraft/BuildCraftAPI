@@ -24,10 +24,10 @@ public interface ISchematicBlock {
     Set<BlockPos> getRequiredBlockOffsets();
 
     @Nonnull
-    List<ItemStack> computeRequiredItems(SchematicBlockContext context);
+    List<ItemStack> computeRequiredItems();
 
     @Nonnull
-    List<FluidStack> computeRequiredFluids(SchematicBlockContext context);
+    List<FluidStack> computeRequiredFluids();
 
     ISchematicBlock getRotated(Rotation rotation);
 

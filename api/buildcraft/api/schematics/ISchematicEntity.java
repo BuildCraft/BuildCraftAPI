@@ -22,10 +22,10 @@ public interface ISchematicEntity {
     Vec3d getPos();
 
     @Nonnull
-    List<ItemStack> computeRequiredItems(SchematicEntityContext context);
+    List<ItemStack> computeRequiredItems();
 
     @Nonnull
-    List<FluidStack> computeRequiredFluids(SchematicEntityContext context);
+    List<FluidStack> computeRequiredFluids();
 
     ISchematicEntity getRotated(Rotation rotation);
 
