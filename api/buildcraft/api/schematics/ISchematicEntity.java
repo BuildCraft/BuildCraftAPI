@@ -1,5 +1,6 @@
 package buildcraft.api.schematics;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -22,10 +23,14 @@ public interface ISchematicEntity {
     Vec3d getPos();
 
     @Nonnull
-    List<ItemStack> computeRequiredItems();
+    default List<ItemStack> computeRequiredItems() {
+        return Collections.emptyList();
+    }
 
     @Nonnull
-    List<FluidStack> computeRequiredFluids();
+    default List<FluidStack> computeRequiredFluids() {
+        return Collections.emptyList();
+    }
 
     ISchematicEntity getRotated(Rotation rotation);
 
