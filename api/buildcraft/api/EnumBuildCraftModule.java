@@ -1,13 +1,11 @@
 package buildcraft.api;
 
-import java.util.Arrays;
 import java.util.Locale;
-import java.util.function.Predicate;
 
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.LoaderState;
 
-public enum EnumBuildCraftModule {
+public enum EnumBuildCraftModule implements IBuildCraftMod {
     LIB,
     // Base module for all BC.
     CORE,
@@ -22,23 +20,41 @@ public enum EnumBuildCraftModule {
     COMPAT;
 
     public static final EnumBuildCraftModule[] VALUES = values();
+    private static boolean hasChecked = false;
 
-    public static boolean isBuildCraftMod(String modid) {
-        return Arrays.stream(VALUES).map(EnumBuildCraftModule::getModid).anyMatch(Predicate.isEqual(modid));
+    public final String name = name().toLowerCase(Locale.ROOT);
+    public final String modId = "buildcraft" + name;
+    private boolean loaded;
+
+    private static void check() {
+        if (hasChecked) {
+            return;
+        }
+        hasChecked = true;
+        if (!Loader.instance().hasReachedState(LoaderState.PREINITIALIZATION)) {
+            throw new RuntimeException("You can only use EnumBuidCraftModule.isLoaded from pre-init onwards!");
+        }
+        for (EnumBuildCraftModule module : VALUES) {
+            module.loaded = Loader.isModLoaded(module.modId);
+        }
     }
 
-    public String getName() {
-        return name().toLowerCase(Locale.ROOT);
+    public static boolean isBuildCraftMod(String testModId) {
+        for (EnumBuildCraftModule mod : VALUES) {
+            if (mod.modId.equals(testModId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public String getModid() {
-        return "buildcraft" + getName();
+    @Override
+    public String getNetworkName() {
+        return modId;
     }
 
     public boolean isLoaded() {
-        if (!Loader.instance().hasReachedState(LoaderState.CONSTRUCTING)) {
-            throw new RuntimeException("Accessed isLoaded method too early! You can only use it from construction onwards!");
-        }
-        return Loader.isModLoaded(getModid());
+        check();
+        return loaded;
     }
 }

@@ -1,9 +1,11 @@
 package buildcraft.api.transport.pipe;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 
 public interface IPipeRegistry {
@@ -22,6 +24,13 @@ public interface IPipeRegistry {
      * {@link #setItemForPipe(PipeDefinition, IItemPipe)}. The returned item will be automatically registered with
      * forge. */
     IItemPipe createItemForPipe(PipeDefinition definition);
+
+    /** Identical to {@link #createItemForPipe(PipeDefinition)}, but doesn't require registering tags with buildcraft
+     * lib in order to register.
+     * 
+     * @param postCreate A function to call in order to setup the {@link Item#setRegistryName(ResourceLocation)} and
+     *            {@link Item#setUnlocalizedName(String)}. */
+    IItemPipe createUnnamedItemForPipe(PipeDefinition definition, Consumer<Item> postCreate);
 
     Iterable<PipeDefinition> getAllRegisteredPipes();
 }
