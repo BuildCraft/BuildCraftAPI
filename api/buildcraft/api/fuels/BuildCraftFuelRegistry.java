@@ -4,9 +4,9 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.fuels;
 
-public final class BuildcraftFuelRegistry {
+public final class BuildCraftFuelRegistry {
     public static IFuelManager fuel;
     public static ICoolantManager coolant;
 
-    private BuildcraftFuelRegistry() {}
+    private BuildCraftFuelRegistry() {}
 }
