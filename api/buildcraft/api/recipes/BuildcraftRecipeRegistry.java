@@ -4,10 +4,10 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.recipes;
 
-public final class BuildCraftRecipeRegistry {
+public final class BuildcraftRecipeRegistry {
 
     public static IIntegrationRecipeRegistry integrationRecipes;
     public static IRefineryRecipeManager refineryRecipes;
 
-    private BuildCraftRecipeRegistry() {}
+    private BuildcraftRecipeRegistry() {}
 }
