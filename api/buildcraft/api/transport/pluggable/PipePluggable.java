@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -146,5 +147,11 @@ public abstract class PipePluggable {
 
     public boolean canConnectToRedstone(@Nullable EnumFacing to) {
         return false;
+    }
+
+    /** PipePluggable version of
+     * {@link net.minecraft.block.state.IBlockState#getBlockFaceShape(IBlockAccess, BlockPos, EnumFacing)}  */
+    public BlockFaceShape getBlockFaceShape() {
+        return BlockFaceShape.UNDEFINED;
     }
 }
