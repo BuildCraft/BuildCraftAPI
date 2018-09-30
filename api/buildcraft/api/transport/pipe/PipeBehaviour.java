@@ -82,4 +82,6 @@ public abstract class PipeBehaviour implements ICapabilityProvider {
     }
 
     public void addDrops(NonNullList<ItemStack> toDrop, int fortune) {}
+
+    public void connectionUpdated(EnumFacing face) {}
 }
