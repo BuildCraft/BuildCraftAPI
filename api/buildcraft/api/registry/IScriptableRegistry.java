@@ -54,8 +54,7 @@ public interface IScriptableRegistry<E> extends IReloadableRegistry<E> {
          *         <ul>
          *         <li>The json refers to an item, pipe, block, etc that has been disabled in a config file (like if
          *         buildcraft.lib.registry.RegistryConfig#hasObjectBeenDisabled(String,
-         *         net.minecraft.util.ResourceLocation) returns true)</li>or
-         *         <li></li>
+         *         net.minecraft.util.ResourceLocation) returns true)</li>
          *         <li>or any other scenario where the json might be valid in some other well-defined cases.</li>
          *         </ul>
          *         </li>
