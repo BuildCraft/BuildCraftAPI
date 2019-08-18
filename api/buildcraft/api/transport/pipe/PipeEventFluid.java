@@ -6,8 +6,6 @@ import java.util.EnumSet;
 
 import javax.annotation.Nonnull;
 
-import com.google.common.collect.Lists;
-
 import net.minecraft.util.EnumFacing;
 
 import net.minecraftforge.fluids.FluidStack;
@@ -21,6 +19,8 @@ public abstract class PipeEventFluid extends PipeEvent {
         this.flow = flow;
     }
 
+    /** @deprecated Because cancellation is going to be removed (at some point in the future) */
+    @Deprecated
     protected PipeEventFluid(boolean canBeCancelled, IPipeHolder holder, IFlowFluid flow) {
         super(canBeCancelled, holder);
         this.flow = flow;
@@ -59,7 +59,8 @@ public abstract class PipeEventFluid extends PipeEvent {
          * centre. This should *never* be larger than */
         public final int[] actuallyOffered;
 
-        public PreMoveToCentre(IPipeHolder holder, IFlowFluid flow, FluidStack fluid, int totalAcceptable, int[] totalOffered, int[] actuallyOffered) {
+        public PreMoveToCentre(IPipeHolder holder, IFlowFluid flow, FluidStack fluid, int totalAcceptable,
+            int[] totalOffered, int[] actuallyOffered) {
             super(holder, flow);
             this.fluid = fluid;
             this.totalAcceptable = totalAcceptable;
@@ -75,7 +76,8 @@ public abstract class PipeEventFluid extends PipeEvent {
                     return "Changed totalOffered";
                 }
                 if (actuallyOffered[i] > totalOffered[i]) {
-                    return "actuallyOffered[" + i + "](=" + actuallyOffered[i] + ") shouldn't be greater than totalOffered[" + i + "](=" + totalOffered[i] + ")";
+                    return "actuallyOffered[" + i + "](=" + actuallyOffered[i]
+                        + ") shouldn't be greater than totalOffered[" + i + "](=" + totalOffered[i] + ")";
                 }
             }
             return super.checkStateForErrors();
@@ -94,7 +96,8 @@ public abstract class PipeEventFluid extends PipeEvent {
         // Used for checking the state maximums
         private final int[] fluidLeaveCheck, fluidEnterCheck;
 
-        public OnMoveToCentre(IPipeHolder holder, IFlowFluid flow, FluidStack fluid, int[] fluidLeavingSide, int[] fluidEnteringCentre) {
+        public OnMoveToCentre(IPipeHolder holder, IFlowFluid flow, FluidStack fluid, int[] fluidLeavingSide,
+            int[] fluidEnteringCentre) {
             super(holder, flow);
             this.fluid = fluid;
             this.fluidLeavingSide = fluidLeavingSide;
@@ -107,13 +110,16 @@ public abstract class PipeEventFluid extends PipeEvent {
         public String checkStateForErrors() {
             for (int i = 0; i < fluidLeavingSide.length; i++) {
                 if (fluidLeavingSide[i] > fluidLeaveCheck[i]) {
-                    return "fluidLeavingSide[" + i + "](=" + fluidLeavingSide[i] + ") shouldn't be bigger than its original value!(=" + fluidLeaveCheck[i] + ")";
+                    return "fluidLeavingSide[" + i + "](=" + fluidLeavingSide[i]
+                        + ") shouldn't be bigger than its original value!(=" + fluidLeaveCheck[i] + ")";
                 }
                 if (fluidEnteringCentre[i] > fluidEnterCheck[i]) {
-                    return "fluidEnteringCentre[" + i + "](=" + fluidEnteringCentre[i] + ") shouldn't be bigger than its original value!(=" + fluidEnterCheck[i] + ")";
+                    return "fluidEnteringCentre[" + i + "](=" + fluidEnteringCentre[i]
+                        + ") shouldn't be bigger than its original value!(=" + fluidEnterCheck[i] + ")";
                 }
                 if (fluidEnteringCentre[i] > fluidLeavingSide[i]) {
-                    return "fluidEnteringCentre[" + i + "](=" + fluidEnteringCentre[i] + ") shouldn't be bigger than fluidLeavingSide[" + i + "](=" + fluidLeavingSide[i] + ")";
+                    return "fluidEnteringCentre[" + i + "](=" + fluidEnteringCentre[i]
+                        + ") shouldn't be bigger than fluidLeavingSide[" + i + "](=" + fluidLeavingSide[i] + ")";
                 }
             }
             return super.checkStateForErrors();
@@ -152,8 +158,46 @@ public abstract class PipeEventFluid extends PipeEvent {
             allowed.removeAll(sides);
         }
 
+        public void disallowAllExcept(EnumFacing side) {
+            if (allowed.contains(side)) {
+                allowed.clear();
+                allowed.add(side);
+            } else {
+                allowed.clear();
+            }
+        }
+
         public void disallowAllExcept(EnumFacing... sides) {
-            allowed.retainAll(Lists.newArrayList(sides));
+            switch (sides.length) {
+                case 0: {
+                    allowed.clear();
+                    return;
+                }
+                case 1: {
+                    disallowAllExcept(sides[0]);
+                    return;
+                }
+                case 2: {
+                    allowed.retainAll(EnumSet.of(sides[0], sides[1]));
+                    return;
+                }
+                case 3: {
+                    allowed.retainAll(EnumSet.of(sides[0], sides[1], sides[2]));
+                    return;
+                }
+                case 4: {
+                    allowed.retainAll(EnumSet.of(sides[0], sides[1], sides[2], sides[3]));
+                    return;
+                }
+                default: {
+                    EnumSet<EnumFacing> except = EnumSet.noneOf(EnumFacing.class);
+                    for (EnumFacing face : sides) {
+                        except.add(face);
+                    }
+                    this.allowed.retainAll(except);
+                    return;
+                }
+            }
         }
 
         public void disallowAllExcept(Collection<EnumFacing> sides) {
@@ -187,11 +231,11 @@ public abstract class PipeEventFluid extends PipeEvent {
             if (allowed.size() == 1) {
                 return allowed;
             }
-            outer_loop: while (true) {
+            priority_search: {
                 int val = priority[0];
                 for (int i = 1; i < priority.length; i++) {
                     if (priority[i] != val) {
-                        break outer_loop;
+                        break priority_search;
                     }
                 }
                 // No need to work out the order when all destinations have the same priority

@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -18,6 +19,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import net.minecraftforge.common.capabilities.Capability;
@@ -93,8 +95,8 @@ public abstract class PipePluggable {
     /** Called whenever this pluggable is removed from the pipe. */
     public void onRemove() {}
 
-    /** @param toDrop A list containing all the items to drop (so you should add your items to this list) * */
-    public void getDrops(NonNullList<ItemStack> toDrop) {
+    /** @param toDrop A list containing all the items to drop (so you should add your items to this list) */
+    public void addDrops(NonNullList<ItemStack> toDrop, int fortune) {
         ItemStack stack = getPickStack();
         if (!stack.isEmpty()) {
             toDrop.add(stack);
@@ -133,7 +135,7 @@ public abstract class PipePluggable {
     }
 
     /** PipePluggable version of
-     * {@link Block#isBlockSolid(net.minecraft.world.IBlockAccess, net.minecraft.util.math.BlockPos, EnumFacing)} */
+     * {@link net.minecraft.block.state.IBlockState#isSideSolid(IBlockAccess, BlockPos, EnumFacing)}  */
     public boolean isSideSolid() {
         return false;
     }
@@ -145,5 +147,11 @@ public abstract class PipePluggable {
 
     public boolean canConnectToRedstone(@Nullable EnumFacing to) {
         return false;
+    }
+
+    /** PipePluggable version of
+     * {@link net.minecraft.block.state.IBlockState#getBlockFaceShape(IBlockAccess, BlockPos, EnumFacing)}  */
+    public BlockFaceShape getBlockFaceShape() {
+        return BlockFaceShape.UNDEFINED;
     }
 }

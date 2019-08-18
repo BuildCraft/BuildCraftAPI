@@ -28,6 +28,10 @@ public interface IPipeHolder extends IRedstoneStatementContainer {
 
     IPipe getPipe();
 
+    /** @return true if the player should be able to interact with the pipe holder in GUI form. Implementors should
+     *         generally check to ensure they are still present in-world. */
+    boolean canPlayerInteract(EntityPlayer player);
+
     @Nullable
     PipePluggable getPluggable(EnumFacing side);
 

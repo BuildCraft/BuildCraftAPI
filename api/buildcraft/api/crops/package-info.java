@@ -2,7 +2,7 @@
  *
  * The BuildCraft API is distributed under the terms of the MIT License. Please check the contents of the license, which
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
-@API(apiVersion = "1.1", owner = "BuildCraftAPI|Core", provides = "BuildCraftAPI|crops")
+@API(apiVersion = "1.1", owner = "buildcraftapi_core", provides = "buildcraftapi_crops")
 package buildcraft.api.crops;
 
 import net.minecraftforge.fml.common.API;

@@ -1,13 +1,17 @@
 package buildcraft.api.transport.pipe;
 
+import java.io.IOException;
+
 import javax.annotation.Nonnull;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.RayTraceResult;
 
 import net.minecraftforge.common.capabilities.Capability;
@@ -36,10 +40,16 @@ public abstract class PipeBehaviour implements ICapabilityProvider {
 
     public void writePayload(PacketBuffer buffer, Side side) {}
 
-    public void readPayload(PacketBuffer buffer, Side side, MessageContext ctx) {}
+    public void readPayload(PacketBuffer buffer, Side side, MessageContext ctx) throws IOException {}
 
+    /** @deprecated Replaced by {@link #getTextureData(EnumFacing)}. */
+    @Deprecated
     public int getTextureIndex(EnumFacing face) {
         return 0;
+    }
+
+    public PipeFaceTex getTextureData(EnumFacing face) {
+        return PipeFaceTex.get(getTextureIndex(face));
     }
 
     // Event handling
@@ -52,7 +62,13 @@ public abstract class PipeBehaviour implements ICapabilityProvider {
         return true;
     }
 
-    public boolean onPipeActivate(EntityPlayer player, RayTraceResult trace, float hitX, float hitY, float hitZ, EnumPipePart part) {
+    /** Used to force a connection to a given tile, even if the {@link PipeFlow} wouldn't normally connect to it. */
+    public boolean shouldForceConnection(EnumFacing face, TileEntity oTile) {
+        return false;
+    }
+
+    public boolean onPipeActivate(EntityPlayer player, RayTraceResult trace, float hitX, float hitY, float hitZ,
+        EnumPipePart part) {
         return false;
     }
 
@@ -69,4 +85,6 @@ public abstract class PipeBehaviour implements ICapabilityProvider {
     public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
         return null;
     }
+
+    public void addDrops(NonNullList<ItemStack> toDrop, int fortune) {}
 }

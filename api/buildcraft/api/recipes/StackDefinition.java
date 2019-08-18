@@ -3,8 +3,9 @@ package buildcraft.api.recipes;
 import buildcraft.api.core.IStackFilter;
 
 /**
- * Stack definition for recipe input
+ * @deprecated TEMPORARY CLASS DO NOT USE!
  */
+@Deprecated
 public final class StackDefinition {
     public final IStackFilter filter;
     public final int count;

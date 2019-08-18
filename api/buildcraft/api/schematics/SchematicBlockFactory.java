@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.util.ResourceLocation;
 
-public class SchematicBlockFactory<S extends ISchematicBlock<S>> implements Comparable<SchematicBlockFactory> {
+public class SchematicBlockFactory<S extends ISchematicBlock> implements Comparable<SchematicBlockFactory<?>> {
     @Nonnull
     public final ResourceLocation name;
     public final int priority;

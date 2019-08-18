@@ -1,13 +1,18 @@
 package buildcraft.api;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.util.ResourceLocation;
 
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.LoaderState;
 
-import buildcraft.api.core.BCLog;
-
-public enum BCModules {
+public enum BCModules implements IBuildCraftMod {
     LIB,
     // Base module for all BC.
     CORE,
@@ -22,46 +27,87 @@ public enum BCModules {
     COMPAT;
 
     public static final BCModules[] VALUES = values();
+    private static boolean hasChecked = false;
+    private static BCModules[] loadedModules, missingModules;
 
-    private static final String MODID_START = "buildcraft";
-    private final String modid, part;
+    public final String lowerCaseName = name().toLowerCase(Locale.ROOT);
+    // Bit hacky, but it works as this is all english
+    public final String camelCaseName = name().charAt(0) + lowerCaseName.substring(1);
+    private final String modId = "buildcraft" + lowerCaseName;
+    private boolean loaded;
 
-    BCModules() {
-        part = name().toLowerCase(Locale.ROOT);
-        this.modid = MODID_START + part;
+    private static void checkLoadStatus() {
+        if (hasChecked) {
+            return;
+        }
+        load0();
     }
 
-    public static void fmlPreInit() {}
-
-    public static boolean isBcMod(String modid) {
-        if (!modid.startsWith(MODID_START)) return false;
-        String post = modid.substring(MODID_START.length());
+    /** Performs the actual loading of {@link #checkLoadStatus()}, except this is thread safe. */
+    private static synchronized void load0() {
+        if (hasChecked) {
+            return;
+        }
+        if (!Loader.instance().hasReachedState(LoaderState.PREINITIALIZATION)) {
+            throw new RuntimeException("You can only use BCModules.isLoaded from pre-init onwards!");
+        }
+        List<BCModules> found = new ArrayList<>(), missing = new ArrayList<>();
         for (BCModules module : VALUES) {
-            if (post.equals(module.part)) {
-                return true;
+            module.loaded = Loader.isModLoaded(module.modId);
+            if (module.loaded) {
+                found.add(module);
+            } else {
+                missing.add(module);
             }
         }
-        return false;
+        loadedModules = found.toArray(new BCModules[0]);
+        missingModules = missing.toArray(new BCModules[0]);
+        hasChecked = true;
+    }
+
+    @Nullable
+    public static BCModules getBcMod(String testModId) {
+        for (BCModules mod : VALUES) {
+            if (mod.modId.equals(testModId)) {
+                return mod;
+            }
+        }
+        return null;
+    }
+
+    public static boolean isBcMod(String testModId) {
+        return getBcMod(testModId) != null;
+    }
+
+    public static BCModules[] getLoadedModules() {
+        checkLoadStatus();
+        return loadedModules;
+    }
+
+    public static BCModules[] getMissingModules() {
+        checkLoadStatus();
+        return missingModules;
+    }
+
+    @Override
+    public String getModId() {
+        return modId;
     }
 
     public boolean isLoaded() {
-        return Loader.isModLoaded(modid);
+        checkLoadStatus();
+        return loaded;
     }
 
-    public String getModId() {
-        return modid;
+    public ResourceLocation createLocation(String path) {
+        return new ResourceLocation(getModId(), path);
     }
 
-    static {
-        if (!Loader.instance().hasReachedState(LoaderState.CONSTRUCTING)) {
-            throw new RuntimeException("Accessed BC modules too early! You can only use them from construction onwards!");
-        }
-        for (BCModules module : values()) {
-            if (module.isLoaded()) {
-                BCLog.logger.info("[api.modules] Module " + module.name().toLowerCase(Locale.ROOT) + " is loaded!");
-            } else {
-                BCLog.logger.warn("[api.modules] Module " + module.name().toLowerCase(Locale.ROOT) + " is NOT loaded!");
-            }
-        }
+    public ModelResourceLocation createModelLocation(String path, String variant) {
+        return new ModelResourceLocation(getModId() + ":" + path + "#" + variant);
+    }
+
+    public ModelResourceLocation createModelLocation(String pathAndVariant) {
+        return new ModelResourceLocation(getModId() + ":" + pathAndVariant);
     }
 }

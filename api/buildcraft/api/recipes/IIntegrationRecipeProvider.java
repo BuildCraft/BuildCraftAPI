@@ -1,12 +1,9 @@
 package buildcraft.api.recipes;
 
-import java.util.Optional;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
@@ -24,9 +21,6 @@ public interface IIntegrationRecipeProvider {
 
     /**
      * Returns recipe by it's name
-     * @param recipeTag Additional tag attached to network-transmitted recipe definition
      */
-    default Optional<IntegrationRecipe> getRecipe(@Nonnull ResourceLocation name, @Nullable NBTTagCompound recipeTag) {
-        return Optional.empty();
-    }
+    IntegrationRecipe getRecipe(@Nonnull ResourceLocation name);
 }

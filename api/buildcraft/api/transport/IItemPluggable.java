@@ -1,6 +1,7 @@
 package buildcraft.api.transport;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -20,5 +21,7 @@ public interface IItemPluggable {
      * @param holder The pipe holder
      * @param side The side that the pluggable should be placed on
      * @return A pluggable to place onto the pipe */
-    PipePluggable onPlace(@Nonnull ItemStack stack, IPipeHolder holder, EnumFacing side, EntityPlayer player, EnumHand hand);
+    @Nullable
+    PipePluggable onPlace(@Nonnull ItemStack stack, IPipeHolder holder, EnumFacing side, EntityPlayer player,
+        EnumHand hand);
 }

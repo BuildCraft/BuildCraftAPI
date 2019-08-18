@@ -1,5 +1,6 @@
 package buildcraft.api.schematics;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -15,23 +16,35 @@ import net.minecraftforge.fluids.FluidStack;
 
 import buildcraft.api.core.InvalidInputDataException;
 
-public interface ISchematicBlock<S extends ISchematicBlock<S>> {
+public interface ISchematicBlock {
     void init(SchematicBlockContext context);
 
-    boolean isAir();
+    default boolean isAir() {
+        return false;
+    }
 
     @Nonnull
-    Set<BlockPos> getRequiredBlockOffsets();
+    default Set<BlockPos> getRequiredBlockOffsets() {
+        return Collections.emptySet();
+    }
 
     @Nonnull
-    List<ItemStack> computeRequiredItems(SchematicBlockContext context);
+    default List<ItemStack> computeRequiredItems() {
+        return Collections.emptyList();
+    }
 
     @Nonnull
-    List<FluidStack> computeRequiredFluids(SchematicBlockContext context);
+    default List<FluidStack> computeRequiredFluids() {
+        return Collections.emptyList();
+    }
 
-    S getRotated(Rotation rotation);
+    ISchematicBlock getRotated(Rotation rotation);
 
     boolean canBuild(World world, BlockPos blockPos);
+
+    default boolean isReadyToBuild(World world, BlockPos blockPos) {
+        return true;
+    }
 
     boolean build(World world, BlockPos blockPos);
 

@@ -5,46 +5,42 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.collect.ImmutableSet;
-
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
-import buildcraft.api.core.BuildCraftAPI;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
-/** Provides an immutable assembly recipe */
-public final class AssemblyRecipe implements Comparable<AssemblyRecipe> {
-    public final ResourceLocation name;
-    public final long requiredMicroJoules;
-    public final ImmutableSet<StackDefinition> requiredStacks;
-    public final @Nonnull ItemStack output;
+/**
+ * @deprecated TEMPORARY CLASS DO NOT USE!
+ */
+@Deprecated
+public abstract class AssemblyRecipe implements Comparable<AssemblyRecipe>, IForgeRegistryEntry<AssemblyRecipe> {
+    private ResourceLocation name;
+
     /**
-     * Additional tag used to restore network-transmitted recipe to same state.<br>
-     * You need to register own {@link IAssemblyRecipeProvider} using {@link IAssemblyRecipeRegistry#addRecipeProvider(IAssemblyRecipeProvider)}
-     * to handle this and declare {@link IAssemblyRecipeProvider#getRecipe(ResourceLocation, NBTTagCompound)} method
+     * The outputs this recipe can generate with any of the given inputs
+     * @param inputs Current ingredients in the assembly table
+     * @return A Set containing all possible outputs given the given inputs or an empty one if nothing can be assembled from the given inputs
      */
-    public final @Nullable NBTTagCompound recipeTag;
+    public abstract Set<ItemStack> getOutputs(NonNullList<ItemStack> inputs);
 
-    public AssemblyRecipe(ResourceLocation name, long requiredMicroJoules, Set<StackDefinition> requiredStacks, @Nonnull ItemStack output, @Nullable NBTTagCompound recipeTag) {
-        this.name = name;
-        this.requiredMicroJoules = requiredMicroJoules;
-        this.requiredStacks = ImmutableSet.copyOf(requiredStacks);
-        this.output = output;
-        this.recipeTag = recipeTag;
-    }
+    /**
+     * Used to determine all outputs from this recipe for recipe previews (guide book and/or JEI)
+     */
+    public abstract Set<ItemStack> getOutputPreviews();
 
-    public AssemblyRecipe(String name, long requiredMicroJoules, Set<StackDefinition> requiredStacks, @Nonnull ItemStack output, @Nullable NBTTagCompound recipeTag) {
-        this(BuildCraftAPI.nameToResourceLocation(name), requiredMicroJoules, requiredStacks, output, recipeTag);
-    }
+    /**
+     * Used to determine what items to use up for the given output
+     * @param output The output we want to know the inputs for, only ever called using stacks obtained from getOutputs or getOutputPreviews
+     */
+    public abstract Set<IngredientStack> getInputsFor(@Nonnull ItemStack output);
 
-    public AssemblyRecipe(ResourceLocation name, long requiredMicroJoules, Set<StackDefinition> requiredStacks, @Nonnull ItemStack output) {
-        this(name, requiredMicroJoules, requiredStacks, output, null);
-    }
-
-    public AssemblyRecipe(String name, long requiredMicroJoules, Set<StackDefinition> requiredStacks, @Nonnull ItemStack output) {
-        this(name, requiredMicroJoules, requiredStacks, output, null);
-    }
+    /**
+     * Used to determine how much MJ is required to asemble the given output item
+     * @param output The output we want to know the MJ cost for, only ever called using stacks obtained from getOutputs or getOutputPreviews
+     */
+    public abstract long getRequiredMicroJoulesFor(@Nonnull ItemStack output);
 
     @Override
     public boolean equals(Object o) {
@@ -68,5 +64,22 @@ public final class AssemblyRecipe implements Comparable<AssemblyRecipe> {
     @Override
     public int compareTo(AssemblyRecipe o) {
         return name.toString().compareTo(o.name.toString());
+    }
+
+    @Override
+    public AssemblyRecipe setRegistryName(ResourceLocation name) {
+        this.name = name;
+        return this;
+    }
+
+    @Nullable
+    @Override
+    public ResourceLocation getRegistryName() {
+        return name;
+    }
+
+    @Override
+    public Class<AssemblyRecipe> getRegistryType() {
+        return AssemblyRecipe.class;
     }
 }

@@ -13,7 +13,6 @@ import net.minecraft.util.EnumFacing;
 
 import buildcraft.api.enums.EnumDecoratedBlock;
 import buildcraft.api.enums.EnumEngineType;
-import buildcraft.api.enums.EnumFillerPattern;
 import buildcraft.api.enums.EnumLaserTableType;
 import buildcraft.api.enums.EnumMachineState;
 import buildcraft.api.enums.EnumOptionalSnapshotType;
@@ -50,8 +49,6 @@ public final class BuildCraftProperties {
     public static final IProperty<Boolean> CONNECTED_SOUTH = PropertyBool.create("connected_south");
 
     public static final Map<EnumFacing, IProperty<Boolean>> CONNECTED_MAP;
-
-    public static final IProperty<EnumFillerPattern> FILLER_PATTERN = PropertyEnum.create("pattern", EnumFillerPattern.class);
 
     // Block state setting flags -these are used by World.markAndNotifyBlock and World.setBlockState. These flags can be
     // added together to pass the additions

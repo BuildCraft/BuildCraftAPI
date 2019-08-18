@@ -18,7 +18,7 @@ public enum EnumRedstoneChipset implements IStringSerializable {
     private final String name = name().toLowerCase(Locale.ROOT);
 
     public ItemStack getStack(int stackSize) {
-        Item chipset = BCItems.SILICON_REDSTONE_CHIPSET;
+        Item chipset = BCItems.Silicon.REDSTONE_CHIPSET;
         if (chipset == null) {
             return ItemStack.EMPTY;
         }

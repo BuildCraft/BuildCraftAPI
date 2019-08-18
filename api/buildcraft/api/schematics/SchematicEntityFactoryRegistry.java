@@ -19,27 +19,27 @@ import buildcraft.api.core.BuildCraftAPI;
 public class SchematicEntityFactoryRegistry {
     private static final Set<SchematicEntityFactory<?>> FACTORIES = new TreeSet<>();
 
-    public static <S extends ISchematicEntity<S>> void registerFactory(String name,
-                                                                       int priority,
-                                                                       Predicate<SchematicEntityContext> predicate,
-                                                                       Supplier<S> supplier) {
+    public static <S extends ISchematicEntity> void registerFactory(String name,
+                                                                    int priority,
+                                                                    Predicate<SchematicEntityContext> predicate,
+                                                                    Supplier<S> supplier) {
         FACTORIES.add(new SchematicEntityFactory<>(
-                BuildCraftAPI.nameToResourceLocation(name),
-                priority,
-                predicate,
-                supplier
+            BuildCraftAPI.nameToResourceLocation(name),
+            priority,
+            predicate,
+            supplier
         ));
     }
 
-    public static <S extends ISchematicEntity<S>> void registerFactory(String name,
-                                                                      int priority,
-                                                                      List<ResourceLocation> entities,
-                                                                      Supplier<S> supplier) {
+    public static <S extends ISchematicEntity> void registerFactory(String name,
+                                                                    int priority,
+                                                                    List<ResourceLocation> entities,
+                                                                    Supplier<S> supplier) {
         registerFactory(
-                name,
-                priority,
-                context -> entities.contains(EntityList.getKey(context.entity)),
-                supplier
+            name,
+            priority,
+            context -> entities.contains(EntityList.getKey(context.entity)),
+            supplier
         );
     }
 
@@ -48,18 +48,19 @@ public class SchematicEntityFactoryRegistry {
     }
 
     @Nonnull
-    public static SchematicEntityFactory<?> getFactoryByInstance(ISchematicEntity<?> instance) {
-        return FACTORIES.stream()
-                .filter(schematicEntityFactory -> schematicEntityFactory.clazz == instance.getClass())
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Didn't find a factory for " + instance.getClass()));
+    public static <S extends ISchematicEntity> SchematicEntityFactory<S> getFactoryByInstance(S instance) {
+        // noinspection unchecked
+        return (SchematicEntityFactory<S>) FACTORIES.stream()
+            .filter(schematicEntityFactory -> schematicEntityFactory.clazz == instance.getClass())
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("Didn't find a factory for " + instance.getClass()));
     }
 
     @Nullable
     public static SchematicEntityFactory<?> getFactoryByName(ResourceLocation name) {
         return FACTORIES.stream()
-                .filter(schematicEntityFactory -> schematicEntityFactory.name.equals(name))
-                .findFirst()
-                .orElse(null);
+            .filter(schematicEntityFactory -> schematicEntityFactory.name.equals(name))
+            .findFirst()
+            .orElse(null);
     }
 }

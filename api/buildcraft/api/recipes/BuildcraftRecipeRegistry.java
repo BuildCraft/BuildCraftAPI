@@ -6,7 +6,6 @@ package buildcraft.api.recipes;
 
 public final class BuildcraftRecipeRegistry {
 
-    public static IAssemblyRecipeRegistry assemblyRecipes;
     public static IIntegrationRecipeRegistry integrationRecipes;
     public static IRefineryRecipeManager refineryRecipes;
 

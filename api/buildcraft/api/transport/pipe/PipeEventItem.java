@@ -16,6 +16,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 
 public abstract class PipeEventItem extends PipeEvent {
@@ -27,6 +28,8 @@ public abstract class PipeEventItem extends PipeEvent {
         this.flow = flow;
     }
 
+    /** @deprecated Because cancellation is going to be removed (at some point in the future) */
+    @Deprecated
     protected PipeEventItem(boolean canBeCancelled, IPipeHolder holder, IFlowItems flow) {
         super(canBeCancelled, holder);
         this.flow = flow;
@@ -50,7 +53,8 @@ public abstract class PipeEventItem extends PipeEvent {
          * {@link #attempting} */
         public int accepted;
 
-        public TryInsert(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, EnumFacing from, @Nonnull ItemStack attempting) {
+        public TryInsert(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, EnumFacing from,
+            @Nonnull ItemStack attempting) {
             super(true, holder, flow);
             this.colour = colour;
             this.from = from;
@@ -94,7 +98,8 @@ public abstract class PipeEventItem extends PipeEvent {
     public static class OnInsert extends ReachDest {
         public final EnumFacing from;
 
-        public OnInsert(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, @Nonnull ItemStack stack, EnumFacing from) {
+        public OnInsert(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, @Nonnull ItemStack stack,
+            EnumFacing from) {
             super(holder, flow, colour, stack);
             this.from = from;
         }
@@ -104,7 +109,8 @@ public abstract class PipeEventItem extends PipeEvent {
     public static class ReachCenter extends ReachDest {
         public final EnumFacing from;
 
-        public ReachCenter(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, @Nonnull ItemStack stack, EnumFacing from) {
+        public ReachCenter(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, @Nonnull ItemStack stack,
+            EnumFacing from) {
             super(holder, flow, colour, stack);
             this.from = from;
         }
@@ -114,9 +120,67 @@ public abstract class PipeEventItem extends PipeEvent {
     public static class ReachEnd extends ReachDest {
         public final EnumFacing to;
 
-        public ReachEnd(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, @Nonnull ItemStack stack, EnumFacing to) {
+        public ReachEnd(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, @Nonnull ItemStack stack,
+            EnumFacing to) {
             super(holder, flow, colour, stack);
             this.to = to;
+        }
+    }
+
+    /** Fired whenever the item exists from this pipe in a normal manner (inserted into another pipe or inventory, this
+     * does not overlap with {@link Drop}.) NOTE: This event is fired *after* the item has been ejected, not before, so
+     * modifying {@link Ejected#inserted} won't do anything. You are free to modify {@link Ejected#excess} however. */
+    public static abstract class Ejected extends PipeEventItem {
+        /** The stack that has been inserted */
+        public final ItemStack inserted;
+
+        /** The stack that was refused by the inventory or pipe. */
+        @Nonnull
+        private ItemStack excess;
+
+        /** The side that the item has been ejected to. */
+        public final EnumFacing to;
+
+        protected Ejected(IPipeHolder holder, IFlowItems flow, ItemStack inserted, ItemStack excess, EnumFacing to) {
+            super(holder, flow);
+            this.inserted = inserted;
+            this.excess = excess;
+            this.to = to;
+        }
+
+        @Nonnull
+        public ItemStack getExcess() {
+            return this.excess;
+        }
+
+        public void setExcess(ItemStack stack) {
+            if (stack == null) {
+                throw new NullPointerException("stack");
+            } else {
+                this.excess = stack;
+            }
+        }
+
+        /** Fired when an item is injected into a pipe. (Refer to {@link Ejected} for more details) */
+        public static class IntoPipe extends Ejected {
+            public final IFlowItems otherPipe;
+
+            public IntoPipe(IPipeHolder holder, IFlowItems flow, ItemStack inserted, ItemStack excess, EnumFacing to,
+                IFlowItems otherPipe) {
+                super(holder, flow, inserted, excess, to);
+                this.otherPipe = otherPipe;
+            }
+        }
+
+        /** Fired when an item is injected into a tile entity. (Refer to {@link Ejected} for more details) */
+        public static class IntoTile extends Ejected {
+            public final TileEntity tile;
+
+            public IntoTile(IPipeHolder holder, IFlowItems flow, ItemStack inserted, ItemStack excess, EnumFacing to,
+                TileEntity tile) {
+                super(holder, flow, inserted, excess, to);
+                this.tile = tile;
+            }
         }
     }
 
@@ -139,7 +203,8 @@ public abstract class PipeEventItem extends PipeEvent {
         private final int[] priority = new int[6];
         private final EnumSet<EnumFacing> allowed = EnumSet.allOf(EnumFacing.class);
 
-        public SideCheck(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, EnumFacing from, @Nonnull ItemStack stack) {
+        public SideCheck(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, EnumFacing from,
+            @Nonnull ItemStack stack) {
             super(holder, flow);
             this.colour = colour;
             this.from = from;
@@ -196,12 +261,13 @@ public abstract class PipeEventItem extends PipeEvent {
                     return ImmutableList.of();
                 case 1:
                     return ImmutableList.of(allowed);
+                default:
             }
-            outer_loop: while (true) {
+            priority_search: {
                 int val = priority[0];
                 for (int i = 1; i < priority.length; i++) {
                     if (priority[i] != val) {
-                        break outer_loop;
+                        break priority_search;
                     }
                 }
                 // No need to work out the order when all destinations have the same priority
@@ -243,7 +309,8 @@ public abstract class PipeEventItem extends PipeEvent {
         public final ItemStack stack;
         public boolean canBounce = false;
 
-        public TryBounce(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, EnumFacing from, @Nonnull ItemStack stack) {
+        public TryBounce(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, EnumFacing from,
+            @Nonnull ItemStack stack) {
             super(holder, flow);
             this.colour = colour;
             this.from = from;
@@ -261,7 +328,7 @@ public abstract class PipeEventItem extends PipeEvent {
 
         @Nonnull
         public ItemStack getStack() {
-            ItemStack item = entity.getEntityItem();
+            ItemStack item = entity.getItem();
             return item.isEmpty() ? ItemStack.EMPTY : item;
         }
 
@@ -269,9 +336,9 @@ public abstract class PipeEventItem extends PipeEvent {
             if (stack == null) {
                 throw new NullPointerException("stack");
             } else if (stack.isEmpty()) {
-                entity.setEntityItemStack(ItemStack.EMPTY);
+                entity.setItem(ItemStack.EMPTY);
             } else {
-                entity.setEntityItemStack(stack);
+                entity.setItem(stack);
             }
         }
 
@@ -327,7 +394,8 @@ public abstract class PipeEventItem extends PipeEvent {
     public static class FindDest extends OrderedEvent {
         public final ImmutableList<ItemEntry> items;
 
-        public FindDest(IPipeHolder holder, IFlowItems flow, List<EnumSet<EnumFacing>> orderedDestinations, ImmutableList<ItemEntry> items) {
+        public FindDest(IPipeHolder holder, IFlowItems flow, List<EnumSet<EnumFacing>> orderedDestinations,
+            ImmutableList<ItemEntry> items) {
             super(holder, flow, orderedDestinations);
             this.items = items;
         }

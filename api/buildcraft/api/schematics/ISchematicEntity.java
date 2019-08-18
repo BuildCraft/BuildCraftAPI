@@ -1,5 +1,6 @@
 package buildcraft.api.schematics;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -16,18 +17,22 @@ import net.minecraftforge.fluids.FluidStack;
 
 import buildcraft.api.core.InvalidInputDataException;
 
-public interface ISchematicEntity<S extends ISchematicEntity<S>> {
+public interface ISchematicEntity {
     void init(SchematicEntityContext context);
 
     Vec3d getPos();
 
     @Nonnull
-    List<ItemStack> computeRequiredItems(SchematicEntityContext context);
+    default List<ItemStack> computeRequiredItems() {
+        return Collections.emptyList();
+    }
 
     @Nonnull
-    List<FluidStack> computeRequiredFluids(SchematicEntityContext context);
+    default List<FluidStack> computeRequiredFluids() {
+        return Collections.emptyList();
+    }
 
-    S getRotated(Rotation rotation);
+    ISchematicEntity getRotated(Rotation rotation);
 
     Entity build(World world, BlockPos basePos);
 

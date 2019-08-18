@@ -9,7 +9,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT"
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
     }
 }
 apply plugin: "net.minecraftforge.gradle.forge"
@@ -85,6 +85,20 @@ processResources
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+compileJava {
+    options.compilerArgs << "-Xmaxerrs" << "2000"
+    options.compilerArgs << "-Xmaxwarns" << "2"
+    options.compilerArgs << "-Xlint:all"
+    options.compilerArgs << "-Xdiags:verbose"
+    options.compilerArgs << "-encoding" << "UTF-8"
+}
+
+javadoc {
+    options.setUse(true)
+    options.addStringsOption("Xmaxerrs").setValue(["2000"])
+    options.addStringsOption("Xmaxwarns").setValue(["2"])
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {

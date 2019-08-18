@@ -12,6 +12,12 @@ public interface IDebuggable {
      * right parameters correspond to the sides of the F3 screen.
      * 
      * @param side The side the block was clicked on, may be null if we don't know, or is the "centre" side */
-    @SideOnly(Side.CLIENT)
     void getDebugInfo(List<String> left, List<String> right, EnumFacing side);
+
+    /** Same as {@link #getDebugInfo(List, List, EnumFacing)}, but only for client
+     *
+     * @param side same as for {@link #getDebugInfo(List, List, EnumFacing)} */
+    @SideOnly(Side.CLIENT)
+    default void getClientDebugInfo(List<String> left, List<String> right, EnumFacing side) {
+    }
 }

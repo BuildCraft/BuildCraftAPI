@@ -15,7 +15,7 @@ public class NbtSquishConstants {
      * smaller space. */
     public static final int VANILLA = 0;
     public static final int VANILLA_COMPRESSED = 1;
-    /** Buildcraft provided NBT compressor - puts every tag type into a dictionary and then refers to the dictionary for
+    /** BuildCraft provided NBT compressor - puts every tag type into a dictionary and then refers to the dictionary for
      * every tag which is written out. Can get much better space usage than {@link #VANILLA}, but at the cost of
      * time. */
     public static final int BUILDCRAFT_V1 = 2;

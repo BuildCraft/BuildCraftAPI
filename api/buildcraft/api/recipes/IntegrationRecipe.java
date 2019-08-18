@@ -1,51 +1,43 @@
 package buildcraft.api.recipes;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
-import buildcraft.api.core.BuildCraftAPI;
-
-public final class IntegrationRecipe {
+public abstract class IntegrationRecipe {
     public final ResourceLocation name;
-    public final long requiredMicroJoules;
-    public final StackDefinition target;
-    public final ImmutableList<StackDefinition> toIntegrate;
-    public final @Nonnull ItemStack output;
-    /**
-     * Additional tag used to restore network-transmitted recipe to same state
-     * You need to register own {@link IIntegrationRecipeProvider} using {@link IIntegrationRecipeRegistry#addRecipeProvider(IIntegrationRecipeProvider)}
-     * to handle this and declare {@link IIntegrationRecipeProvider#getRecipe(ResourceLocation, NBTTagCompound)} method
-     */
-    public final @Nullable NBTTagCompound recipeTag;
 
-    public IntegrationRecipe(ResourceLocation name, long requiredMicroJoules, StackDefinition target, List<StackDefinition> toIntegrate, @Nonnull ItemStack output, @Nullable NBTTagCompound recipeTag) {
+    public IntegrationRecipe(ResourceLocation name) {
         this.name = name;
-        this.requiredMicroJoules = requiredMicroJoules;
-        this.target = target;
-        this.toIntegrate = ImmutableList.copyOf(toIntegrate);
-        this.output = output;
-        this.recipeTag = recipeTag;
     }
 
-    public IntegrationRecipe(String name, long requiredMicroJoules, StackDefinition target, List<StackDefinition> toIntegrate, @Nonnull ItemStack output, @Nullable NBTTagCompound recipeTag) {
-        this(BuildCraftAPI.nameToResourceLocation(name), requiredMicroJoules, target, toIntegrate, output, recipeTag);
-    }
+    /**
+     * Determines the output of this recipe
+     * @param target the stack in the middle to integrate the components into
+     * @param toIntegrate All available stacks to integrate (not all have to be used up in this recipe)
+     * @return The output to produce based on the inputs provided or an empty stack if the recipe isn't valid
+     */
+    public abstract ItemStack getOutput(@Nonnull ItemStack target, NonNullList<ItemStack> toIntegrate);
 
-    public IntegrationRecipe(ResourceLocation name, long requiredMicroJoules, StackDefinition target, List<StackDefinition> toIntegrate, @Nonnull ItemStack output) {
-        this(name, requiredMicroJoules, target, toIntegrate, output, null);
-    }
+    /**
+     * Determines the components to use when crafting finishes
+     * @param output The generated outputted, determined by getOutput
+     * @return The components to use up
+     */
+    public abstract ImmutableList<IngredientStack> getRequirements(@Nonnull ItemStack output);
 
-    public IntegrationRecipe(String name, long requiredMicroJoules, StackDefinition target, List<StackDefinition> toIntegrate, @Nonnull ItemStack output) {
-        this(name, requiredMicroJoules, target, toIntegrate, output, null);
-    }
+    /**
+     * Determines the amount of MJ required to integrate
+     * @param output The output that would be generated
+     * @return The powercost in microjoules
+     */
+    public abstract long getRequiredMicroJoules(ItemStack output);
+
+    public abstract IngredientStack getCenterStack();
 
     @Override
     public boolean equals(Object o) {

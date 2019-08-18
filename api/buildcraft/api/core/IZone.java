@@ -9,13 +9,14 @@ import java.util.Random;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
+/** Defines some volume in the world. This is not guaranteed to be fully connected to itself. */
 public interface IZone {
-    /** Returns the smallest possible distance that the index would have to be changed by in order for
+    /** Returns the smallest possible distance that the pos would have to be changed by in order for
      * {@link #contains(Vec3d)} to return true. If the position is already inside then this will return 0 */
-    double distanceTo(BlockPos index);
+    double distanceTo(BlockPos pos);
 
     /** Returns {@link #distanceTo(BlockPos)} but squared. Usually this will be quicker to calculate. */
-    double distanceToSquared(BlockPos index);
+    double distanceToSquared(BlockPos pos);
 
     /** Returns true if the point is enclosed by this zone, such that none of the coordinates lie outside the range
      * specified by this zone. */

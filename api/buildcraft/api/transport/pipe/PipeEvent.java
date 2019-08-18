@@ -9,9 +9,11 @@ public abstract class PipeEvent {
     private boolean canceled = false;
 
     public PipeEvent(IPipeHolder holder) {
-        this(false, holder);
+        this.canBeCancelled = false;
+        this.holder = holder;
     }
 
+    /** deprecated: Because cancellation is going to be removed (at some point in the future) */
     protected PipeEvent(boolean canBeCancelled, IPipeHolder holder) {
         this.canBeCancelled = canBeCancelled;
         this.holder = holder;

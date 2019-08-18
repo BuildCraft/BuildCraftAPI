@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 
 import buildcraft.api.core.CapabilitiesHelper;
 import buildcraft.api.mj.MjAPI;
@@ -20,6 +19,7 @@ public final class PipeApi {
     public static IPipeRegistry pipeRegistry;
     public static IPluggableRegistry pluggableRegistry;
     public static IStripesRegistry stripeRegistry;
+    public static IPipeExtensionManager extensionManager;
     public static PipeFlowType flowStructure;
     public static PipeFlowType flowItems;
     public static PipeFlowType flowFluids;
@@ -123,27 +123,10 @@ public final class PipeApi {
 
     // Internals
 
-    @CapabilityInject(IPipeHolder.class)
-    private static Capability<IPipeHolder> capPipeHolder;
-
-    @CapabilityInject(IPipe.class)
-    private static Capability<IPipe> capPipe;
-
-    @CapabilityInject(PipePluggable.class)
-    private static Capability<PipePluggable> capPlug;
-
-    @CapabilityInject(IInjectable.class)
-    private static Capability<IInjectable> capInjectable;
-
     static {
-        CapabilitiesHelper.registerCapability(IPipe.class);
-        CapabilitiesHelper.registerCapability(IPipeHolder.class);
-        CapabilitiesHelper.registerCapability(IInjectable.class);
-        CapabilitiesHelper.registerCapability(PipePluggable.class);
-
-        CAP_PIPE = CapabilitiesHelper.ensureRegistration(capPipe, IPipe.class);
-        CAP_PLUG = CapabilitiesHelper.ensureRegistration(capPlug, PipePluggable.class);
-        CAP_PIPE_HOLDER = CapabilitiesHelper.ensureRegistration(capPipeHolder, IPipeHolder.class);
-        CAP_INJECTABLE = CapabilitiesHelper.ensureRegistration(capInjectable, IInjectable.class);
+        CAP_PIPE = CapabilitiesHelper.registerCapability(IPipe.class);
+        CAP_PLUG = CapabilitiesHelper.registerCapability(PipePluggable.class);
+        CAP_PIPE_HOLDER = CapabilitiesHelper.registerCapability(IPipeHolder.class);
+        CAP_INJECTABLE = CapabilitiesHelper.registerCapability(IInjectable.class);
     }
 }

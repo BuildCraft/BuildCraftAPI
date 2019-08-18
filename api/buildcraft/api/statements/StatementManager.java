@@ -4,6 +4,7 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.statements;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -11,20 +12,31 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-
-import buildcraft.api.core.BCLog;
 
 public final class StatementManager {
 
     public static Map<String, IStatement> statements = new HashMap<>();
-    public static Map<String, Class<? extends IStatementParameter>> parameters = new HashMap<>();
+    public static Map<String, IParameterReader> parameters = new HashMap<>();
+    public static Map<String, IParamReaderBuf> paramsBuf = new HashMap<>();
     private static List<ITriggerProvider> triggerProviders = new LinkedList<>();
     private static List<IActionProvider> actionProviders = new LinkedList<>();
 
     static {
-        registerParameterClass(StatementParameterItemStack.class);
+        registerParameter(StatementParameterItemStack::new);
+    }
+
+    @FunctionalInterface
+    public interface IParameterReader {
+        IStatementParameter readFromNbt(NBTTagCompound nbt);
+    }
+
+    @FunctionalInterface
+    public interface IParamReaderBuf {
+        IStatementParameter readFromBuf(PacketBuffer buffer) throws IOException;
     }
 
     /** Deactivate constructor */
@@ -46,8 +58,22 @@ public final class StatementManager {
         statements.put(statement.getUniqueTag(), statement);
     }
 
-    public static void registerParameterClass(Class<? extends IStatementParameter> param) {
-        parameters.put(createParameter(param).getUniqueTag(), param);
+    public static void registerParameter(IParameterReader reader) {
+        registerParameter(reader, buf -> reader.readFromNbt(buf.readCompoundTag()));
+    }
+
+    public static void registerParameter(IParameterReader reader, IParamReaderBuf bufReader) {
+        String name = reader.readFromNbt(new NBTTagCompound()).getUniqueTag();
+        registerParameter(name, reader);
+        registerParameter(name, bufReader);
+    }
+
+    public static void registerParameter(String name, IParameterReader reader) {
+        parameters.put(name, reader);
+    }
+
+    public static void registerParameter(String name, IParamReaderBuf reader) {
+        paramsBuf.put(name, reader);
     }
 
     public static List<ITriggerExternal> getExternalTriggers(EnumFacing side, TileEntity entity) {
@@ -124,24 +150,7 @@ public final class StatementManager {
         return new ArrayList<>(actions);
     }
 
-    public static IStatementParameter createParameter(String kind) {
-        return createParameter(parameters.get(kind));
-    }
-
-    private static IStatementParameter createParameter(Class<? extends IStatementParameter> param) {
-        if (param == null) {
-            return null;
-        }
-
-        try {
-            return param.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (Error error) {
-            BCLog.logErrorAPI(error, IStatementParameter.class);
-            throw error;
-        }
-
-        return null;
+    public static IParameterReader getParameterReader(String kind) {
+        return parameters.get(kind);
     }
 }

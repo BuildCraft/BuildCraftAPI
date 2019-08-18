@@ -4,6 +4,8 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.tiles;
 
+import java.util.Locale;
+
 /** This interface should be implemented by any Tile Entity which wishes to have non-redstone automation (for example,
  * BuildCraft Gates, but also other mods which implement it, e.g. OpenComputers). */
 public interface IControllable {
@@ -13,16 +15,15 @@ public interface IControllable {
         LOOP;
 
         public static final Mode[] VALUES = values();
+
+        public final String lowerCaseName = name().toLowerCase(Locale.ROOT);
     }
 
-    /** Get the current control mode of the Tile Entity.
-     *
-     * @return */
     Mode getControlMode();
 
-    /** Set the mode of the Tile Entity.
-     * 
-     * @param mode
-     * @return True if this control mode is accepted. */
-    boolean setControlMode(Mode mode, boolean simulate);
+    void setControlMode(Mode mode);
+
+    default boolean acceptsControlMode(Mode mode) {
+        return mode != null;
+    }
 }
