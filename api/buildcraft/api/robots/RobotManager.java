@@ -4,11 +4,11 @@
  * of the license located in http://www.mod-buildcraft.com/MMPL-1.0.txt */
 package buildcraft.api.robots;
 
+import buildcraft.api.core.BCLog;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import buildcraft.api.core.BCLog;
 
 public abstract class RobotManager {
     public static IRobotRegistryProvider registryProvider;

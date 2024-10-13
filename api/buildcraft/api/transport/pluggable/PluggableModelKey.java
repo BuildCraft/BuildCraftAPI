@@ -1,17 +1,17 @@
 package buildcraft.api.transport.pluggable;
 
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.Direction;
+
 import java.util.Objects;
 
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-
 public abstract class PluggableModelKey {
-    public final BlockRenderLayer layer;
-    public final EnumFacing side;
+    public final RenderType layer;
+    public final Direction side;
     private final int hash;
 
-    public PluggableModelKey(BlockRenderLayer layer, EnumFacing side) {
-        if (layer != BlockRenderLayer.CUTOUT && layer != BlockRenderLayer.TRANSLUCENT) {
+    public PluggableModelKey(RenderType layer, Direction side) {
+        if (layer != RenderType.cutout() && layer != RenderType.translucent()) {
             throw new IllegalArgumentException("Can only use CUTOUT or TRANSLUCENT at the moment (was " + layer + ")");
         }
         if (side == null) throw new NullPointerException("side");

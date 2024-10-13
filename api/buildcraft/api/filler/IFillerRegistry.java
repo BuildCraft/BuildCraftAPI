@@ -1,12 +1,10 @@
 package buildcraft.api.filler;
 
-import java.util.Collection;
+import buildcraft.api.statements.IStatement;
+import net.minecraft.core.BlockPos;
 
 import javax.annotation.Nullable;
-
-import net.minecraft.util.math.BlockPos;
-
-import buildcraft.api.statements.IStatement;
+import java.util.Collection;
 
 public interface IFillerRegistry {
     void addPattern(IFillerPattern pattern);

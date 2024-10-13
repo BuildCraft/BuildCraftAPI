@@ -6,12 +6,11 @@
 
 package buildcraft.api.template;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
 import buildcraft.api.core.EnumHandlerPriority;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public interface ITemplateRegistry {
     /** Adds a handler with a {@link EnumHandlerPriority} of {@linkplain EnumHandlerPriority#NORMAL} */
@@ -21,5 +20,5 @@ public interface ITemplateRegistry {
 
     void addHandler(ITemplateHandler handler, EnumHandlerPriority priority);
 
-    boolean handle(World world, BlockPos pos, EntityPlayer player, ItemStack stack);
+    boolean handle(Level world, BlockPos pos, Player player, ItemStack stack);
 }

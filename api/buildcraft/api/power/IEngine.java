@@ -4,23 +4,23 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.power;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
 
 /** Engines should implement this interface if they want to support BuildCraft's behaviour of passing power between
  * engines without using receivePower() (which has other issues). */
 public interface IEngine {
     /** Returns true if the engine wants to receive power from another engine on this side.
-     * 
+     *
      * @param side
      * @return */
-    boolean canReceiveFromEngine(EnumFacing side);
+    boolean canReceiveFromEngine(Direction side);
 
     /** Receives power from an engine.
      *
      * @param microJoules The number of micro joules to add.
      * @param simulate If true then just pretend you received power- don't actually change any of your internal state.
      * @return True if all the power was accepted, false if not.
-     * 
+     *
      * @see buildcraft.api.mj.IMjReceiver#receivePower(long, boolean) */
     boolean receivePower(long microJoules, boolean simulate);
 }

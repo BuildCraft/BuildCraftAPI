@@ -6,13 +6,13 @@
 
 package buildcraft.api.transport;
 
-import net.minecraft.item.EnumDyeColor;
+import net.minecraft.world.item.DyeColor;
 
 public interface IWireEmitter {
     /** Checks to see if this wire emitter is currently emitting the given colour. Only used to check if a given emitter
      * is still active. */
-    boolean isEmitting(EnumDyeColor colour);
+    boolean isEmitting(DyeColor colour);
 
     /** Emits the given wire colour this tick. */
-    void emitWire(EnumDyeColor colour);
+    void emitWire(DyeColor colour);
 }

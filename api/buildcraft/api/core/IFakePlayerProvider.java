@@ -7,10 +7,8 @@
 package buildcraft.api.core;
 
 import com.mojang.authlib.GameProfile;
-
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.WorldServer;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.FakePlayer;
 
 public interface IFakePlayerProvider {
@@ -19,7 +17,7 @@ public interface IFakePlayerProvider {
      * UUID of the real player who created the block or entity that calls this.
      */
     @Deprecated
-    FakePlayer getBuildCraftPlayer(WorldServer world);
+    FakePlayer getBuildCraftPlayer(ServerLevel world);
 
     /**
      * @param world
@@ -27,7 +25,7 @@ public interface IFakePlayerProvider {
      * @return A fake player that can be used IN THE CURRENT METHOD CONTEXT ONLY! This will cause problems if this
      * player is left around as it holds a reference to the world object.
      */
-    FakePlayer getFakePlayer(WorldServer world, GameProfile profile);
+    FakePlayer getFakePlayer(ServerLevel world, GameProfile profile);
 
     /**
      * @param world
@@ -36,5 +34,5 @@ public interface IFakePlayerProvider {
      * @return A fake player that can be used IN THE CURRENT METHOD CONTEXT ONLY! This will cause problems if this
      * player is left around as it holds a reference to the world object.
      */
-    FakePlayer getFakePlayer(WorldServer world, GameProfile profile, BlockPos pos);
+    FakePlayer getFakePlayer(ServerLevel world, GameProfile profile, BlockPos pos);
 }

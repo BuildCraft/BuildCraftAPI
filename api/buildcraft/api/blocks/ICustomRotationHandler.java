@@ -1,11 +1,11 @@
 package buildcraft.api.blocks;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 public interface ICustomRotationHandler {
-    EnumActionResult attemptRotation(World world, BlockPos pos, IBlockState state, EnumFacing sideWrenched);
+    InteractionResult attemptRotation(Level world, BlockPos pos, BlockState state, Direction sideWrenched);
 }

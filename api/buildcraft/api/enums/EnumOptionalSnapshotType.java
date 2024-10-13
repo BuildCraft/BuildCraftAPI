@@ -1,14 +1,14 @@
 package buildcraft.api.enums;
 
-import java.util.Locale;
+import net.minecraft.util.StringRepresentable;
 
-import net.minecraft.util.IStringSerializable;
+import java.util.Locale;
 
 /**
  * Version of {@link EnumSnapshotType} with {@link EnumOptionalSnapshotType#NONE} value.
  * Shouldn't be used where it's possible to use {@link EnumSnapshotType}.
  */
-public enum EnumOptionalSnapshotType implements IStringSerializable {
+public enum EnumOptionalSnapshotType implements StringRepresentable {
     NONE(null),
     TEMPLATE(EnumSnapshotType.TEMPLATE),
     BLUEPRINT(EnumSnapshotType.BLUEPRINT);
@@ -34,7 +34,7 @@ public enum EnumOptionalSnapshotType implements IStringSerializable {
     }
 
     @Override
-    public String getName() {
+    public String getSerializedName() {
         return name().toLowerCase(Locale.ROOT);
     }
 }

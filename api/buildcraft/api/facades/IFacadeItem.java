@@ -4,11 +4,11 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.facades;
 
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.ItemStack;
 
 public interface IFacadeItem {
 
@@ -22,7 +22,7 @@ public interface IFacadeItem {
     }
 
     @Nonnull
-    ItemStack getFacadeForBlock(IBlockState state);
+    ItemStack getFacadeForBlock(BlockState state);
 
     /** @param facade The {@link IFacade} instance. NOTE: This MUST be an object returned from
      *            {@link IFacadeRegistry#createBasicFacade(IFacadeState, boolean)} or
@@ -32,4 +32,6 @@ public interface IFacadeItem {
 
     @Nullable
     IFacade getFacade(@Nonnull ItemStack facade);
+
+    ItemStack createItemStack(IFacade state);
 }

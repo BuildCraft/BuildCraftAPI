@@ -4,7 +4,7 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.core;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 /** A cuboid volume. BuildCraft's default implementation is mutable, so you should not cache instances that you do not
  * own as-is, without making an immutable copy first. */
@@ -18,6 +18,6 @@ public interface IBox extends IZone {
     BlockPos max();
 
     default BlockPos size() {
-        return max().subtract(min()).add(1, 1, 1);
+        return max().subtract(min()).offset(1, 1, 1);
     }
 }

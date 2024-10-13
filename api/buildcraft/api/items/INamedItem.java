@@ -1,11 +1,12 @@
 package buildcraft.api.items;
 
+import net.minecraft.world.item.ItemStack;
+
 import javax.annotation.Nonnull;
 
-import net.minecraft.item.ItemStack;
-
 public interface INamedItem {
-    String getName(@Nonnull ItemStack stack);
+    // Component getName(@Nonnull ItemStack stack);
+    String getName_INamedItem(@Nonnull ItemStack stack);
 
     boolean setName(@Nonnull ItemStack stack, String name);
 }

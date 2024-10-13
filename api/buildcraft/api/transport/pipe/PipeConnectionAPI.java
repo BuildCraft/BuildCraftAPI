@@ -1,10 +1,9 @@
 package buildcraft.api.transport.pipe;
 
-import java.util.Map;
-
 import com.google.common.collect.Maps;
+import net.minecraft.world.level.block.Block;
 
-import net.minecraft.block.Block;
+import java.util.Map;
 
 /** Use this class to register blocks with custom block sizes so that pipes can connect to them properly. Note that you
  * do not need to register a custom pipe connection if your block implements ICustomPipeConnection. The registered
@@ -15,7 +14,7 @@ public final class PipeConnectionAPI {
 
     /** Register a block with a custom connection. Useful if you don't own the block class or are adding it for some-one
      * else.
-     * 
+     *
      * @param block The block instance
      * @param connection The connection instance */
     public static void registerConnection(Block block, ICustomPipeConnection connection) {

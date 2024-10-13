@@ -4,14 +4,13 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.filler;
 
-import javax.annotation.Nullable;
-
-import net.minecraft.util.math.BlockPos;
-
 import buildcraft.api.core.render.ISprite;
 import buildcraft.api.statements.IStatement;
 import buildcraft.api.statements.IStatementParameter;
 import buildcraft.api.statements.containers.IFillerStatementContainer;
+import net.minecraft.core.BlockPos;
+
+import javax.annotation.Nullable;
 
 /** A type of statement that is used for filler patterns. */
 public interface IFillerPattern extends IStatement {

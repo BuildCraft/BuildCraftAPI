@@ -1,10 +1,10 @@
 package buildcraft.api.enums;
 
+import net.minecraft.util.StringRepresentable;
+
 import java.util.Locale;
 
-import net.minecraft.util.IStringSerializable;
-
-public enum EnumPowerStage implements IStringSerializable {
+public enum EnumPowerStage implements StringRepresentable {
     BLUE,
     GREEN,
     YELLOW,
@@ -21,7 +21,7 @@ public enum EnumPowerStage implements IStringSerializable {
     }
 
     @Override
-    public String getName() {
+    public String getSerializedName() {
         return getModelName();
     }
 }

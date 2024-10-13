@@ -1,25 +1,24 @@
 package buildcraft.api.transport.pipe;
 
-import java.io.IOException;
-
-import javax.annotation.Nonnull;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.RayTraceResult;
-
+import buildcraft.api.core.EnumPipePart;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 
-import buildcraft.api.core.EnumPipePart;
+import javax.annotation.Nonnull;
+import java.io.IOException;
 
 public abstract class PipeBehaviour implements ICapabilityProvider {
     public final IPipe pipe;
@@ -28,63 +27,70 @@ public abstract class PipeBehaviour implements ICapabilityProvider {
         this.pipe = pipe;
     }
 
-    public PipeBehaviour(IPipe pipe, NBTTagCompound nbt) {
+    public PipeBehaviour(IPipe pipe, CompoundTag nbt) {
         this.pipe = pipe;
     }
 
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound nbt = new NBTTagCompound();
+    public CompoundTag writeToNbt() {
+        CompoundTag nbt = new CompoundTag();
 
         return nbt;
     }
 
-    public void writePayload(PacketBuffer buffer, Side side) {}
+    public void writePayload(FriendlyByteBuf buffer, Dist side) {
+    }
 
-    public void readPayload(PacketBuffer buffer, Side side, MessageContext ctx) throws IOException {}
+    // public void readPayload(FriendlyByteBuf buffer, Dist side, MessageContext ctx) throws IOException {}
+    public void readPayload(FriendlyByteBuf buffer, NetworkDirection side, NetworkEvent.Context ctx) throws IOException {
+    }
 
-    /** @deprecated Replaced by {@link #getTextureData(EnumFacing)}. */
+    /** @deprecated Replaced by {@link #getTextureData(Direction)}. */
     @Deprecated
-    public int getTextureIndex(EnumFacing face) {
+    public int getTextureIndex(Direction face) {
         return 0;
     }
 
-    public PipeFaceTex getTextureData(EnumFacing face) {
+    public PipeFaceTex getTextureData(Direction face) {
         return PipeFaceTex.get(getTextureIndex(face));
     }
 
     // Event handling
 
-    public boolean canConnect(EnumFacing face, PipeBehaviour other) {
+    public boolean canConnect(Direction face, PipeBehaviour other) {
         return true;
     }
 
-    public boolean canConnect(EnumFacing face, TileEntity oTile) {
+    public boolean canConnect(Direction face, BlockEntity oTile) {
         return true;
     }
 
     /** Used to force a connection to a given tile, even if the {@link PipeFlow} wouldn't normally connect to it. */
-    public boolean shouldForceConnection(EnumFacing face, TileEntity oTile) {
+    public boolean shouldForceConnection(Direction face, BlockEntity oTile) {
         return false;
     }
 
-    public boolean onPipeActivate(EntityPlayer player, RayTraceResult trace, float hitX, float hitY, float hitZ,
-        EnumPipePart part) {
+    public boolean onPipeActivate(Player player, HitResult trace, float hitX, float hitY, float hitZ, EnumPipePart part) {
         return false;
     }
 
-    public void onEntityCollide(Entity entity) {}
-
-    public void onTick() {}
-
-    @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
-        return getCapability(capability, facing) != null;
+    public void onEntityCollide(Entity entity) {
     }
 
-    @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
-        return null;
+    public void onTick() {
     }
 
-    public void addDrops(NonNullList<ItemStack> toDrop, int fortune) {}
+    // 1.18.2: getCapability().isPresent()
+//    @Override
+//    public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
+//        return getCapability(capability, facing) != null;
+//    }
+
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
+        return LazyOptional.empty();
+    }
+
+    public void addDrops(NonNullList<ItemStack> toDrop, int fortune) {
+    }
 }

@@ -1,12 +1,11 @@
 package buildcraft.api.inventory;
 
+import buildcraft.api.core.IStackFilter;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-
-import buildcraft.api.core.IStackFilter;
 
 /** A simple way to define something that deals with item insertion and extraction, without caring about slots. */
 public interface IItemTransactor {
@@ -19,7 +18,7 @@ public interface IItemTransactor {
 
     /** Similar to {@link #insert(ItemStack, boolean, boolean)} but probably be more efficient at inserting lots of
      * items.
-     * 
+     *
      * @param stacks The stacks to insert. Must not be null!
      * @param simulate If true then the in-world state of this will not be changed.
      * @return The overflow stacks. Will be an empty list if all of it was accepted. */
@@ -35,7 +34,7 @@ public interface IItemTransactor {
     }
 
     /** Extracts a number of items that match the given filter
-     * 
+     *
      * @param filter The filter that MUST be met by the extracted stack. Null means no filter - it can be any item.
      * @param min The minimum number of items to extract, or 0 if not enough items can be extracted
      * @param max The maximum number of items to extract.

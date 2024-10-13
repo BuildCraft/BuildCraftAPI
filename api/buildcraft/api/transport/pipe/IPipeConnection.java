@@ -4,7 +4,7 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.transport.pipe;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.core.Direction;
 
 @Deprecated
 // TODO: Test to see if this is necessary! (Or perhaps make it a capability)
@@ -22,5 +22,5 @@ public interface IPipeConnection {
      * @param type
      * @param with
      * @return CONNECT to force a connection, DISCONNECT to force no connection, and DEFAULT to let the pipe decide. */
-    ConnectOverride overridePipeConnection(Object/*IPipeTile.PipeType*/ type, EnumFacing with);
+    ConnectOverride overridePipeConnection(Object/*IPipeTile.PipeType*/ type, Direction with);
 }

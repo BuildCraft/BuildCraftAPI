@@ -1,56 +1,48 @@
 package buildcraft.api.properties;
 
+import buildcraft.api.enums.*;
+import com.google.common.collect.Maps;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+
 import java.util.Map;
 
-import com.google.common.collect.Maps;
-
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.util.EnumFacing;
-
-import buildcraft.api.enums.EnumDecoratedBlock;
-import buildcraft.api.enums.EnumEngineType;
-import buildcraft.api.enums.EnumLaserTableType;
-import buildcraft.api.enums.EnumMachineState;
-import buildcraft.api.enums.EnumOptionalSnapshotType;
-import buildcraft.api.enums.EnumPowerStage;
-import buildcraft.api.enums.EnumSpring;
-
 public final class BuildCraftProperties {
-    public static final IProperty<EnumFacing> BLOCK_FACING = PropertyEnum.create("facing", EnumFacing.class, EnumFacing.Plane.HORIZONTAL.facings());
-    public static final IProperty<EnumFacing> BLOCK_FACING_6 = PropertyEnum.create("facing", EnumFacing.class);
+    public static final Property<Direction> BLOCK_FACING = EnumProperty.create("facing", Direction.class, new Direction[] { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST });
+    public static final Property<Direction> BLOCK_FACING_6 = EnumProperty.create("facing", Direction.class);
 
-    public static final IProperty<EnumDyeColor> BLOCK_COLOR = PropertyEnum.create("color", EnumDyeColor.class);
-    public static final IProperty<EnumSpring> SPRING_TYPE = PropertyEnum.create("type", EnumSpring.class);
-    public static final IProperty<EnumEngineType> ENGINE_TYPE = PropertyEnum.create("type", EnumEngineType.class);
-    public static final IProperty<EnumLaserTableType> LASER_TABLE_TYPE = PropertyEnum.create("type", EnumLaserTableType.class);
-    public static final IProperty<EnumMachineState> MACHINE_STATE = PropertyEnum.create("state", EnumMachineState.class);
-    public static final IProperty<EnumPowerStage> ENERGY_STAGE = PropertyEnum.create("stage", EnumPowerStage.class);
-    public static final IProperty<EnumOptionalSnapshotType> SNAPSHOT_TYPE = PropertyEnum.create("snapshot_type", EnumOptionalSnapshotType.class);
-    public static final IProperty<EnumDecoratedBlock> DECORATED_BLOCK = PropertyEnum.create("decoration_type", EnumDecoratedBlock.class);
+    public static final Property<DyeColor> BLOCK_COLOR = EnumProperty.create("color", DyeColor.class);
+    // public static final EnumProperty<EnumSpring> SPRING_TYPE = EnumProperty.create("type", EnumSpring.class);
+//    public static final Property<EnumEngineType> ENGINE_TYPE = EnumProperty.create("type", EnumEngineType.class);
+    public static final Property<EnumLaserTableType> LASER_TABLE_TYPE = EnumProperty.create("type", EnumLaserTableType.class);
+    public static final Property<EnumMachineState> MACHINE_STATE = EnumProperty.create("state", EnumMachineState.class);
+    public static final Property<EnumPowerStage> ENERGY_STAGE = EnumProperty.create("stage", EnumPowerStage.class);
+    public static final Property<EnumOptionalSnapshotType> SNAPSHOT_TYPE = EnumProperty.create("snapshot_type", EnumOptionalSnapshotType.class);
+    public static final Property<EnumDecoratedBlock> DECORATED_BLOCK = EnumProperty.create("decoration_type", EnumDecoratedBlock.class);
 
-    public static final IProperty<Integer> GENERIC_PIPE_DATA = PropertyInteger.create("pipe_data", 0, 15);
-    public static final IProperty<Integer> LED_POWER = PropertyInteger.create("led_power", 0, 3);
+    public static final Property<Integer> GENERIC_PIPE_DATA = IntegerProperty.create("pipe_data", 0, 15);
+    public static final Property<Integer> LED_POWER = IntegerProperty.create("led_power", 0, 3);
 
-    public static final IProperty<Boolean> JOINED_BELOW = PropertyBool.create("joined_below");
-    public static final IProperty<Boolean> MOVING = PropertyBool.create("moving");
-    public static final IProperty<Boolean> LED_DONE = PropertyBool.create("led_done");
-    public static final IProperty<Boolean> ACTIVE = PropertyBool.create("active");
-    public static final IProperty<Boolean> VALID = PropertyBool.create("valid");
+    public static final Property<Boolean> JOINED_BELOW = BooleanProperty.create("joined_below"); // 这里的注册名就是model文件里的条件
+    public static final Property<Boolean> MOVING = BooleanProperty.create("moving");
+    public static final Property<Boolean> LED_DONE = BooleanProperty.create("led_done");
+    //    public static final Property<Boolean> ACTIVE = BooleanProperty.create("active"); // set but never used
+    public static final Property<Boolean> VALID = BooleanProperty.create("valid");
 
-    public static final IProperty<Boolean> CONNECTED_UP = PropertyBool.create("connected_up");
-    public static final IProperty<Boolean> CONNECTED_DOWN = PropertyBool.create("connected_down");
-    public static final IProperty<Boolean> CONNECTED_EAST = PropertyBool.create("connected_east");
-    public static final IProperty<Boolean> CONNECTED_WEST = PropertyBool.create("connected_west");
-    public static final IProperty<Boolean> CONNECTED_NORTH = PropertyBool.create("connected_north");
-    public static final IProperty<Boolean> CONNECTED_SOUTH = PropertyBool.create("connected_south");
+    public static final Property<Boolean> CONNECTED_UP = BooleanProperty.create("connected_up");
+    public static final Property<Boolean> CONNECTED_DOWN = BooleanProperty.create("connected_down");
+    public static final Property<Boolean> CONNECTED_EAST = BooleanProperty.create("connected_east");
+    public static final Property<Boolean> CONNECTED_WEST = BooleanProperty.create("connected_west");
+    public static final Property<Boolean> CONNECTED_NORTH = BooleanProperty.create("connected_north");
+    public static final Property<Boolean> CONNECTED_SOUTH = BooleanProperty.create("connected_south");
 
-    public static final Map<EnumFacing, IProperty<Boolean>> CONNECTED_MAP;
+    public static final Map<Direction, Property<Boolean>> CONNECTED_MAP;
 
-    // Block state setting flags -these are used by World.markAndNotifyBlock and World.setBlockState. These flags can be
+    // Block state setting flags -these are used by Level.markAndNotifyBlock and Level.setBlockState. These flags can be
     // added together to pass the additions
     public static final int UPDATE_NONE = 0;
     /** This updates the neighbouring blocks that the new block is set. It also updates the comparator output of this
@@ -63,23 +55,24 @@ public final class BuildCraftProperties {
      * world.isRemote returns false. */
     public static final int UPDATE_EVEN_CLIENT = 4 + MARK_BLOCK_FOR_UPDATE; // 6
 
-    // Pre-added flags- pass these as-is to the World.markAndNotifyBlock and World.setBlockState methods.
+    // Pre-added flags- pass these as-is to the Level.markAndNotifyBlock and Level.setBlockState methods.
     /** This will do what both {@link #UPDATE_NEIGHBOURS} and {@link #MARK_BLOCK_FOR_UPDATE} do. */
     public static final int MARK_THIS_AND_NEIGHBOURS = UPDATE_NEIGHBOURS + MARK_BLOCK_FOR_UPDATE;
     /** This will update everything about this block. */
     public static final int UPDATE_ALL = UPDATE_NEIGHBOURS + MARK_BLOCK_FOR_UPDATE + UPDATE_EVEN_CLIENT;
 
     static {
-        Map<EnumFacing, IProperty<Boolean>> map = Maps.newEnumMap(EnumFacing.class);
-        map.put(EnumFacing.DOWN, CONNECTED_DOWN);
-        map.put(EnumFacing.UP, CONNECTED_UP);
-        map.put(EnumFacing.EAST, CONNECTED_EAST);
-        map.put(EnumFacing.WEST, CONNECTED_WEST);
-        map.put(EnumFacing.NORTH, CONNECTED_NORTH);
-        map.put(EnumFacing.SOUTH, CONNECTED_SOUTH);
+        Map<Direction, Property<Boolean>> map = Maps.newEnumMap(Direction.class);
+        map.put(Direction.DOWN, CONNECTED_DOWN);
+        map.put(Direction.UP, CONNECTED_UP);
+        map.put(Direction.EAST, CONNECTED_EAST);
+        map.put(Direction.WEST, CONNECTED_WEST);
+        map.put(Direction.NORTH, CONNECTED_NORTH);
+        map.put(Direction.SOUTH, CONNECTED_SOUTH);
         CONNECTED_MAP = Maps.immutableEnumMap(map);
     }
 
     /** Deactivate constructor */
-    private BuildCraftProperties() {}
+    private BuildCraftProperties() {
+    }
 }

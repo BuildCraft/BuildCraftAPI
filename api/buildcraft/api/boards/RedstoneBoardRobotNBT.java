@@ -4,15 +4,14 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.boards;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-
 import buildcraft.api.robots.EntityRobotBase;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 
 public abstract class RedstoneBoardRobotNBT extends RedstoneBoardNBT<EntityRobotBase> {
 
     @Override
-    public RedstoneBoardRobot create(NBTTagCompound nbt, EntityRobotBase robot) {
+    public RedstoneBoardRobot create(CompoundTag nbt, EntityRobotBase robot) {
         return create(robot);
     }
 

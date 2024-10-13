@@ -1,7 +1,7 @@
 package buildcraft.api.robots;
 
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 
 public interface IRobotRegistryProvider {
-    IRobotRegistry getRegistry(World world);
+    IRobotRegistry getRegistry(Level world);
 }
