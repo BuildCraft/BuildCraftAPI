@@ -12,7 +12,8 @@ public final class BCLog {
     public static final Logger logger = LogManager.getLogger("BuildCraft");
 
     /** Deactivate constructor */
-    private BCLog() {}
+    private BCLog() {
+    }
 
     @Deprecated
     public static void logErrorAPI(String mod, Throwable error, Class<?> classFile) {

@@ -5,10 +5,10 @@
 package buildcraft.api.statements;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 public interface ITriggerExternal extends ITrigger {
 
-    boolean isTriggerActive(TileEntity target, EnumFacing side, IStatementContainer source, IStatementParameter[] parameters);
+    boolean isTriggerActive(TileEntity target, Direction side, IStatementContainer source, IStatementParameter[] parameters);
 
 }

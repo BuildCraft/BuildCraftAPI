@@ -9,11 +9,11 @@ import java.lang.annotation.Target;
  * extends {@link PipeEvent}. <br>
  * An example is:<br>
  * <code>
-    &#64;PipeEventHandler <br>
-    public void sideCheck(PipeEventItem.SideCheck sideCheck) {<br>
-     // Logic omitted<br>
-    }
- *  
+ &#64;PipeEventHandler <br>
+ public void sideCheck(PipeEventItem.SideCheck sideCheck) {<br>
+ // Logic omitted<br>
+ }
+ *
  *   </code> */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

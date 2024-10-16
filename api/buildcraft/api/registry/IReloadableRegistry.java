@@ -1,9 +1,9 @@
 package buildcraft.api.registry;
 
+import net.minecraft.util.ResourceLocation;
+
 import java.util.Collection;
 import java.util.Map;
-
-import net.minecraft.util.ResourceLocation;
 
 /** A registry of any Java object. This does not perform serialisation of any kind to the entries. */
 public interface IReloadableRegistry<E> {

@@ -4,22 +4,24 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.robots;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 public abstract class ResourceId {
 
-    protected ResourceId() {}
-
-    public void writeToNBT(NBTTagCompound nbt) {
-        nbt.setString("resourceName", RobotManager.getResourceIdName(getClass()));
+    protected ResourceId() {
     }
 
-    protected void readFromNBT(NBTTagCompound nbt) {}
+    public void writeToNBT(CompoundNBT nbt) {
+        nbt.putString("resourceName", RobotManager.getResourceIdName(getClass()));
+    }
 
-    public static ResourceId load(NBTTagCompound nbt) {
+    protected void readFromNBT(CompoundNBT nbt) {
+    }
+
+    public static ResourceId load(CompoundNBT nbt) {
         try {
             Class<?> cls;
-            if (nbt.hasKey("class")) {
+            if (nbt.contains("class")) {
                 // Migration support for 6.4.x
                 cls = RobotManager.getResourceIdByLegacyClassName(nbt.getString("class"));
             } else {

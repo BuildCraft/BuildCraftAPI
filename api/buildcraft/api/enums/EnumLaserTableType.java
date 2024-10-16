@@ -10,7 +10,7 @@ public enum EnumLaserTableType implements IStringSerializable {
     PROGRAMMING_TABLE;
 
     @Override
-    public String getName() {
+    public String getSerializedName() {
         return name();
     }
 }

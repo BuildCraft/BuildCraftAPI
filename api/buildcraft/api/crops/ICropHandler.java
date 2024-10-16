@@ -1,11 +1,11 @@
 package buildcraft.api.crops;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 public interface ICropHandler {
@@ -32,7 +32,7 @@ public interface ICropHandler {
      * @param seed
      * @param pos
      * @return true if the item was planted at pos. */
-    boolean plantCrop(World world, EntityPlayer player, ItemStack seed, BlockPos pos);
+    boolean plantCrop(World world, PlayerEntity player, ItemStack seed, BlockPos pos);
 
     /** Check if a crop is mature and can be harvested.
      *
@@ -40,7 +40,7 @@ public interface ICropHandler {
      * @param state
      * @param pos
      * @return true if the block at pos is mature and can be harvested. */
-    boolean isMature(IBlockAccess blockAccess, IBlockState state, BlockPos pos);
+    boolean isMature(IWorld blockAccess, BlockState state, BlockPos pos);
 
     /** Harvest the crop. You can assume harvestCrop() will only be called if isMature() returned true.
      *

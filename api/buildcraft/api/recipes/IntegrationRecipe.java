@@ -1,12 +1,11 @@
 package buildcraft.api.recipes;
 
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nonnull;
 
 public abstract class IntegrationRecipe {
     public final ResourceLocation name;
@@ -30,6 +29,9 @@ public abstract class IntegrationRecipe {
      */
     public abstract ImmutableList<IngredientStack> getRequirements(@Nonnull ItemStack output);
 
+    // Calen
+    public abstract ImmutableList<IngredientStack> getRequirements();
+
     /**
      * Determines the amount of MJ required to integrate
      * @param output The output that would be generated
@@ -38,6 +40,9 @@ public abstract class IntegrationRecipe {
     public abstract long getRequiredMicroJoules(ItemStack output);
 
     public abstract IngredientStack getCenterStack();
+
+    // Calen
+    public abstract ItemStack getOutput();
 
     @Override
     public boolean equals(Object o) {

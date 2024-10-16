@@ -1,11 +1,11 @@
 package buildcraft.api.schematics;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 public class SchematicBlockContext {
     @Nonnull
@@ -15,14 +15,14 @@ public class SchematicBlockContext {
     @Nonnull
     public final BlockPos pos;
     @Nonnull
-    public final IBlockState blockState;
+    public final BlockState blockState;
     @Nonnull
     public final Block block;
 
     public SchematicBlockContext(@Nonnull World world,
                                  @Nonnull BlockPos basePos,
                                  @Nonnull BlockPos pos,
-                                 @Nonnull IBlockState blockState,
+                                 @Nonnull BlockState blockState,
                                  @Nonnull Block block) {
         this.world = world;
         this.basePos = basePos;

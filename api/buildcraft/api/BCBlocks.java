@@ -1,16 +1,24 @@
 package buildcraft.api;
 
 import net.minecraft.block.Block;
-
-import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
+import net.minecraftforge.registries.ObjectHolder;
 
 public class BCBlocks {
 
     @ObjectHolder("buildcraftcore")
     public static class Core {
-        public static final Block SPRING = null;
-        public static final Block DECORATED = null;
-        public static final Block ENGINE = null;
+        public static final Block SPRING_WATER = null;
+        public static final Block SPRING_OIL = null;
+        public static final Block DECORATED_DESTROY = null;
+        public static final Block DECORATED_BLUEPRINT = null;
+        public static final Block DECORATED_TEMPLATE = null;
+        public static final Block DECORATED_PAPER = null;
+        public static final Block DECORATED_LEATHER = null;
+        public static final Block DECORATED_LASER_BACK = null;
+        public static final Block ENGINE_WOOD = null;
+        public static final Block ENGINE_STONE = null;
+        public static final Block ENGINE_IRON = null;
+        public static final Block ENGINE_CREATIVE = null;
         public static final Block MARKER_VOLUME = null;
         public static final Block MARKER_PATH = null;
     }

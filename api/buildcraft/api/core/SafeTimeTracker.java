@@ -44,7 +44,7 @@ public class SafeTimeTracker {
             return false;
         }
 
-        long currentTime = world.getTotalWorldTime();
+        long currentTime = world.getGameTime();
 
         if (currentTime < lastMark) {
             lastMark = currentTime;
@@ -65,6 +65,6 @@ public class SafeTimeTracker {
     }
 
     public void markTime(World world) {
-        lastMark = world.getTotalWorldTime();
+        lastMark = world.getGameTime();
     }
 }

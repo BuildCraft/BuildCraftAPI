@@ -120,7 +120,7 @@ public class PipeFaceTex {
         if (!Arrays.equals(textures, other.textures)) {
             return false;
         }
-        for (int i = textures.length; i > 0;) {
+        for (int i = textures.length; i > 0; ) {
             i--;
             if (getColour(i) != other.getColour(i)) {
                 return false;

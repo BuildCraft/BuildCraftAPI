@@ -1,17 +1,15 @@
 package buildcraft.api.mj;
 
 import io.netty.buffer.ByteBuf;
-
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
-
 import net.minecraftforge.common.util.INBTSerializable;
 
 /** Provides a basic implementation of a simple battery. Note that you should call {@link #tick(World, BlockPos)} or
- * {@link #tick(World, Vec3d)} every tick to allow for losing excess power. */
-public class MjBattery implements INBTSerializable<NBTTagCompound> {
+ * {@link #tick(World, Vector3d)} every tick to allow for losing excess power. */
+public class MjBattery implements INBTSerializable<CompoundNBT> {
     private final long capacity;
     private long microJoules = 0;
 
@@ -20,14 +18,14 @@ public class MjBattery implements INBTSerializable<NBTTagCompound> {
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setLong("stored", microJoules);
+    public CompoundNBT serializeNBT() {
+        CompoundNBT nbt = new CompoundNBT();
+        nbt.putLong("stored", microJoules);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         microJoules = nbt.getLong("stored");
     }
 
@@ -47,7 +45,7 @@ public class MjBattery implements INBTSerializable<NBTTagCompound> {
     }
 
     /** Attempts to add power, but only if this is not already full.
-     * 
+     *
      * @param microJoulesToAdd The power to add.
      * @return The excess power. */
     public long addPowerChecking(long microJoulesToAdd, boolean simulate) {
@@ -63,7 +61,7 @@ public class MjBattery implements INBTSerializable<NBTTagCompound> {
     }
 
     /** Attempts to extract exactly the given amount of power.
-     * 
+     *
      * @param power The amount of power to extract.
      * @return True if the power was removed, false if not. */
     public boolean extractPower(long power) {
@@ -90,16 +88,16 @@ public class MjBattery implements INBTSerializable<NBTTagCompound> {
     }
 
     public void tick(World world, BlockPos position) {
-        tick(world, new Vec3d(position.getX() + 0.5, position.getY() + 0.5, position.getZ() + 0.5));
+        tick(world, new Vector3d(position.getX() + 0.5, position.getY() + 0.5, position.getZ() + 0.5));
     }
 
-    public void tick(World world, Vec3d position) {
+    public void tick(World world, Vector3d position) {
         if (microJoules > capacity * 2) {
             losePower(world, position);
         }
     }
 
-    protected void losePower(World world, Vec3d position) {
+    protected void losePower(World world, Vector3d position) {
         long diff = microJoules - capacity * 2;
         long lost = ceilDivide(diff, 32);
         microJoules -= lost;

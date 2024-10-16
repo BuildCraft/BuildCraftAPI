@@ -6,11 +6,11 @@
 
 package buildcraft.api.template;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public interface ITemplateHandler {
-    boolean handle(World world, BlockPos pos, EntityPlayer player, ItemStack stack);
+    boolean handle(World world, BlockPos pos, PlayerEntity player, ItemStack stack);
 }

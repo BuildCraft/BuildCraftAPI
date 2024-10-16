@@ -4,15 +4,15 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.core;
 
-import java.util.Random;
-
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
+
+import java.util.Random;
 
 /** Defines some volume in the world. This is not guaranteed to be fully connected to itself. */
 public interface IZone {
     /** Returns the smallest possible distance that the pos would have to be changed by in order for
-     * {@link #contains(Vec3d)} to return true. If the position is already inside then this will return 0 */
+     * {@link #contains(Vector3d)} to return true. If the position is already inside then this will return 0 */
     double distanceTo(BlockPos pos);
 
     /** Returns {@link #distanceTo(BlockPos)} but squared. Usually this will be quicker to calculate. */
@@ -20,8 +20,8 @@ public interface IZone {
 
     /** Returns true if the point is enclosed by this zone, such that none of the coordinates lie outside the range
      * specified by this zone. */
-    boolean contains(Vec3d point);
+    boolean contains(Vector3d point);
 
-    /** Gets a random position that {@link #contains(Vec3d)} will return true. */
+    /** Gets a random position that {@link #contains(Vector3d)} will return true. */
     BlockPos getRandomBlockPos(Random rand);
 }

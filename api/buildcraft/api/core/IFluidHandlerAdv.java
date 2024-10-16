@@ -1,9 +1,9 @@
 package buildcraft.api.core;
 
-import javax.annotation.Nullable;
-
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+
+import javax.annotation.Nullable;
 
 /** A version of {@link IFluidHandler} that can drain a fluid that a fluid filter accepts. */
 public interface IFluidHandlerAdv extends IFluidHandler {
@@ -14,5 +14,5 @@ public interface IFluidHandlerAdv extends IFluidHandler {
      * @param doDrain If false, drain will only be simulated.
      * @return FluidStack representing the Fluid and amount that was (or would have been, if simulated) drained. */
     @Nullable
-    FluidStack drain(IFluidFilter filter, int maxDrain, boolean doDrain);
+    FluidStack drain(IFluidFilter filter, int maxDrain, FluidAction doDrain);
 }

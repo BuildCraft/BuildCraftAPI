@@ -1,14 +1,13 @@
 package buildcraft.api.statements.containers;
 
-import javax.annotation.Nullable;
-
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-
 import buildcraft.api.core.IBox;
 import buildcraft.api.filler.IFillerPattern;
 import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.IStatementParameter;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public interface IFillerStatementContainer extends IStatementContainer {
 

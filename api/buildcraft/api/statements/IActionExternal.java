@@ -5,8 +5,8 @@
 package buildcraft.api.statements;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 public interface IActionExternal extends IAction {
-    void actionActivate(TileEntity target, EnumFacing side, IStatementContainer source, IStatementParameter[] parameters);
+    void actionActivate(TileEntity target, Direction side, IStatementContainer source, IStatementParameter[] parameters);
 }

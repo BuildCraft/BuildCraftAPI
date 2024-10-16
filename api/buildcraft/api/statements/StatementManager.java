@@ -4,21 +4,15 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.statements;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
+
+import java.io.IOException;
+import java.util.*;
 
 public final class StatementManager {
-
     public static Map<String, IStatement> statements = new HashMap<>();
     public static Map<String, IParameterReader> parameters = new HashMap<>();
     public static Map<String, IParamReaderBuf> paramsBuf = new HashMap<>();
@@ -31,7 +25,7 @@ public final class StatementManager {
 
     @FunctionalInterface
     public interface IParameterReader {
-        IStatementParameter readFromNbt(NBTTagCompound nbt);
+        IStatementParameter readFromNbt(CompoundNBT nbt);
     }
 
     @FunctionalInterface
@@ -40,7 +34,8 @@ public final class StatementManager {
     }
 
     /** Deactivate constructor */
-    private StatementManager() {}
+    private StatementManager() {
+    }
 
     public static void registerTriggerProvider(ITriggerProvider provider) {
         if (provider != null && !triggerProviders.contains(provider)) {
@@ -59,11 +54,11 @@ public final class StatementManager {
     }
 
     public static void registerParameter(IParameterReader reader) {
-        registerParameter(reader, buf -> reader.readFromNbt(buf.readCompoundTag()));
+        registerParameter(reader, buf -> reader.readFromNbt(buf.readNbt()));
     }
 
     public static void registerParameter(IParameterReader reader, IParamReaderBuf bufReader) {
-        String name = reader.readFromNbt(new NBTTagCompound()).getUniqueTag();
+        String name = reader.readFromNbt(new CompoundNBT()).getUniqueTag();
         registerParameter(name, reader);
         registerParameter(name, bufReader);
     }
@@ -76,7 +71,7 @@ public final class StatementManager {
         paramsBuf.put(name, reader);
     }
 
-    public static List<ITriggerExternal> getExternalTriggers(EnumFacing side, TileEntity entity) {
+    public static List<ITriggerExternal> getExternalTriggers(Direction side, TileEntity entity) {
         if (entity instanceof IOverrideDefaultStatements) {
             List<ITriggerExternal> result = ((IOverrideDefaultStatements) entity).overrideTriggers();
             if (result != null) {
@@ -93,7 +88,7 @@ public final class StatementManager {
         return new ArrayList<>(triggers);
     }
 
-    public static List<IActionExternal> getExternalActions(EnumFacing side, TileEntity entity) {
+    public static List<IActionExternal> getExternalActions(Direction side, TileEntity entity) {
         if (entity instanceof IOverrideDefaultStatements) {
             List<IActionExternal> result = ((IOverrideDefaultStatements) entity).overrideActions();
             if (result != null) {
@@ -130,7 +125,7 @@ public final class StatementManager {
         return new ArrayList<>(actions);
     }
 
-    public static List<ITriggerInternalSided> getInternalSidedTriggers(IStatementContainer container, EnumFacing side) {
+    public static List<ITriggerInternalSided> getInternalSidedTriggers(IStatementContainer container, Direction side) {
         LinkedHashSet<ITriggerInternalSided> triggers = new LinkedHashSet<>();
 
         for (ITriggerProvider provider : triggerProviders) {
@@ -140,7 +135,7 @@ public final class StatementManager {
         return new ArrayList<>(triggers);
     }
 
-    public static List<IActionInternalSided> getInternalSidedActions(IStatementContainer container, EnumFacing side) {
+    public static List<IActionInternalSided> getInternalSidedActions(IStatementContainer container, Direction side) {
         LinkedHashSet<IActionInternalSided> actions = new LinkedHashSet<>();
 
         for (IActionProvider provider : actionProviders) {

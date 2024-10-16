@@ -1,26 +1,23 @@
 package buildcraft.api.schematics;
 
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import buildcraft.api.core.InvalidInputDataException;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
-
 import net.minecraftforge.fluids.FluidStack;
 
-import buildcraft.api.core.InvalidInputDataException;
+import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
 
 public interface ISchematicEntity {
     void init(SchematicEntityContext context);
 
-    Vec3d getPos();
+    Vector3d getPos();
 
     @Nonnull
     default List<ItemStack> computeRequiredItems() {
@@ -38,8 +35,8 @@ public interface ISchematicEntity {
 
     Entity buildWithoutChecks(World world, BlockPos basePos);
 
-    NBTTagCompound serializeNBT();
+    CompoundNBT serializeNBT();
 
     /** @throws InvalidInputDataException If the input data wasn't correct or didn't make sense. */
-    void deserializeNBT(NBTTagCompound nbt) throws InvalidInputDataException;
+    void deserializeNBT(CompoundNBT nbt) throws InvalidInputDataException;
 }

@@ -1,25 +1,24 @@
 /** Copyright (c) 2011-2015, SpaceToad and the BuildCraft Team http://www.mod-buildcraft.com
  *
- * The BuildCraft API is distributed under the terms of the MIT License. Please check the contents of the license, which
- * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
+ * BuildCraft is distributed under the terms of the Minecraft Mod Public License 1.0, or MMPL. Please check the contents
+ * of the license located in http://www.mod-buildcraft.com/MMPL-1.0.txt */
 package buildcraft.api.statements;
 
-import java.util.List;
-import java.util.Objects;
-
-import javax.annotation.Nonnull;
-
+import buildcraft.api.core.render.ISprite;
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import buildcraft.api.core.render.ISprite;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class StatementParameterItemStack implements IStatementParameter {
     // needed because ItemStack.EMPTY doesn't have @Nonnull applied to it :/
@@ -47,8 +46,8 @@ public class StatementParameterItemStack implements IStatementParameter {
         this.stack = stack;
     }
 
-    public StatementParameterItemStack(NBTTagCompound nbt) {
-        ItemStack read = new ItemStack(nbt.getCompoundTag("stack"));
+    public StatementParameterItemStack(CompoundNBT nbt) {
+        ItemStack read = ItemStack.of(nbt.getCompound("stack"));
         if (read.isEmpty()) {
             stack = EMPTY_STACK;
         } else {
@@ -57,11 +56,11 @@ public class StatementParameterItemStack implements IStatementParameter {
     }
 
     @Override
-    public void writeToNbt(NBTTagCompound compound) {
+    public void writeToNbt(CompoundNBT compound) {
         if (!stack.isEmpty()) {
-            NBTTagCompound tagCompound = new NBTTagCompound();
-            stack.writeToNBT(tagCompound);
-            compound.setTag("stack", tagCompound);
+            CompoundNBT tagCompound = new CompoundNBT();
+            stack.save(tagCompound);
+            compound.put("stack", tagCompound);
         }
     }
 
@@ -78,7 +77,7 @@ public class StatementParameterItemStack implements IStatementParameter {
 
     @Override
     public StatementParameterItemStack onClick(
-        IStatementContainer source, IStatement stmt, ItemStack stack, StatementMouseClick mouse
+            IStatementContainer source, IStatement stmt, ItemStack stack, StatementMouseClick mouse
     ) {
         if (stack.isEmpty()) {
             return EMPTY;
@@ -94,8 +93,7 @@ public class StatementParameterItemStack implements IStatementParameter {
         if (object instanceof StatementParameterItemStack) {
             StatementParameterItemStack param = (StatementParameterItemStack) object;
 
-            return ItemStack.areItemStacksEqual(stack, param.stack)
-            && ItemStack.areItemStackTagsEqual(stack, param.stack);
+            return ItemStack.matches(stack, param.stack);
         } else {
             return false;
         }
@@ -107,25 +105,48 @@ public class StatementParameterItemStack implements IStatementParameter {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public String getDescription() {
+    @OnlyIn(Dist.CLIENT)
+    public ITextComponent getDescription() {
         throw new UnsupportedOperationException("Don't call getDescription directly!");
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public List<String> getTooltip() {
+    @OnlyIn(Dist.CLIENT)
+    public String getDescriptionKey() {
+        throw new UnsupportedOperationException("Don't call getDescription directly!");
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public List<ITextComponent> getTooltip() {
         if (stack.isEmpty()) {
             return ImmutableList.of();
         }
-        List<String> tooltip = stack.getTooltip(null, ITooltipFlag.TooltipFlags.NORMAL);
+        List<ITextComponent> tooltip = stack.getTooltipLines(null, ITooltipFlag.TooltipFlags.NORMAL);
         if (!tooltip.isEmpty()) {
-            tooltip.set(0, stack.getRarity().rarityColor + tooltip.get(0));
+            tooltip.set(0, new StringTextComponent(stack.getRarity().color.toString()).append(tooltip.get(0)));
             for (int i = 1; i < tooltip.size(); i++) {
-                tooltip.set(i, TextFormatting.GRAY + tooltip.get(i));
+                tooltip.set(i, new StringTextComponent(TextFormatting.GRAY.toString()).append(tooltip.get(i)));
             }
         }
         return tooltip;
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public List<String> getTooltipKey() {
+        if (stack.isEmpty()) {
+            return ImmutableList.of();
+        }
+        List<ITextComponent> tooltip = stack.getTooltipLines(null, ITooltipFlag.TooltipFlags.NORMAL);
+        List<String> toolTipRet = new ArrayList<>(tooltip.size());
+        if (!tooltip.isEmpty()) {
+            toolTipRet.set(0, new StringTextComponent(stack.getRarity().color.toString()).append(tooltip.get(0)).getString());
+            for (int i = 1; i < tooltip.size(); i++) {
+                toolTipRet.set(i, new StringTextComponent(TextFormatting.GRAY.toString()).append(tooltip.get(i)).getString());
+            }
+        }
+        return toolTipRet;
     }
 
     @Override

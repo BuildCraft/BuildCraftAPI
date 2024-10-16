@@ -4,14 +4,13 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.boards;
 
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.common.util.Constants;
+
 import java.util.List;
 import java.util.Random;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-
-import net.minecraftforge.common.util.Constants;
 
 public abstract class RedstoneBoardNBT<T> {
 
@@ -19,23 +18,23 @@ public abstract class RedstoneBoardNBT<T> {
 
     public abstract String getID();
 
-    public abstract void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean advanced);
+    public abstract void addInformation(ItemStack stack, PlayerEntity player, List<String> list, boolean advanced);
 
     public abstract String getDisplayName();
 
-    public abstract IRedstoneBoard<T> create(NBTTagCompound nbt, T object);
+    public abstract IRedstoneBoard<T> create(CompoundNBT nbt, T object);
 
     public abstract String getItemModelLocation();
 
-    public void createBoard(NBTTagCompound nbt) {
-        nbt.setString("id", getID());
+    public void createBoard(CompoundNBT nbt) {
+        nbt.putString("id", getID());
     }
 
-    public int getParameterNumber(NBTTagCompound nbt) {
-        if (!nbt.hasKey("parameters")) {
+    public int getParameterNumber(CompoundNBT nbt) {
+        if (!nbt.contains("parameters")) {
             return 0;
         } else {
-            return nbt.getTagList("parameters", Constants.NBT.TAG_COMPOUND).tagCount();
+            return nbt.getList("parameters", Constants.NBT.TAG_COMPOUND).size();
         }
     }
 

@@ -1,16 +1,14 @@
 package buildcraft.api.registry;
 
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-
 import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.Set;
 
 /** A type of {@link IReloadableRegistry} that can be configured with buildcraft style simple scripts. A full
  * description can be found [...] */
@@ -37,7 +35,7 @@ public interface IScriptableRegistry<E> extends IReloadableRegistry<E> {
     }
 
     /** @return A {@link Set} (likely unmodifiable) that contains all of the
-     *         {@link ResourceLocation#getResourceDomain()}'s that had added entries to this registry through
+     *         {@link ResourceLocation#getNamespace()}'s that had added entries to this registry through
      *         scripts. */
     Set<String> getSourceDomains();
 
@@ -56,7 +54,7 @@ public interface IScriptableRegistry<E> extends IReloadableRegistry<E> {
          * @throws JsonSyntaxException if the input {@link JsonObject} was either missing required fields or had the
          *             wrong type or data for those fields. */
         OptionallyDisabled<E> deserialize(ResourceLocation name, JsonObject obj, JsonDeserializationContext ctx)
-            throws JsonSyntaxException;
+                throws JsonSyntaxException;
     }
 
     /** Similar to {@link IEntryDeserializer} except that this guarantees that
@@ -71,7 +69,7 @@ public interface IScriptableRegistry<E> extends IReloadableRegistry<E> {
          * {@link #deserializeConst(ResourceLocation, JsonObject, JsonDeserializationContext)} directly. */
         @Override
         default OptionallyDisabled<E> deserialize(ResourceLocation name, JsonObject obj, JsonDeserializationContext ctx)
-            throws JsonSyntaxException {
+                throws JsonSyntaxException {
             return new OptionallyDisabled<>(deserializeConst(name, obj, ctx));
         }
 
@@ -82,7 +80,7 @@ public interface IScriptableRegistry<E> extends IReloadableRegistry<E> {
          * @throws JsonSyntaxException if the input {@link JsonObject} was either missing required fields or had the
          *             wrong type or data for those fields. */
         E deserializeConst(ResourceLocation name, JsonObject obj, JsonDeserializationContext ctx)
-            throws JsonSyntaxException;
+                throws JsonSyntaxException;
     }
 
     /** A simple wrapper which either contains the object, or a string with a reason why it is allowed to be null. */

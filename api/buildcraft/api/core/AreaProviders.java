@@ -1,10 +1,10 @@
 package buildcraft.api.core;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AreaProviders {
     public static final List<IAreaProviderGetter> providers = new ArrayList<>();

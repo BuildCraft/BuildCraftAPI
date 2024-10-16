@@ -1,10 +1,10 @@
 package buildcraft.api.schematics;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 public class SchematicEntityContext {
     @Nonnull

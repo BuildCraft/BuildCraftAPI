@@ -1,16 +1,13 @@
 package buildcraft.api.mj;
 
-import java.text.DecimalFormat;
-
-import javax.annotation.Nonnull;
-
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.Vec3d;
+import buildcraft.api.core.CapabilitiesHelper;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
-
 import net.minecraftforge.common.capabilities.Capability;
 
-import buildcraft.api.core.CapabilitiesHelper;
+import javax.annotation.Nonnull;
+import java.text.DecimalFormat;
 
 public class MjAPI {
 
@@ -53,14 +50,18 @@ public class MjAPI {
 
     public enum NullaryEffectManager implements IMjEffectManager {
         INSTANCE;
-        @Override
-        public void createPowerLossEffect(World world, Vec3d center, long microJoulesLost) {}
 
         @Override
-        public void createPowerLossEffect(World world, Vec3d center, EnumFacing direction, long microJoulesLost) {}
+        public void createPowerLossEffect(World world, Vector3d center, long microJoulesLost) {
+        }
 
         @Override
-        public void createPowerLossEffect(World world, Vec3d center, Vec3d direction, long microJoulesLost) {}
+        public void createPowerLossEffect(World world, Vector3d center, Direction direction, long microJoulesLost) {
+        }
+
+        @Override
+        public void createPowerLossEffect(World world, Vector3d center, Vector3d direction, long microJoulesLost) {
+        }
     }
     // @formatter:on
 
@@ -71,21 +72,22 @@ public class MjAPI {
     // ###############
 
     @Nonnull
-    public static final Capability<IMjConnector> CAP_CONNECTOR;
+    public static Capability<IMjConnector> CAP_CONNECTOR;
 
     @Nonnull
-    public static final Capability<IMjReceiver> CAP_RECEIVER;
+    public static Capability<IMjReceiver> CAP_RECEIVER;
 
     @Nonnull
-    public static final Capability<IMjRedstoneReceiver> CAP_REDSTONE_RECEIVER;
+    public static Capability<IMjRedstoneReceiver> CAP_REDSTONE_RECEIVER;
 
     @Nonnull
-    public static final Capability<IMjReadable> CAP_READABLE;
+    public static Capability<IMjReadable> CAP_READABLE;
 
     @Nonnull
-    public static final Capability<IMjPassiveProvider> CAP_PASSIVE_PROVIDER;
+    public static Capability<IMjPassiveProvider> CAP_PASSIVE_PROVIDER;
 
-    static {
+    //static
+    public static void regCaps() {
         CAP_CONNECTOR = CapabilitiesHelper.registerCapability(IMjConnector.class);
         CAP_RECEIVER = CapabilitiesHelper.registerCapability(IMjReceiver.class);
         CAP_REDSTONE_RECEIVER = CapabilitiesHelper.registerCapability(IMjRedstoneReceiver.class);

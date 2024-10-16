@@ -8,9 +8,7 @@ package buildcraft.api.core;
 
 import java.io.IOException;
 
-/**
- * Indicates that we failed to load from NBT or some other file.
- */
+/** Indicates that we failed to load from NBT or some other file. */
 public class InvalidInputDataException extends IOException {
     public InvalidInputDataException() {
     }

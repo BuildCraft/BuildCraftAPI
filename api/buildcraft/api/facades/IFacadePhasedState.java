@@ -1,12 +1,12 @@
 package buildcraft.api.facades;
 
-import javax.annotation.Nullable;
+import net.minecraft.item.DyeColor;
 
-import net.minecraft.item.EnumDyeColor;
+import javax.annotation.Nullable;
 
 public interface IFacadePhasedState {
     IFacadeState getState();
 
     @Nullable
-    EnumDyeColor getActiveColor();
+    DyeColor getActiveColor();
 }

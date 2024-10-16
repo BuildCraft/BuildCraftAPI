@@ -4,19 +4,18 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.core;
 
-import java.util.HashMap;
-import java.util.Set;
-
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
 
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
+import java.util.HashMap;
+import java.util.Set;
 
 public final class BuildCraftAPI {
     public static IFakePlayerProvider fakePlayerProvider;
@@ -25,12 +24,13 @@ public final class BuildCraftAPI {
     public static final HashMap<String, IWorldProperty> worldProperties = Maps.newHashMap();
 
     /** Deactivate constructor */
-    private BuildCraftAPI() {}
+    private BuildCraftAPI() {
+    }
 
     public static String getVersion() {
-        ModContainer container = Loader.instance().getIndexedModList().get("buildcraftlib");
+        ModContainer container = ModList.get().getModContainerById("buildcraftlib").get();
         if (container != null) {
-            return container.getDisplayVersion();
+            return container.getModInfo().getVersion().getQualifier();
         }
         return "UNKNOWN VERSION";
     }
@@ -52,7 +52,8 @@ public final class BuildCraftAPI {
 
     public static ResourceLocation nameToResourceLocation(String name) {
         if (name.indexOf(':') > 0) return new ResourceLocation(name);
-        ModContainer modContainer = Loader.instance().activeModContainer();
+//        ModContainer modContainer = Loader.instance().activeModContainer();
+        ModContainer modContainer = ModLoadingContext.get().getActiveContainer();
         if (modContainer == null) {
             throw new IllegalStateException("Illegal recipe name " + name + ". Provide domain id to register it correctly.");
         }

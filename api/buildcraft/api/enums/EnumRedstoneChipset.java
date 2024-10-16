@@ -1,13 +1,14 @@
 package buildcraft.api.enums;
 
-import java.util.Locale;
-
+import buildcraft.api.BCItems;
+import buildcraft.api.items.IChipset;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 
-import buildcraft.api.BCItems;
+import java.util.Locale;
 
+// public enum EnumRedstoneChipset implements IStringSerializable
 public enum EnumRedstoneChipset implements IStringSerializable {
     RED,
     IRON,
@@ -18,12 +19,29 @@ public enum EnumRedstoneChipset implements IStringSerializable {
     private final String name = name().toLowerCase(Locale.ROOT);
 
     public ItemStack getStack(int stackSize) {
-        Item chipset = BCItems.Silicon.REDSTONE_CHIPSET;
+        Item chipset = null;
+        switch (this) {
+            case RED:
+                chipset = BCItems.Silicon.CHIPSET_REDSTONE;
+                break;
+            case IRON:
+                chipset = BCItems.Silicon.CHIPSET_IRON;
+                break;
+            case GOLD:
+                chipset = BCItems.Silicon.CHIPSET_GOLD;
+                break;
+            case QUARTZ:
+                chipset = BCItems.Silicon.CHIPSET_QUARTZ;
+                break;
+            case DIAMOND:
+                chipset = BCItems.Silicon.CHIPSET_DIAMOND;
+                break;
+        }
         if (chipset == null) {
             return ItemStack.EMPTY;
+        } else {
+            return new ItemStack(chipset, stackSize);
         }
-
-        return new ItemStack(chipset, stackSize, ordinal());
     }
 
     public ItemStack getStack() {
@@ -31,10 +49,12 @@ public enum EnumRedstoneChipset implements IStringSerializable {
     }
 
     public static EnumRedstoneChipset fromStack(ItemStack stack) {
-        if (stack == null) {
+//        if (stack == null)
+        if (stack == null || !(stack.getItem() instanceof IChipset)) {
             return RED;
         }
-        return fromOrdinal(stack.getMetadata());
+//        return fromOrdinal(stack.getMetadata());
+        return ((IChipset) stack.getItem()).getType();
     }
 
     public static EnumRedstoneChipset fromOrdinal(int ordinal) {
@@ -45,7 +65,8 @@ public enum EnumRedstoneChipset implements IStringSerializable {
     }
 
     @Override
-    public String getName() {
+//    public String getName()
+    public String getSerializedName() {
         return name;
     }
 }

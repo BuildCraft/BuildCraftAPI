@@ -4,13 +4,11 @@
  * of the license located in http://www.mod-buildcraft.com/MMPL-1.0.txt */
 package buildcraft.api.robots;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import net.minecraft.nbt.NBTTagCompound;
+import buildcraft.api.core.EnumPipePart;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-
-import buildcraft.api.core.EnumPipePart;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class ResourceIdBlock extends ResourceId {
 
@@ -30,7 +28,7 @@ public class ResourceIdBlock extends ResourceId {
     }
 
     public ResourceIdBlock(TileEntity tile) {
-        pos = tile.getPos();
+        pos = tile.getBlockPos();
     }
 
     @Override
@@ -51,21 +49,21 @@ public class ResourceIdBlock extends ResourceId {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
+    public void writeToNBT(CompoundNBT nbt) {
         super.writeToNBT(nbt);
 
         int[] arr = new int[] { pos.getX(), pos.getY(), pos.getZ() };
-        nbt.setIntArray("pos", arr);
+        nbt.putIntArray("pos", arr);
 
-        nbt.setTag("side", side.writeToNBT());
+        nbt.put("side", side.writeToNBT());
     }
 
     @Override
-    protected void readFromNBT(NBTTagCompound nbt) {
+    protected void readFromNBT(CompoundNBT nbt) {
         super.readFromNBT(nbt);
         int[] arr = nbt.getIntArray("pos");
         pos = new BlockPos(arr[0], arr[1], arr[2]);
 
-        side = EnumPipePart.readFromNBT(nbt.getTag("side"));
+        side = EnumPipePart.readFromNBT(nbt.get("side"));
     }
 }

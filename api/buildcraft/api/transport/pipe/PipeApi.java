@@ -1,18 +1,16 @@
 package buildcraft.api.transport.pipe;
 
-import java.util.IdentityHashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
-import net.minecraftforge.common.capabilities.Capability;
-
 import buildcraft.api.core.CapabilitiesHelper;
 import buildcraft.api.mj.MjAPI;
 import buildcraft.api.transport.IInjectable;
 import buildcraft.api.transport.IStripesRegistry;
 import buildcraft.api.transport.pluggable.IPluggableRegistry;
 import buildcraft.api.transport.pluggable.PipePluggable;
+import net.minecraftforge.common.capabilities.Capability;
+
+import javax.annotation.Nonnull;
+import java.util.IdentityHashMap;
+import java.util.Map;
 
 /** The central holding class for all pipe related registers and methods. */
 public final class PipeApi {
@@ -37,16 +35,16 @@ public final class PipeApi {
     public static final Map<PipeDefinition, PowerTransferInfo> powerTransferData = new IdentityHashMap<>();
 
     @Nonnull
-    public static final Capability<IPipeHolder> CAP_PIPE_HOLDER;
+    public static Capability<IPipeHolder> CAP_PIPE_HOLDER;
 
     @Nonnull
-    public static final Capability<IPipe> CAP_PIPE;
+    public static Capability<IPipe> CAP_PIPE;
 
     @Nonnull
-    public static final Capability<PipePluggable> CAP_PLUG;
+    public static Capability<PipePluggable> CAP_PLUG;
 
     @Nonnull
-    public static final Capability<IInjectable> CAP_INJECTABLE;
+    public static Capability<IInjectable> CAP_INJECTABLE;
 
     public static FluidTransferInfo getFluidTransferInfo(PipeDefinition def) {
         FluidTransferInfo info = fluidTransferData.get(def);
@@ -93,7 +91,7 @@ public final class PipeApi {
         public final boolean isReceiver;
 
         /** Sets resistancePerTick to be equal to lossPerTick when full power is being transferred, scaling down to 0.
-         * 
+         *
          * @param transferPerTick
          * @param lossPerTick
          * @param isReceiver */
@@ -102,7 +100,7 @@ public final class PipeApi {
         }
 
         /** Sets lossPerTick to be equal to resistancePerTick when full power is being transferred.
-         * 
+         *
          * @param transferPerTick
          * @param resistancePerTick
          * @param isReceiver */
@@ -123,7 +121,8 @@ public final class PipeApi {
 
     // Internals
 
-    static {
+    // static
+    public static void regCaps() {
         CAP_PIPE = CapabilitiesHelper.registerCapability(IPipe.class);
         CAP_PLUG = CapabilitiesHelper.registerCapability(PipePluggable.class);
         CAP_PIPE_HOLDER = CapabilitiesHelper.registerCapability(IPipeHolder.class);

@@ -2,9 +2,7 @@ package buildcraft.api.filler;
 
 import net.minecraft.util.math.BlockPos;
 
-/**
- * Use methods of the interface as much as possible, implementation can do optimizations
- */
+/** Use methods of the interface as much as possible, implementation can do optimizations */
 public interface IFilledTemplate {
     BlockPos getSize();
 

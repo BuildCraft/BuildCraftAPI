@@ -1,8 +1,8 @@
 package buildcraft.api.enums;
 
-import java.util.Locale;
-
 import net.minecraft.util.IStringSerializable;
+
+import java.util.Locale;
 
 public enum EnumPowerStage implements IStringSerializable {
     BLUE,
@@ -21,7 +21,7 @@ public enum EnumPowerStage implements IStringSerializable {
     }
 
     @Override
-    public String getName() {
+    public String getSerializedName() {
         return getModelName();
     }
 }

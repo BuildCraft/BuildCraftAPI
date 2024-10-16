@@ -1,8 +1,7 @@
 package buildcraft.api.transport;
 
-import net.minecraft.item.EnumDyeColor;
-
 import buildcraft.api.transport.pipe.IPipeHolder;
+import net.minecraft.item.DyeColor;
 
 public interface IWireManager {
 
@@ -10,15 +9,15 @@ public interface IWireManager {
 
     void updateBetweens(boolean recursive);
 
-    EnumDyeColor getColorOfPart(EnumWirePart part);
+    DyeColor getColorOfPart(EnumWirePart part);
 
-    EnumDyeColor removePart(EnumWirePart part);
+    DyeColor removePart(EnumWirePart part);
 
-    boolean addPart(EnumWirePart part, EnumDyeColor colour);
+    boolean addPart(EnumWirePart part, DyeColor colour);
 
-    boolean hasPartOfColor(EnumDyeColor color);
+    boolean hasPartOfColor(DyeColor color);
 
     boolean isPowered(EnumWirePart part);
 
-    boolean isAnyPowered(EnumDyeColor color);
+    boolean isAnyPowered(DyeColor color);
 }

@@ -4,11 +4,11 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.robots;
 
-import java.util.Collection;
-
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.Collection;
 
 public interface IRobotRegistry {
 
@@ -36,7 +36,7 @@ public interface IRobotRegistry {
 
     void releaseResources(EntityRobotBase robot);
 
-    DockingStation getStation(BlockPos pos, EnumFacing side);
+    DockingStation getStation(BlockPos pos, Direction side);
 
     Collection<DockingStation> getStations();
 
@@ -48,9 +48,9 @@ public interface IRobotRegistry {
 
     void release(DockingStation station, long robotId);
 
-    void writeToNBT(NBTTagCompound nbt);
+    void writeToNBT(CompoundNBT nbt);
 
-    void readFromNBT(NBTTagCompound nbt);
+    void readFromNBT(CompoundNBT nbt);
 
     void registryMarkDirty();
 }

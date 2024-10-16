@@ -1,15 +1,17 @@
 package buildcraft.api.transport.pipe;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.Rarity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModLoadingContext;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
-
 public final class PipeDefinition {
+    public final Item.Properties properties;
     public final ResourceLocation identifier;
     public final IPipeCreator logicConstructor;
     public final IPipeLoader logicLoader;
@@ -23,6 +25,7 @@ public final class PipeDefinition {
     private EnumPipeColourType colourType;
 
     public PipeDefinition(PipeDefinitionBuilder builder) {
+        this.properties = builder.properties;
         this.identifier = builder.identifier;
         this.textures = new String[builder.textureSuffixes.length];
         for (int i = 0; i < textures.length; i++) {
@@ -63,10 +66,14 @@ public final class PipeDefinition {
 
     @FunctionalInterface
     public interface IPipeLoader {
-        PipeBehaviour loadBehaviour(IPipe t, NBTTagCompound u);
+        PipeBehaviour loadBehaviour(IPipe t, CompoundNBT u);
     }
 
     public static class PipeDefinitionBuilder {
+        public Item.Properties properties = new Item.Properties()
+                .rarity(Rarity.COMMON)
+                .durability(0)
+                .stacksTo(64);
         public ResourceLocation identifier;
         public String texturePrefix;
         public String[] textureSuffixes = { "" };
@@ -81,10 +88,11 @@ public final class PipeDefinition {
         public boolean canBeColoured;
         public EnumPipeColourType colourType;
 
-        public PipeDefinitionBuilder() {}
+        public PipeDefinitionBuilder() {
+        }
 
         public PipeDefinitionBuilder(ResourceLocation identifier, IPipeCreator logicConstructor,
-            IPipeLoader logicLoader, PipeFlowType flowType) {
+                                     IPipeLoader logicLoader, PipeFlowType flowType) {
             this.identifier = identifier;
             this.logicConstructor = logicConstructor;
             this.logicLoader = logicLoader;
@@ -100,10 +108,10 @@ public final class PipeDefinition {
         }
 
         private static String getActiveModId() {
-            ModContainer mod = Loader.instance().activeModContainer();
+            ModContainer mod = ModLoadingContext.get().getActiveContainer();
             if (mod == null) {
                 throw new IllegalStateException(
-                    "Cannot interact with PipeDefinition outside of an actively scoped mod!");
+                        "Cannot interact with PipeDefinition outside of an actively scoped mod!");
             }
             return mod.getModId();
         }
@@ -119,7 +127,7 @@ public final class PipeDefinition {
 
         /** Sets the texture prefix to be: <code>[current_mod_id]:pipes/[prefix]</code> where [current_mod_id] is the
          * modid of the currently loaded mod, and [prefix] is the string parameter given.
-         * 
+         *
          * @return this */
         public PipeDefinitionBuilder texPrefix(String prefix) {
             return texPrefixDirect(getActiveModId() + ":pipes/" + prefix);
@@ -127,7 +135,7 @@ public final class PipeDefinition {
 
         /** Sets the {@link #texturePrefix} to the input string, without any additions or changes (unlike
          * {@link #texPrefix(String)})
-         * 
+         *
          * @return this */
         public PipeDefinitionBuilder texPrefixDirect(String prefix) {
             texturePrefix = prefix;
@@ -136,7 +144,7 @@ public final class PipeDefinition {
 
         /** Sets {@link #textureSuffixes} to the given array, or to <code>{""}</code> if the argument list is empty or
          * null.
-         * 
+         *
          * @return this. */
         public PipeDefinitionBuilder texSuffixes(String... suffixes) {
             if (suffixes == null || suffixes.length == 0) {

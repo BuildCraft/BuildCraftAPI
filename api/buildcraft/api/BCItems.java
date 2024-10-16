@@ -1,10 +1,8 @@
 package buildcraft.api;
 
-import net.minecraft.item.Item;
-
-import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
-
 import buildcraft.api.items.FluidItemDrops;
+import net.minecraft.item.Item;
+import net.minecraftforge.registries.ObjectHolder;
 
 public class BCItems {
 
@@ -23,7 +21,7 @@ public class BCItems {
         public static final Item GEAR_GOLD = null;
         public static final Item GEAR_DIAMOND = null;
         public static final Item WRENCH = null;
-        public static final Item PAINTBRUSH = null;
+        public static final Item PAINTBRUSH_CLEAN = null;
         public static final Item LIST = null;
         public static final Item MAP_LOCATION = null;
         public static final Item MARKER_CONNECTOR = null;
@@ -42,14 +40,14 @@ public class BCItems {
 
     @ObjectHolder("buildcraftenergy")
     public static class Energy {
-        public static final Item GLOB_OF_OIL = null;
+        public static final Item GLOB_OIL = null;
     }
 
     @ObjectHolder("buildcraftfactory")
     public static class Factory {
         public static final Item PLASTIC_SHEET = null;
-        public static final Item WATER_GEL = null;
-        public static final Item GELLED_WATER = null;
+        public static final Item WATER_GEL_SPAWN = null;
+        public static final Item GEL = null;
     }
 
     @ObjectHolder("buildcrafttransport")
@@ -57,19 +55,24 @@ public class BCItems {
         public static final Item PLUG_BLOCKER = null;
         public static final Item PLUG_POWER_ADAPTOR = null;
 
-        public static final Item PIPE_STRUCTURE = null;
-        public static final Item PIPE_WOOD_ITEM = null;
-        public static final Item PIPE_EMZULI_ITEM = null;
-        public static final Item PIPE_DIAMOND_WOOD_ITEM = null;
-        public static final Item PIPE_WOOD_FLUID = null;
-        public static final Item PIPE_DIAMOND_WOOD_FLUID = null;
+        public static final Item PIPE_STRUCTURE_COBBLESTONE_COLORLESS = null;
+        public static final Item PIPE_ITEMS_WOOD_COLORLESS = null;
+        public static final Item PIPE_ITEMS_EMZULI_COLORLESS = null;
+        public static final Item PIPE_ITEMS_DIAMOND_WOOD_COLORLESS = null;
+        public static final Item PIPE_FLUIDS_WOOD_COLORLESS = null;
+        public static final Item PIPE_FLUIDS_DIAMOND_WOOD_COLORLESS = null;
     }
 
     @ObjectHolder("buildcraftsilicon")
     public static class Silicon {
-        public static final Item REDSTONE_CHIPSET = null;
+        public static final Item CHIPSET_REDSTONE = null;
+        public static final Item CHIPSET_IRON = null;
+        public static final Item CHIPSET_GOLD = null;
+        public static final Item CHIPSET_QUARTZ = null;
+        public static final Item CHIPSET_DIAMOND = null;
 
         public static final Item PLUG_PULSAR = null;
+        public static final Item PLUG_FACADE = null;
     }
 
     @ObjectHolder("buildcraftrobotics")

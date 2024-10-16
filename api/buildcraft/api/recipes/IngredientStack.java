@@ -6,8 +6,12 @@
 
 package buildcraft.api.recipes;
 
+import com.google.gson.JsonElement;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.tags.ITag.INamedTag;
+import net.minecraft.util.IItemProvider;
 import net.minecraftforge.common.crafting.CraftingHelper;
 
 public final class IngredientStack {
@@ -23,7 +27,31 @@ public final class IngredientStack {
         this(ingredient, 1);
     }
 
-    public static IngredientStack of(Object o) {
+    // public static IngredientStack of(Object o)
+    public static IngredientStack of(JsonElement o) {
         return new IngredientStack(CraftingHelper.getIngredient(o));
+    }
+
+    public static IngredientStack of(ItemStack o) {
+        return new IngredientStack(Ingredient.of(o));
+    }
+
+    public static IngredientStack of(IItemProvider o) {
+        return new IngredientStack(Ingredient.of(o));
+    }
+
+    public static IngredientStack of(INamedTag tag) {
+        return new IngredientStack(Ingredient.of(tag));
+    }
+
+    public void toNetwork(PacketBuffer buffer) {
+        buffer.writeInt(this.count);
+        this.ingredient.toNetwork(buffer);
+    }
+
+    public static IngredientStack fromNetwork(PacketBuffer buffer) {
+        int countIn = buffer.readInt();
+        Ingredient ingredientIn = Ingredient.fromNetwork(buffer);
+        return new IngredientStack(ingredientIn, countIn);
     }
 }

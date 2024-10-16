@@ -4,17 +4,16 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.statements;
 
-import java.util.Collection;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 
 import javax.annotation.Nonnull;
-
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import java.util.Collection;
 
 public interface IActionProvider {
     void addInternalActions(Collection<IActionInternal> actions, IStatementContainer container);
 
-    void addInternalSidedActions(Collection<IActionInternalSided> actions, IStatementContainer container, @Nonnull EnumFacing side);
+    void addInternalSidedActions(Collection<IActionInternalSided> actions, IStatementContainer container, @Nonnull Direction side);
 
-    void addExternalActions(Collection<IActionExternal> actions, @Nonnull EnumFacing side, TileEntity tile);
+    void addExternalActions(Collection<IActionExternal> actions, @Nonnull Direction side, TileEntity tile);
 }

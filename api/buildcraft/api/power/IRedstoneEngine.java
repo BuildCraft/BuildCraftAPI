@@ -4,4 +4,5 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.power;
 
-public interface IRedstoneEngine {}
+public interface IRedstoneEngine {
+}

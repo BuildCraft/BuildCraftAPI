@@ -4,13 +4,13 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.gates;
 
-import java.util.List;
-
 import buildcraft.api.statements.IStatement;
 import buildcraft.api.statements.IStatementParameter;
 import buildcraft.api.statements.StatementSlot;
 import buildcraft.api.statements.containers.ISidedStatementContainer;
 import buildcraft.api.transport.pipe.IPipeHolder;
+
+import java.util.List;
 
 public interface IGate extends ISidedStatementContainer {
 

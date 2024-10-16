@@ -1,23 +1,16 @@
 package buildcraft.api.transport.pipe;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import java.util.*;
 
 public abstract class PipeEventItem extends PipeEvent {
 
@@ -44,8 +37,8 @@ public abstract class PipeEventItem extends PipeEvent {
     /** Fires whenever item insertion is attempted. The item might have been extracted by the pipe behaviour, inserted
      * by another pipe or even a different kind of tile. Note that you have no way of telling what caused this event. */
     public static class TryInsert extends PipeEventItem {
-        public final EnumDyeColor colour;
-        public final EnumFacing from;
+        public final DyeColor colour;
+        public final Direction from;
         /** The itemstack that is attempting to be inserted. NEVER CHANGE THIS! */
         @Nonnull
         public final ItemStack attempting;
@@ -53,8 +46,8 @@ public abstract class PipeEventItem extends PipeEvent {
          * {@link #attempting} */
         public int accepted;
 
-        public TryInsert(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, EnumFacing from,
-            @Nonnull ItemStack attempting) {
+        public TryInsert(IPipeHolder holder, IFlowItems flow, DyeColor colour, Direction from,
+                         @Nonnull ItemStack attempting) {
             super(true, holder, flow);
             this.colour = colour;
             this.from = from;
@@ -70,11 +63,11 @@ public abstract class PipeEventItem extends PipeEvent {
     }
 
     public static abstract class ReachDest extends PipeEventItem {
-        public EnumDyeColor colour;
+        public DyeColor colour;
         @Nonnull
         private ItemStack stack;
 
-        public ReachDest(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, @Nonnull ItemStack stack) {
+        public ReachDest(IPipeHolder holder, IFlowItems flow, DyeColor colour, @Nonnull ItemStack stack) {
             super(holder, flow);
             this.colour = colour;
             this.stack = stack;
@@ -96,10 +89,10 @@ public abstract class PipeEventItem extends PipeEvent {
 
     /** Fired after {@link TryInsert} (if some items were allowed in) to modify the incoming itemstack or its colour. */
     public static class OnInsert extends ReachDest {
-        public final EnumFacing from;
+        public final Direction from;
 
-        public OnInsert(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, @Nonnull ItemStack stack,
-            EnumFacing from) {
+        public OnInsert(IPipeHolder holder, IFlowItems flow, DyeColor colour, @Nonnull ItemStack stack,
+                        Direction from) {
             super(holder, flow, colour, stack);
             this.from = from;
         }
@@ -107,10 +100,10 @@ public abstract class PipeEventItem extends PipeEvent {
 
     /** Fired whenever an item reaches the centre of a pipe. Note that you *can* change the itemstack or the colour. */
     public static class ReachCenter extends ReachDest {
-        public final EnumFacing from;
+        public final Direction from;
 
-        public ReachCenter(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, @Nonnull ItemStack stack,
-            EnumFacing from) {
+        public ReachCenter(IPipeHolder holder, IFlowItems flow, DyeColor colour, @Nonnull ItemStack stack,
+                           Direction from) {
             super(holder, flow, colour, stack);
             this.from = from;
         }
@@ -118,10 +111,10 @@ public abstract class PipeEventItem extends PipeEvent {
 
     /** Fired whenever an item reaches the end of a pipe. Note that you *can* change the itemstack or the colour. */
     public static class ReachEnd extends ReachDest {
-        public final EnumFacing to;
+        public final Direction to;
 
-        public ReachEnd(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, @Nonnull ItemStack stack,
-            EnumFacing to) {
+        public ReachEnd(IPipeHolder holder, IFlowItems flow, DyeColor colour, @Nonnull ItemStack stack,
+                        Direction to) {
             super(holder, flow, colour, stack);
             this.to = to;
         }
@@ -139,9 +132,9 @@ public abstract class PipeEventItem extends PipeEvent {
         private ItemStack excess;
 
         /** The side that the item has been ejected to. */
-        public final EnumFacing to;
+        public final Direction to;
 
-        protected Ejected(IPipeHolder holder, IFlowItems flow, ItemStack inserted, ItemStack excess, EnumFacing to) {
+        protected Ejected(IPipeHolder holder, IFlowItems flow, ItemStack inserted, ItemStack excess, Direction to) {
             super(holder, flow);
             this.inserted = inserted;
             this.excess = excess;
@@ -165,8 +158,8 @@ public abstract class PipeEventItem extends PipeEvent {
         public static class IntoPipe extends Ejected {
             public final IFlowItems otherPipe;
 
-            public IntoPipe(IPipeHolder holder, IFlowItems flow, ItemStack inserted, ItemStack excess, EnumFacing to,
-                IFlowItems otherPipe) {
+            public IntoPipe(IPipeHolder holder, IFlowItems flow, ItemStack inserted, ItemStack excess, Direction to,
+                            IFlowItems otherPipe) {
                 super(holder, flow, inserted, excess, to);
                 this.otherPipe = otherPipe;
             }
@@ -176,8 +169,8 @@ public abstract class PipeEventItem extends PipeEvent {
         public static class IntoTile extends Ejected {
             public final TileEntity tile;
 
-            public IntoTile(IPipeHolder holder, IFlowItems flow, ItemStack inserted, ItemStack excess, EnumFacing to,
-                TileEntity tile) {
+            public IntoTile(IPipeHolder holder, IFlowItems flow, ItemStack inserted, ItemStack excess, Direction to,
+                            TileEntity tile) {
                 super(holder, flow, inserted, excess, to);
                 this.tile = tile;
             }
@@ -193,18 +186,18 @@ public abstract class PipeEventItem extends PipeEvent {
     /** Fired after {@link ReachCenter} to determine what sides are the items NOT allowed to go to, and the order of
      * priority for the allowed sides. */
     public static class SideCheck extends PipeEventItem {
-        public final EnumDyeColor colour;
-        public final EnumFacing from;
+        public final DyeColor colour;
+        public final Direction from;
         @Nonnull
         public final ItemStack stack;
 
         /** The priorities of each side. Stored inversely to the values given, so a higher priority will have a lower
          * value than a lower priority. */
         private final int[] priority = new int[6];
-        private final EnumSet<EnumFacing> allowed = EnumSet.allOf(EnumFacing.class);
+        private final EnumSet<Direction> allowed = EnumSet.allOf(Direction.class);
 
-        public SideCheck(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, EnumFacing from,
-            @Nonnull ItemStack stack) {
+        public SideCheck(IPipeHolder holder, IFlowItems flow, DyeColor colour, Direction from,
+                         @Nonnull ItemStack stack) {
             super(holder, flow);
             this.colour = colour;
             this.from = from;
@@ -214,23 +207,23 @@ public abstract class PipeEventItem extends PipeEvent {
         /** Checks to see if a side if allowed. Note that this may return true even though a later handler might
          * disallow a side, so you should only use this to skip checking a side (for example a diamond pipe might not
          * check the filters for a specific side if its already been disallowed) */
-        public boolean isAllowed(EnumFacing side) {
+        public boolean isAllowed(Direction side) {
             return allowed.contains(side);
         }
 
         /** Disallows the specific side(s) from being a destination for the item. If no sides are allowed, then
          * {@link TryBounce} will be fired to test if the item can bounce back. */
-        public void disallow(EnumFacing... sides) {
-            for (EnumFacing side : sides) {
+        public void disallow(Direction... sides) {
+            for (Direction side : sides) {
                 allowed.remove(side);
             }
         }
 
-        public void disallowAll(Collection<EnumFacing> sides) {
+        public void disallowAll(Collection<Direction> sides) {
             allowed.removeAll(sides);
         }
 
-        public void disallowAllExcept(EnumFacing... sides) {
+        public void disallowAllExcept(Direction... sides) {
             allowed.retainAll(Lists.newArrayList(sides));
         }
 
@@ -238,23 +231,23 @@ public abstract class PipeEventItem extends PipeEvent {
             allowed.clear();
         }
 
-        public void increasePriority(EnumFacing side) {
+        public void increasePriority(Direction side) {
             increasePriority(side, 1);
         }
 
-        public void increasePriority(EnumFacing side, int by) {
+        public void increasePriority(Direction side, int by) {
             priority[side.ordinal()] -= by;
         }
 
-        public void decreasePriority(EnumFacing side) {
+        public void decreasePriority(Direction side) {
             decreasePriority(side, 1);
         }
 
-        public void decreasePriority(EnumFacing side, int by) {
+        public void decreasePriority(Direction side, int by) {
             increasePriority(side, -by);
         }
 
-        public List<EnumSet<EnumFacing>> getOrder() {
+        public List<EnumSet<Direction>> getOrder() {
             // Skip the calculations if the size is simple
             switch (allowed.size()) {
                 case 0:
@@ -263,7 +256,8 @@ public abstract class PipeEventItem extends PipeEvent {
                     return ImmutableList.of(allowed);
                 default:
             }
-            priority_search: {
+            priority_search:
+            {
                 int val = priority[0];
                 for (int i = 1; i < priority.length; i++) {
                     if (priority[i] != val) {
@@ -277,15 +271,15 @@ public abstract class PipeEventItem extends PipeEvent {
             int[] ordered = Arrays.copyOf(priority, 6);
             Arrays.sort(ordered);
             int last = 0;
-            List<EnumSet<EnumFacing>> list = Lists.newArrayList();
+            List<EnumSet<Direction>> list = Lists.newArrayList();
             for (int i = 0; i < 6; i++) {
                 int current = ordered[i];
                 if (i != 0 && current == last) {
                     continue;
                 }
                 last = current;
-                EnumSet<EnumFacing> set = EnumSet.noneOf(EnumFacing.class);
-                for (EnumFacing face : EnumFacing.VALUES) {
+                EnumSet<Direction> set = EnumSet.noneOf(Direction.class);
+                for (Direction face : Direction.values()) {
                     if (allowed.contains(face)) {
                         if (priority[face.ordinal()] == current) {
                             set.add(face);
@@ -303,14 +297,14 @@ public abstract class PipeEventItem extends PipeEvent {
     /** Fired after {@link SideCheck} (if all sides were disallowed) to see if the item is allowed to bounce back to
      * where it was inserted. */
     public static class TryBounce extends PipeEventItem {
-        public final EnumDyeColor colour;
-        public final EnumFacing from;
+        public final DyeColor colour;
+        public final Direction from;
         @Nonnull
         public final ItemStack stack;
         public boolean canBounce = false;
 
-        public TryBounce(IPipeHolder holder, IFlowItems flow, EnumDyeColor colour, EnumFacing from,
-            @Nonnull ItemStack stack) {
+        public TryBounce(IPipeHolder holder, IFlowItems flow, DyeColor colour, Direction from,
+                         @Nonnull ItemStack stack) {
             super(holder, flow);
             this.colour = colour;
             this.from = from;
@@ -319,9 +313,9 @@ public abstract class PipeEventItem extends PipeEvent {
     }
 
     public static class Drop extends PipeEventItem {
-        private final EntityItem entity;
+        private final ItemEntity entity;
 
-        public Drop(IPipeHolder holder, IFlowItems flow, EntityItem entity) {
+        public Drop(IPipeHolder holder, IFlowItems flow, ItemEntity entity) {
             super(holder, flow);
             this.entity = entity;
         }
@@ -342,32 +336,32 @@ public abstract class PipeEventItem extends PipeEvent {
             }
         }
 
-        public EntityItem getEntity() {
+        public ItemEntity getEntity() {
             return this.entity;
         }
     }
 
     /** Base class for {@link Split} and {@link FindDest}. Do not listen to this directly! */
     public static abstract class OrderedEvent extends PipeEventItem {
-        public final List<EnumSet<EnumFacing>> orderedDestinations;
+        public final List<EnumSet<Direction>> orderedDestinations;
 
-        public OrderedEvent(IPipeHolder holder, IFlowItems flow, List<EnumSet<EnumFacing>> orderedDestinations) {
+        public OrderedEvent(IPipeHolder holder, IFlowItems flow, List<EnumSet<Direction>> orderedDestinations) {
             super(holder, flow);
             this.orderedDestinations = orderedDestinations;
         }
 
-        public EnumSet<EnumFacing> getAllPossibleDestinations() {
-            EnumSet<EnumFacing> set = EnumSet.noneOf(EnumFacing.class);
-            for (EnumSet<EnumFacing> e : orderedDestinations) {
+        public EnumSet<Direction> getAllPossibleDestinations() {
+            EnumSet<Direction> set = EnumSet.noneOf(Direction.class);
+            for (EnumSet<Direction> e : orderedDestinations) {
                 set.addAll(e);
             }
             return set;
         }
 
-        public ImmutableList<EnumFacing> generateRandomOrder() {
-            ImmutableList.Builder<EnumFacing> builder = ImmutableList.builder();
-            for (EnumSet<EnumFacing> set : orderedDestinations) {
-                List<EnumFacing> faces = new ArrayList<>(set);
+        public ImmutableList<Direction> generateRandomOrder() {
+            ImmutableList.Builder<Direction> builder = ImmutableList.builder();
+            for (EnumSet<Direction> set : orderedDestinations) {
+                List<Direction> faces = new ArrayList<>(set);
                 Collections.shuffle(faces);
                 builder.addAll(faces);
             }
@@ -382,7 +376,7 @@ public abstract class PipeEventItem extends PipeEvent {
     public static class Split extends OrderedEvent {
         public final List<ItemEntry> items = new ArrayList<>();
 
-        public Split(IPipeHolder holder, IFlowItems flow, List<EnumSet<EnumFacing>> order, ItemEntry toSplit) {
+        public Split(IPipeHolder holder, IFlowItems flow, List<EnumSet<Direction>> order, ItemEntry toSplit) {
             super(holder, flow, order);
             items.add(toSplit);
         }
@@ -394,8 +388,8 @@ public abstract class PipeEventItem extends PipeEvent {
     public static class FindDest extends OrderedEvent {
         public final ImmutableList<ItemEntry> items;
 
-        public FindDest(IPipeHolder holder, IFlowItems flow, List<EnumSet<EnumFacing>> orderedDestinations,
-            ImmutableList<ItemEntry> items) {
+        public FindDest(IPipeHolder holder, IFlowItems flow, List<EnumSet<Direction>> orderedDestinations,
+                        ImmutableList<ItemEntry> items) {
             super(holder, flow, orderedDestinations);
             this.items = items;
         }
@@ -422,15 +416,15 @@ public abstract class PipeEventItem extends PipeEvent {
 
     /** Mostly immutable holding class for item stacks. */
     public static class ItemEntry {
-        public final EnumDyeColor colour;
+        public final DyeColor colour;
         @Nonnull
         public final ItemStack stack;
-        public final EnumFacing from;
+        public final Direction from;
         /** The list of the destinations to try, in order. */
         @Nullable
-        public List<EnumFacing> to;
+        public List<Direction> to;
 
-        public ItemEntry(EnumDyeColor colour, @Nonnull ItemStack stack, EnumFacing from) {
+        public ItemEntry(DyeColor colour, @Nonnull ItemStack stack, Direction from) {
             this.colour = colour;
             this.stack = stack;
             this.from = from;

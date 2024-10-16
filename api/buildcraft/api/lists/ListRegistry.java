@@ -1,10 +1,10 @@
 package buildcraft.api.lists;
 
+import net.minecraft.item.Item;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import net.minecraft.item.Item;
 
 public final class ListRegistry {
     public static final List<Class<? extends Item>> itemClassAsType = new ArrayList<>();

@@ -1,6 +1,6 @@
 package buildcraft.api.statements;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 /** This interface can be used by tiles to override external trigger behaviour.
  *
@@ -12,5 +12,5 @@ public interface ITriggerExternalOverride {
         IGNORE
     }
 
-    Result override(EnumFacing side, IStatementContainer source, ITriggerExternal trigger, IStatementParameter[] parameters);
+    Result override(Direction side, IStatementContainer source, ITriggerExternal trigger, IStatementParameter[] parameters);
 }

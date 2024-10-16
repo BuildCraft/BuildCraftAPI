@@ -1,12 +1,12 @@
 package buildcraft.api.mj;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import net.minecraft.util.EnumFacing;
-
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /** Provides a quick way to return all types of a single {@link IMjConnector} for all the different capabilities. */
 public class MjCapabilityHelper implements ICapabilityProvider {
@@ -34,28 +34,33 @@ public class MjCapabilityHelper implements ICapabilityProvider {
         this.provider = mj instanceof IMjPassiveProvider ? (IMjPassiveProvider) mj : null;
     }
 
-    @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
-        return getCapability(capability, facing) != null;
-    }
+//    @Override
+//    public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
+//        return getCapability(capability, facing) != null;
+//    }
 
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
         if (capability == MjAPI.CAP_CONNECTOR) {
-            return MjAPI.CAP_CONNECTOR.cast(connector);
+//            return MjAPI.CAP_CONNECTOR.cast(connector);
+            return connector == null ? LazyOptional.empty() : LazyOptional.of(() -> connector).cast();
         }
         if (capability == MjAPI.CAP_RECEIVER) {
-            return MjAPI.CAP_RECEIVER.cast(receiver);
+//            return MjAPI.CAP_RECEIVER.cast(receiver);
+            return receiver == null ? LazyOptional.empty() : LazyOptional.of(() -> receiver).cast();
         }
         if (capability == MjAPI.CAP_REDSTONE_RECEIVER) {
-            return MjAPI.CAP_REDSTONE_RECEIVER.cast(rsReceiver);
+//            return MjAPI.CAP_REDSTONE_RECEIVER.cast(rsReceiver);
+            return rsReceiver == null ? LazyOptional.empty() : LazyOptional.of(() -> rsReceiver).cast();
         }
         if (capability == MjAPI.CAP_READABLE) {
-            return MjAPI.CAP_READABLE.cast(readable);
+//            return MjAPI.CAP_READABLE.cast(readable);
+            return readable == null ? LazyOptional.empty() : LazyOptional.of(() -> readable).cast();
         }
         if (capability == MjAPI.CAP_PASSIVE_PROVIDER) {
-            return MjAPI.CAP_PASSIVE_PROVIDER.cast(provider);
+//            return MjAPI.CAP_PASSIVE_PROVIDER.cast(provider);
+            return provider == null ? LazyOptional.empty() : LazyOptional.of(() -> provider).cast();
         }
-        return null;
+        return LazyOptional.empty();
     }
 }

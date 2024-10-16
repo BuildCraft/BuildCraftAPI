@@ -1,12 +1,10 @@
 package buildcraft.api.transport.pipe;
 
-import java.util.Map;
-import java.util.function.Consumer;
-
-import javax.annotation.Nullable;
-
-import net.minecraft.item.Item;
+import net.minecraft.item.DyeColor;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.RegistryObject;
+
+import java.util.Map;
 
 public interface IPipeRegistry {
     PipeDefinition getDefinition(ResourceLocation identifier);
@@ -15,22 +13,26 @@ public interface IPipeRegistry {
 
     /** Maps the given {@link PipeDefinition} to an {@link IItemPipe}. This acts exactly akin to
      * {@link Map#put(Object, Object)}. */
-    void setItemForPipe(PipeDefinition definition, @Nullable IItemPipe item);
+//    void setItemForPipe(PipeDefinition definition, @Nullable IItemPipe item);
+    void setItemForPipe(PipeDefinition definition, Map<DyeColor, RegistryObject<? extends IItemPipe>> item);
 
-    IItemPipe getItemForPipe(PipeDefinition definition);
+    /** Creates a pipe item with a single colour  */
+    // IItemPipe getItemForPipe(PipeDefinition definition);
+    IItemPipe getItemForPipe(PipeDefinition definition, DyeColor colour);
 
     /** Creates an {@link IItemPipe} for the given {@link PipeDefinition}. If the {@link PipeDefinition} has been
      * registered with {@link #registerPipe(PipeDefinition)} then it will also be registered with
-     * {@link #setItemForPipe(PipeDefinition, IItemPipe)}. The returned item will be automatically registered with
+     * {@link #setItemForPipe(PipeDefinition, Map)}. The returned item will be automatically registered with
      * forge. */
-    IItemPipe createItemForPipe(PipeDefinition definition);
+//    IItemPipe createItemForPipe(PipeDefinition definition);
+    Map<DyeColor, RegistryObject<? extends IItemPipe>> createItemForPipe(PipeDefinition definition);
 
-    /** Identical to {@link #createItemForPipe(PipeDefinition)}, but doesn't require registering tags with buildcraft
-     * lib in order to register.
-     * 
-     * @param postCreate A function to call in order to setup the {@link Item#setRegistryName(ResourceLocation)} and
-     *            {@link Item#setUnlocalizedName(String)}. */
-    IItemPipe createUnnamedItemForPipe(PipeDefinition definition, Consumer<Item> postCreate);
+//    /** Identical to {@link #createItemForPipe(PipeDefinition)}, but doesn't require registering tags with buildcraftcore
+//     * lib in order to register.
+//     *
+//     * @param postCreate A function to call in order to setup the {@link Item#setRegistryName(ResourceLocation)} and
+//     *            {@link Item#setUnlocalizedName(String)}. */
+//    IItemPipe createUnnamedItemForPipe(PipeDefinition definition, Consumer<Item> postCreate);
 
     Iterable<PipeDefinition> getAllRegisteredPipes();
 }

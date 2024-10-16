@@ -8,21 +8,21 @@ public abstract class PipeEventTileState extends PipeEvent {
         super(holder);
     }
 
-    /** Fired in {@link TileEntity#invalidate()} */
+    /** Fired in {@link TileEntity#setRemoved()} */
     public static class Invalidate extends PipeEventTileState {
         public Invalidate(IPipeHolder holder) {
             super(holder);
         }
     }
 
-    /** Fired in {@link TileEntity#validate()} */
+    /** Fired in {@link TileEntity#clearRemoved()} */
     public static class Validate extends PipeEventTileState {
         public Validate(IPipeHolder holder) {
             super(holder);
         }
     }
 
-    /** Fired in {@link TileEntity#onChunkUnload()} */
+    /** Fired in {@link TileEntity#onChunkUnloaded()} */
     public static class ChunkUnload extends PipeEventTileState {
         public ChunkUnload(IPipeHolder holder) {
             super(holder);

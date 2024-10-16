@@ -1,18 +1,16 @@
 package buildcraft.api.core;
 
-import java.lang.reflect.Field;
-import java.util.IdentityHashMap;
-import java.util.concurrent.Callable;
-
-import javax.annotation.Nonnull;
-
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.util.EnumFacing;
-
+import net.minecraft.nbt.INBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+
+import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
+import java.util.IdentityHashMap;
+import java.util.concurrent.Callable;
 
 /** Forge has a wonderful system for capabilities, which provides a better way of managing mod compat even if the target
  * mod isn't loaded. Said system uses ASM data to inject capabilities into every mod, which makes it a matter of
@@ -38,20 +36,21 @@ public class CapabilitiesHelper {
     /** Registers a given type with {@link #registerCapability(CheckedStorage, Callable)}, but with a
      * {@link ThrowingStorage} and a factory that throws an {@link UnsupportedOperationException} instead of creating a
      * new capability instance.
-     * 
+     *
      * @param clazz The type that all instances must derive from.
      * @return The registered {@link Capability} */
     @Nonnull
     public static <T> Capability<T> registerCapability(Class<T> clazz) {
-        return registerCapability(new ThrowingStorage<>(clazz), () -> {
+        return registerCapability(new ThrowingStorage<>(clazz), () ->
+        {
             throw new UnsupportedOperationException("You must create your own instances!");
         });
     }
 
     /** Registers a given type with the {@link CapabilityManager}, but also returns the capability instance.
-     * 
+     *
      * @param storage The storage for the capability. This must extend {@link CheckedStorage} in order to allow the
-     *            internal mechanisms to ensure that nothing went wrong during our meddling into forge.
+     *                internal mechanisms to ensure that nothing went wrong during our meddling into forge.
      * @param factory The factory for the capability.
      * @return The registered {@link Capability} */
     @Nonnull
@@ -62,7 +61,7 @@ public class CapabilitiesHelper {
     /** A type of {@link IStorage} that contains the class that it would store. Used by the internal mechanisms of
      * {@link CapabilitiesHelper} to ensure that everything registers properly. A default always-throwing implementation
      * is {@link ThrowingStorage}.
-     * 
+     *
      * @param <T> The type of this storage */
     public static abstract class CheckedStorage<T> implements IStorage<T> {
 
@@ -82,12 +81,12 @@ public class CapabilitiesHelper {
         }
 
         @Override
-        public NBTBase writeNBT(Capability<T> capability, T instance, EnumFacing side) {
+        public INBT writeNBT(Capability<T> capability, T instance, Direction side) {
             throw new UnsupportedOperationException("You must create your own instances!");
         }
 
         @Override
-        public void readNBT(Capability<T> capability, T instance, EnumFacing side, NBTBase nbt) {
+        public void readNBT(Capability<T> capability, T instance, Direction side, INBT nbt) {
             throw new UnsupportedOperationException("You must create your own instances!");
         }
     }
@@ -127,7 +126,7 @@ public class CapabilitiesHelper {
         }
         if (!(obj instanceof Capability)) {
             throw new Error("We must have the wrong map! providers.get(key) returned " + obj.getClass()
-                + " rather than " + Capability.class);
+                    + " rather than " + Capability.class);
         }
         Capability<?> cap = (Capability<?>) obj;
         // Ensure that the given cap is actually *our* capability
@@ -136,12 +135,12 @@ public class CapabilitiesHelper {
         IStorage<?> cStorage = cap.getStorage();
         if (!(cStorage instanceof CheckedStorage)) {
             throw new IllegalStateException(
-                "Returned capability storage has a different storage class than expected! " + cStorage.getClass());
+                    "Returned capability storage has a different storage class than expected! " + cStorage.getClass());
         }
         CheckedStorage<?> vStorage = (CheckedStorage<?>) cStorage;
         if (vStorage.clazz != clazz) {
             throw new IllegalStateException(
-                "Returned capability storage has a different class than expected! " + vStorage.clazz + " vs " + clazz);
+                    "Returned capability storage has a different class than expected! " + vStorage.clazz + " vs " + clazz);
         }
         return (Capability<T>) cap;
     }
@@ -159,12 +158,12 @@ public class CapabilitiesHelper {
 
     public static class VoidStorage<T> implements Capability.IStorage<T> {
         @Override
-        public NBTBase writeNBT(Capability<T> capability, T instance, EnumFacing side) {
+        public INBT writeNBT(Capability<T> capability, T instance, Direction side) {
             throw new IllegalStateException("You must create your own instances!");
         }
 
         @Override
-        public void readNBT(Capability<T> capability, T instance, EnumFacing side, NBTBase nbt) {
+        public void readNBT(Capability<T> capability, T instance, Direction side, INBT nbt) {
             throw new IllegalStateException("You must create your own instances!");
         }
     }

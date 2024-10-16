@@ -4,18 +4,17 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.events;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.eventbus.api.Cancelable;
+import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
 public class BlockInteractionEvent extends Event {
-    public final EntityPlayer player;
-    public final IBlockState state;
+    public final PlayerEntity player;
+    public final BlockState state;
 
-    public BlockInteractionEvent(EntityPlayer player, IBlockState state) {
+    public BlockInteractionEvent(PlayerEntity player, BlockState state) {
         this.player = player;
         this.state = state;
     }

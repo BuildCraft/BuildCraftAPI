@@ -1,7 +1,6 @@
 package buildcraft.api.inventory;
 
 import net.minecraft.item.ItemStack;
-
 import net.minecraftforge.items.IItemHandler;
 
 /** A type of {@link IItemHandler} that has a single valid stack per slot, as specified by {@link #getFilter(int)}. Note

@@ -4,17 +4,11 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.core;
 
-import java.lang.reflect.Method;
-import java.util.Locale;
-
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.LoaderState;
-import net.minecraftforge.fml.common.ModContainer;
-
-import buildcraft.api.BCModules;
+import java.lang.reflect.Method;
+import java.util.Locale;
 
 /** Provides a way to quickly enable or disable certain debug conditions via VM arguments or whether the client/server
  * is in a dev environment */
@@ -48,8 +42,8 @@ public class BCDebugging {
 
         boolean isDev;
         try {
-            Method getTileEntity = World.class.getDeclaredMethod("getTileEntity", BlockPos.class);
-            BCLog.logger.info("[debugger] Method found: World.getTileEntity = " + getTileEntity);
+            Method getBlockEntity = World.class.getDeclaredMethod("getBlockEntity", BlockPos.class);
+            BCLog.logger.info("[debugger] Method found: World.getBlockEntity = " + getBlockEntity);
             isDev = true;
         } catch (Throwable ignored) {
             // If it didn't find it then we aren't in a dev environment
