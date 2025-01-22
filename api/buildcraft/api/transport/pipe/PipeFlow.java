@@ -73,6 +73,8 @@ public abstract class PipeFlow implements ICapabilityProvider {
 
     public void onTick() {}
 
+    public void postPluggableTick() {}
+
     public void addDrops(NonNullList<ItemStack> toDrop, int fortune) {}
 
     public boolean onFlowActivate(EntityPlayer player, RayTraceResult trace, float hitX, float hitY, float hitZ,
