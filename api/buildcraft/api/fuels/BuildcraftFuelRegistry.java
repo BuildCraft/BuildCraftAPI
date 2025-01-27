@@ -8,5 +8,6 @@ public final class BuildcraftFuelRegistry {
     public static IFuelManager fuel;
     public static ICoolantManager coolant;
 
-    private BuildcraftFuelRegistry() {}
+    private BuildcraftFuelRegistry() {
+    }
 }

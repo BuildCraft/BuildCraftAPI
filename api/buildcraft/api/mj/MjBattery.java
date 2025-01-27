@@ -1,17 +1,15 @@
 package buildcraft.api.mj;
 
 import io.netty.buffer.ByteBuf;
-
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.INBTSerializable;
 
-/** Provides a basic implementation of a simple battery. Note that you should call {@link #tick(World, BlockPos)} or
- * {@link #tick(World, Vec3d)} every tick to allow for losing excess power. */
-public class MjBattery implements INBTSerializable<NBTTagCompound> {
+/** Provides a basic implementation of a simple battery. Note that you should call {@link #tick(Level, BlockPos)} or
+ * {@link #tick(Level, Vec3)} every tick to allow for losing excess power. */
+public class MjBattery implements INBTSerializable<CompoundTag> {
     private final long capacity;
     private long microJoules = 0;
 
@@ -20,14 +18,14 @@ public class MjBattery implements INBTSerializable<NBTTagCompound> {
     }
 
     @Override
-    public NBTTagCompound serializeNBT() {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setLong("stored", microJoules);
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
+        nbt.putLong("stored", microJoules);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         microJoules = nbt.getLong("stored");
     }
 
@@ -40,14 +38,26 @@ public class MjBattery implements INBTSerializable<NBTTagCompound> {
     }
 
     public long addPower(long microJoulesToAdd, boolean simulate) {
-        if (!simulate) {
-            this.microJoules += microJoulesToAdd;
+//        if (!simulate) {
+//            this.microJoules += microJoulesToAdd;
+//        }
+//        return 0;
+
+        // Calen FIX: now the battery will not receive energy more than this.capability
+        long excess = 0;
+        long toAdd = microJoulesToAdd;
+        if (this.microJoules + microJoulesToAdd > this.capacity) {
+            excess = this.microJoules + microJoulesToAdd - this.capacity;
+            toAdd = this.capacity - this.microJoules;
         }
-        return 0;
+        if (!simulate) {
+            this.microJoules += toAdd;
+        }
+        return excess;
     }
 
     /** Attempts to add power, but only if this is not already full.
-     * 
+     *
      * @param microJoulesToAdd The power to add.
      * @return The excess power. */
     public long addPowerChecking(long microJoulesToAdd, boolean simulate) {
@@ -63,7 +73,7 @@ public class MjBattery implements INBTSerializable<NBTTagCompound> {
     }
 
     /** Attempts to extract exactly the given amount of power.
-     * 
+     *
      * @param power The amount of power to extract.
      * @return True if the power was removed, false if not. */
     public boolean extractPower(long power) {
@@ -89,17 +99,17 @@ public class MjBattery implements INBTSerializable<NBTTagCompound> {
         return capacity;
     }
 
-    public void tick(World world, BlockPos position) {
-        tick(world, new Vec3d(position.getX() + 0.5, position.getY() + 0.5, position.getZ() + 0.5));
+    public void tick(Level world, BlockPos position) {
+        tick(world, new Vec3(position.getX() + 0.5, position.getY() + 0.5, position.getZ() + 0.5));
     }
 
-    public void tick(World world, Vec3d position) {
+    public void tick(Level world, Vec3 position) {
         if (microJoules > capacity * 2) {
             losePower(world, position);
         }
     }
 
-    protected void losePower(World world, Vec3d position) {
+    protected void losePower(Level world, Vec3 position) {
         long diff = microJoules - capacity * 2;
         long lost = ceilDivide(diff, 32);
         microJoules -= lost;

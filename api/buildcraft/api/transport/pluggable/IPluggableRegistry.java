@@ -1,6 +1,6 @@
 package buildcraft.api.transport.pluggable;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public interface IPluggableRegistry {
     default void register(PluggableDefinition definition) {

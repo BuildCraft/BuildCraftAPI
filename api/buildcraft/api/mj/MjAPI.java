@@ -1,16 +1,16 @@
 package buildcraft.api.mj;
 
-import java.text.DecimalFormat;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nonnull;
-
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-
-import net.minecraftforge.common.capabilities.Capability;
-
-import buildcraft.api.core.CapabilitiesHelper;
+import java.text.DecimalFormat;
 
 public class MjAPI {
 
@@ -53,14 +53,18 @@ public class MjAPI {
 
     public enum NullaryEffectManager implements IMjEffectManager {
         INSTANCE;
-        @Override
-        public void createPowerLossEffect(World world, Vec3d center, long microJoulesLost) {}
 
         @Override
-        public void createPowerLossEffect(World world, Vec3d center, EnumFacing direction, long microJoulesLost) {}
+        public void createPowerLossEffect(Level world, Vec3 center, long microJoulesLost) {
+        }
 
         @Override
-        public void createPowerLossEffect(World world, Vec3d center, Vec3d direction, long microJoulesLost) {}
+        public void createPowerLossEffect(Level world, Vec3 center, Direction direction, long microJoulesLost) {
+        }
+
+        @Override
+        public void createPowerLossEffect(Level world, Vec3 center, Vec3 direction, long microJoulesLost) {
+        }
     }
     // @formatter:on
 
@@ -71,26 +75,30 @@ public class MjAPI {
     // ###############
 
     @Nonnull
-    public static final Capability<IMjConnector> CAP_CONNECTOR;
+    public static final Capability<IMjConnector> CAP_CONNECTOR = CapabilityManager.get(new CapabilityToken<>() {
+    });
+    @Nonnull
+    public static final Capability<IMjReceiver> CAP_RECEIVER = CapabilityManager.get(new CapabilityToken<>() {
+    });
+    @Nonnull
+    public static final Capability<IMjRedstoneReceiver> CAP_REDSTONE_RECEIVER = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     @Nonnull
-    public static final Capability<IMjReceiver> CAP_RECEIVER;
+    public static final Capability<IMjReadable> CAP_READABLE = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     @Nonnull
-    public static final Capability<IMjRedstoneReceiver> CAP_REDSTONE_RECEIVER;
+    public static final Capability<IMjPassiveProvider> CAP_PASSIVE_PROVIDER = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
-    @Nonnull
-    public static final Capability<IMjReadable> CAP_READABLE;
-
-    @Nonnull
-    public static final Capability<IMjPassiveProvider> CAP_PASSIVE_PROVIDER;
-
-    static {
-        CAP_CONNECTOR = CapabilitiesHelper.registerCapability(IMjConnector.class);
-        CAP_RECEIVER = CapabilitiesHelper.registerCapability(IMjReceiver.class);
-        CAP_REDSTONE_RECEIVER = CapabilitiesHelper.registerCapability(IMjRedstoneReceiver.class);
-        CAP_READABLE = CapabilitiesHelper.registerCapability(IMjReadable.class);
-        CAP_PASSIVE_PROVIDER = CapabilitiesHelper.registerCapability(IMjPassiveProvider.class);
+    @SubscribeEvent
+    public static void registerCapability(RegisterCapabilitiesEvent event) {
+        event.register(IMjConnector.class);
+        event.register(IMjReceiver.class);
+        event.register(IMjRedstoneReceiver.class);
+        event.register(IMjReadable.class);
+        event.register(IMjPassiveProvider.class);
     }
 
     private static long getMjValue() {

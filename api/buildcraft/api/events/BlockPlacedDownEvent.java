@@ -4,20 +4,19 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.events;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.BlockPos;
-
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.eventbus.api.Cancelable;
+import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
 public class BlockPlacedDownEvent extends Event {
-    public final EntityPlayer player;
-    public final IBlockState state;
+    public final Player player;
+    public final BlockState state;
     public final BlockPos pos;
 
-    public BlockPlacedDownEvent(EntityPlayer player, BlockPos pos, IBlockState state) {
+    public BlockPlacedDownEvent(Player player, BlockPos pos, BlockState state) {
         this.player = player;
         this.state = state;
         this.pos = pos;

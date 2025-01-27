@@ -1,40 +1,46 @@
 package buildcraft.api.enums;
 
+import buildcraft.api.blocks.ISpring;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+
 import java.util.Locale;
-import java.util.function.Supplier;
+import java.util.function.BiFunction;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IStringSerializable;
-
-import buildcraft.api.properties.BuildCraftProperties;
-
-public enum EnumSpring implements IStringSerializable {
-    WATER(5, -1, Blocks.WATER.getDefaultState()),
+public enum EnumSpring implements StringRepresentable {
+    WATER(5, -1, Blocks.WATER.defaultBlockState()),
     OIL(6000, 8, null); // Set in BuildCraftEnergy
 
     public static final EnumSpring[] VALUES = values();
 
     public final int tickRate, chance;
-    public IBlockState liquidBlock;
+    public BlockState liquidBlock;
     public boolean canGen = true;
-    public Supplier<TileEntity> tileConstructor;
+    // public Supplier<BlockEntity> tileConstructor;
+    public BiFunction<BlockPos, BlockState, BlockEntity> tileConstructor;
 
     private final String lowerCaseName = name().toLowerCase(Locale.ROOT);
 
-    EnumSpring(int tickRate, int chance, IBlockState liquidBlock) {
+    EnumSpring(int tickRate, int chance, BlockState liquidBlock) {
         this.tickRate = tickRate;
         this.chance = chance;
         this.liquidBlock = liquidBlock;
     }
 
-    public static EnumSpring fromState(IBlockState state) {
-        return state.getValue(BuildCraftProperties.SPRING_TYPE);
+    public static EnumSpring fromState(BlockState state) {
+//        return state.getValue(BuildCraftProperties.SPRING_TYPE);
+        if (state.getBlock() instanceof ISpring spring) {
+            return spring.getType();
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public String getName() {
+    public String getSerializedName() {
         return lowerCaseName;
     }
 }

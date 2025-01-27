@@ -19,7 +19,7 @@ public interface IHeatable {
     double getCurrentHeatValue();
 
     /** Set the heat of the tile.
-     * 
+     *
      * @param value Heat value, in degrees.
      * @return The heat the tile has after the set. */
     double setHeatValue(double value);

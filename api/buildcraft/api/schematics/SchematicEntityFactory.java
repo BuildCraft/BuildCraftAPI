@@ -1,11 +1,10 @@
 package buildcraft.api.schematics;
 
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
-
-import net.minecraft.util.ResourceLocation;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class SchematicEntityFactory<S extends ISchematicEntity> implements Comparable<SchematicEntityFactory<?>> {
     @Nonnull

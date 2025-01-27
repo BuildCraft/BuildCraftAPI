@@ -1,19 +1,18 @@
 package buildcraft.api.items;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.registries.RegistryObject;
 
 public class FluidItemDrops {
-
-    public static IItemFluidShard item;
+    public static RegistryObject<? extends IItemFluidShard> item;
 
     public static void addFluidDrops(NonNullList<ItemStack> toDrop, FluidStack... fluids) {
         if (item != null) {
             for (FluidStack fluid : fluids) {
-                item.addFluidDrops(toDrop, fluid);
+                item.get().addFluidDrops(toDrop, fluid);
             }
         }
     }
@@ -21,7 +20,7 @@ public class FluidItemDrops {
     public static void addFluidDrops(NonNullList<ItemStack> toDrop, IFluidTank... tanks) {
         if (item != null) {
             for (IFluidTank tank : tanks) {
-                item.addFluidDrops(toDrop, tank.getFluid());
+                item.get().addFluidDrops(toDrop, tank.getFluid());
             }
         }
     }

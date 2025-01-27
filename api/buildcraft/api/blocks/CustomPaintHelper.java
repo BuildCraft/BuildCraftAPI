@@ -1,24 +1,23 @@
 package buildcraft.api.blocks;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nullable;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-
 import buildcraft.api.core.BCDebugging;
 import buildcraft.api.core.BCLog;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
 
 /** Provides a simple way to paint a single block, iterating through all {@link ICustomPaintHandler}'s that are
  * registered for the block. */
@@ -43,11 +42,12 @@ public enum CustomPaintHelper {
 
     /** Register's a paint handler for every class of a given block. */
     public void registerHandlerForAll(Class<? extends Block> blockClass, ICustomPaintHandler handler) {
-        for (Block block : Block.REGISTRY) {
+//        for (Block block : Block.REGISTRY)
+        for (Block block : ForgeRegistries.BLOCKS.getValues()) {
             Class<? extends Block> foundClass = block.getClass();
             if (blockClass.isAssignableFrom(foundClass)) {
                 if (DEBUG) {
-                    BCLog.logger.info("[api.painting] Found an assignable block " + block.getRegistryName() + " (" + foundClass + ") for " + blockClass);
+                    BCLog.logger.info("[api.painting] Found an assignable block " + block.builtInRegistryHolder().key().location() + " (" + foundClass + ") for " + blockClass);
                 }
                 registerHandlerInternal(block, handler);
             }
@@ -57,10 +57,10 @@ public enum CustomPaintHelper {
     public void registerHandler(Block block, ICustomPaintHandler handler) {
         if (registerHandlerInternal(block, handler)) {
             if (DEBUG) {
-                BCLog.logger.info("[api.painting] Setting a paint handler for block " + block.getRegistryName() + "(" + handler.getClass() + ")");
+                BCLog.logger.info("[api.painting] Setting a paint handler for block " + block.builtInRegistryHolder().key().location() + "(" + handler.getClass() + ")");
             }
         } else if (DEBUG) {
-            BCLog.logger.info("[api.painting] Adding another paint handler for block " + block.getRegistryName() + "(" + handler.getClass() + ")");
+            BCLog.logger.info("[api.painting] Adding another paint handler for block " + block.builtInRegistryHolder().key().location() + "(" + handler.getClass() + ")");
         }
     }
 
@@ -77,7 +77,7 @@ public enum CustomPaintHelper {
     }
 
     /** Attempts to paint a block at the given position. Basically iterates through all registered paint handlers. */
-    public EnumActionResult attemptPaintBlock(World world, BlockPos pos, IBlockState state, Vec3d hitPos, @Nullable EnumFacing hitSide, @Nullable EnumDyeColor paint) {
+    public InteractionResult attemptPaintBlock(Level world, BlockPos pos, BlockState state, Vec3 hitPos, @Nullable Direction hitSide, @Nullable DyeColor paint) {
         Block block = state.getBlock();
         if (block instanceof ICustomPaintHandler) {
             return ((ICustomPaintHandler) block).attemptPaint(world, pos, state, hitPos, hitSide, paint);
@@ -87,29 +87,55 @@ public enum CustomPaintHelper {
             return defaultAttemptPaint(world, pos, state, hitPos, hitSide, paint);
         }
         for (ICustomPaintHandler handler : custom) {
-            EnumActionResult result = handler.attemptPaint(world, pos, state, hitPos, hitSide, paint);
-            if (result != EnumActionResult.PASS) {
+            InteractionResult result = handler.attemptPaint(world, pos, state, hitPos, hitSide, paint);
+            if (result != InteractionResult.PASS) {
                 return result;
             }
         }
         return defaultAttemptPaint(world, pos, state, hitPos, hitSide, paint);
     }
 
-    private EnumActionResult defaultAttemptPaint(World world, BlockPos pos, IBlockState state, Vec3d hitPos, EnumFacing hitSide, @Nullable EnumDyeColor paint) {
+    private InteractionResult defaultAttemptPaint(Level world, BlockPos pos, BlockState state, Vec3 hitPos, Direction hitSide, @Nullable DyeColor paint) {
         for (ICustomPaintHandler handler : allHandlers) {
-            EnumActionResult result = handler.attemptPaint(world, pos, state, hitPos, hitSide, paint);
-            if (result != EnumActionResult.PASS) {
+            InteractionResult result = handler.attemptPaint(world, pos, state, hitPos, hitSide, paint);
+            if (result != InteractionResult.PASS) {
                 return result;
             }
         }
         if (paint == null) {
-            return EnumActionResult.FAIL;
+            return InteractionResult.FAIL;
         }
-        Block b = state.getBlock();
-        if (b.recolorBlock(world, pos, hitSide, paint)) {
-            return EnumActionResult.SUCCESS;
+//        Block b = state.getBlock();
+//        if (b.recolorBlock(world, pos, hitSide, paint))
+        if (recolorBlock(world, pos, hitSide, paint)) {
+            return InteractionResult.SUCCESS;
         } else {
-            return EnumActionResult.FAIL;
+            return InteractionResult.FAIL;
         }
+    }
+
+    /**
+     * From 1.12.2 Block
+     * Common way to recolor a block with an external tool
+     *
+     * @param world The world
+     * @param pos   Block position in world
+     * @param side  The side hit with the coloring tool
+     * @param color The color to change to
+     * @return If the recoloring was successful
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static boolean recolorBlock(Level world, BlockPos pos, Direction side, DyeColor color) {
+        BlockState state = world.getBlockState(pos);
+        for (Property prop : state.getProperties()) {
+            if (prop.getName().equals("color") && prop.getValueClass() == DyeColor.class) {
+                DyeColor current = (DyeColor) state.getValue(prop);
+                if (current != color && prop.getPossibleValues().contains(color)) {
+                    world.setBlock(pos, state.setValue(prop, color), Block.UPDATE_ALL);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

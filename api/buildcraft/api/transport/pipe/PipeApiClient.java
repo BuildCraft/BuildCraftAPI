@@ -1,14 +1,13 @@
 package buildcraft.api.transport.pipe;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import buildcraft.api.transport.pluggable.IPlugDynamicRenderer;
 import buildcraft.api.transport.pluggable.IPluggableStaticBaker;
 import buildcraft.api.transport.pluggable.PipePluggable;
 import buildcraft.api.transport.pluggable.PluggableModelKey;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public enum PipeApiClient {
     INSTANCE;
 
@@ -22,12 +21,10 @@ public enum PipeApiClient {
 
         /** Registers a dynamic renderer for the given pipe behaviour. Most {@link PipeBehaviour} types will have no use
          * for this. */
-        <B extends PipeBehaviour> void registerRenderer(Class<? extends B> behaviourClass,
-            IPipeBehaviourRenderer<B> renderer);
+        <B extends PipeBehaviour> void registerRenderer(Class<? extends B> behaviourClass, IPipeBehaviourRenderer<B> renderer);
 
         <P extends PipePluggable> void registerRenderer(Class<? extends P> plugClass, IPlugDynamicRenderer<P> renderer);
 
-        <P extends PluggableModelKey> void registerBaker(Class<? extends P> keyClass,
-            IPluggableStaticBaker<P> renderer);
+        <P extends PluggableModelKey> void registerBaker(Class<? extends P> keyClass, IPluggableStaticBaker<P> renderer);
     }
 }

@@ -4,7 +4,7 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.core;
 
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 
 /** Provides a way of tracking time in the world, without requiring manual ticking. */
 public class SafeTimeTracker {
@@ -34,17 +34,17 @@ public class SafeTimeTracker {
     }
 
     /** Return true if the internal delay has passed since last time marked was called successfully. */
-    public boolean markTimeIfDelay(World world) {
+    public boolean markTimeIfDelay(Level world) {
         return markTimeIfDelay(world, internalDelay);
     }
 
     /** Return true if a given delay has passed since last time marked was called successfully. */
-    public boolean markTimeIfDelay(World world, long delay) {
+    public boolean markTimeIfDelay(Level world, long delay) {
         if (world == null) {
             return false;
         }
 
-        long currentTime = world.getTotalWorldTime();
+        long currentTime = world.getGameTime();
 
         if (currentTime < lastMark) {
             lastMark = currentTime;
@@ -64,7 +64,7 @@ public class SafeTimeTracker {
         return duration > 0 ? duration : 0;
     }
 
-    public void markTime(World world) {
-        lastMark = world.getTotalWorldTime();
+    public void markTime(Level world) {
+        lastMark = world.getGameTime();
     }
 }

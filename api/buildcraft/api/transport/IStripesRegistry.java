@@ -1,12 +1,11 @@
 package buildcraft.api.transport;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
 import buildcraft.api.core.EnumHandlerPriority;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public interface IStripesRegistry {
     /** Adds a handler with a {@link EnumHandlerPriority} of {@linkplain EnumHandlerPriority#NORMAL} */
@@ -25,17 +24,17 @@ public interface IStripesRegistry {
 
     /** @param pos The position of the stripes pipe.
      * @return True if a handler handled the itemstack, false otherwise (and so nothing has been done) */
-    boolean handleItem(World world,
+    boolean handleItem(Level world,
                        BlockPos pos,
-                       EnumFacing direction,
+                       Direction direction,
                        ItemStack stack,
-                       EntityPlayer player,
+                       Player player,
                        IStripesActivator activator);
 
     /** @return True if a handler broke a block, false otherwise (and so nothing has been done) */
-    boolean handleBlock(World world,
+    boolean handleBlock(Level world,
                         BlockPos pos,
-                        EnumFacing direction,
-                        EntityPlayer player,
+                        Direction direction,
+                        Player player,
                         IStripesActivator activator);
 }

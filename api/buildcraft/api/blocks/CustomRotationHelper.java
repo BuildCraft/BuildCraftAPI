@@ -1,20 +1,19 @@
 package buildcraft.api.blocks;
 
-import java.util.List;
-import java.util.Map;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
 import buildcraft.api.core.BCDebugging;
 import buildcraft.api.core.BCLog;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.List;
+import java.util.Map;
 
 public enum CustomRotationHelper {
     INSTANCE;
@@ -26,11 +25,11 @@ public enum CustomRotationHelper {
     private final Map<Block, List<ICustomRotationHandler>> handlers = Maps.newIdentityHashMap();
 
     public void registerHandlerForAll(Class<? extends Block> blockClass, ICustomRotationHandler handler) {
-        for (Block block : Block.REGISTRY) {
+        for (Block block : ForgeRegistries.BLOCKS) {
             Class<? extends Block> foundClass = block.getClass();
             if (blockClass.isAssignableFrom(foundClass)) {
                 if (DEBUG) {
-                    BCLog.logger.info("[api.rotation] Found an assignable block " + block.getRegistryName() + " (" + foundClass + ") for " + blockClass);
+                    BCLog.logger.info("[api.rotation] Found an assignable block " + block.builtInRegistryHolder().key().location() + " (" + foundClass + ") for " + blockClass);
                 }
                 registerHandlerInternal(block, handler);
             }
@@ -40,10 +39,10 @@ public enum CustomRotationHelper {
     public void registerHandler(Block block, ICustomRotationHandler handler) {
         if (registerHandlerInternal(block, handler)) {
             if (DEBUG) {
-                BCLog.logger.info("[api.rotation] Setting a rotation handler for block " + block.getRegistryName());
+                BCLog.logger.info("[api.rotation] Setting a rotation handler for block " + block.builtInRegistryHolder().key().location());
             }
         } else if (DEBUG) {
-            BCLog.logger.info("[api.rotation] Adding another rotation handler for block " + block.getRegistryName());
+            BCLog.logger.info("[api.rotation] Adding another rotation handler for block " + block.builtInRegistryHolder().key().location());
         }
     }
 
@@ -59,18 +58,18 @@ public enum CustomRotationHelper {
         }
     }
 
-    public EnumActionResult attemptRotateBlock(World world, BlockPos pos, IBlockState state, EnumFacing sideWrenched) {
+    public InteractionResult attemptRotateBlock(Level world, BlockPos pos, BlockState state, Direction sideWrenched) {
         Block block = state.getBlock();
         if (block instanceof ICustomRotationHandler) {
             return ((ICustomRotationHandler) block).attemptRotation(world, pos, state, sideWrenched);
         }
-        if (!handlers.containsKey(block)) return EnumActionResult.PASS;
+        if (!handlers.containsKey(block)) return InteractionResult.PASS;
         for (ICustomRotationHandler handler : handlers.get(block)) {
-            EnumActionResult result = handler.attemptRotation(world, pos, state, sideWrenched);
-            if (result != EnumActionResult.PASS) {
+            InteractionResult result = handler.attemptRotation(world, pos, state, sideWrenched);
+            if (result != InteractionResult.PASS) {
                 return result;
             }
         }
-        return EnumActionResult.PASS;
+        return InteractionResult.PASS;
     }
 }

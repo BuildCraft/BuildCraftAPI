@@ -4,20 +4,20 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.transport;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public interface IStripesHandlerItem {
 
     /** Called to handle the given {@link ItemStack} within the world. Note that the player's inventory will be empty,
-     * except that the target stack will be set into its {@link EnumHand#MAIN_HAND}. Any items left in the players
+     * except that the target stack will be set into its {@link InteractionHand#MAIN_HAND}. Any items left in the players
      * inventory will be returned back through the activator with
-     * {@link IStripesActivator#sendItem(ItemStack, EnumFacing)}
-     * 
+     * {@link IStripesActivator#sendItem(ItemStack, Direction)}
+     *
      * @param world
      * @param pos
      * @param direction
@@ -26,5 +26,5 @@ public interface IStripesHandlerItem {
      * @param activator
      * @return True if this used the item, false otherwise (note that this handler MUST NOT return false if it has
      *         changed the world in any way) */
-    boolean handle(World world, BlockPos pos, EnumFacing direction, ItemStack stack, EntityPlayer player, IStripesActivator activator);
+    boolean handle(Level world, BlockPos pos, Direction direction, ItemStack stack, Player player, IStripesActivator activator);
 }

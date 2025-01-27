@@ -1,12 +1,12 @@
 package buildcraft.api.transport.pipe;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import net.minecraft.client.renderer.BufferBuilder;
-
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public interface IPipeBehaviourRenderer<B extends PipeBehaviour> {
-    void render(B behaviour, double x, double y, double z, float partialTicks, BufferBuilder bb);
+    // void render(B behaviour, double x, double y, double z, float partialTicks, BufferBuilder bb);
+    public void render(B gate, float partialTicks, PoseStack poseStack, VertexConsumer vertexConsumer, int combinedLight, int combinedOverlay);
 }

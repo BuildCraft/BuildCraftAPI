@@ -1,16 +1,15 @@
 package buildcraft.api;
 
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.ModLoadingStage;
+
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import javax.annotation.Nullable;
-
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.util.ResourceLocation;
-
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.LoaderState;
 
 public enum BCModules implements IBuildCraftMod {
     LIB,
@@ -30,10 +29,14 @@ public enum BCModules implements IBuildCraftMod {
     private static boolean hasChecked = false;
     private static BCModules[] loadedModules, missingModules;
 
+    // Calen
+    public static final String BUILDCRAFT = "buildcraft";
+
     public final String lowerCaseName = name().toLowerCase(Locale.ROOT);
     // Bit hacky, but it works as this is all english
     public final String camelCaseName = name().charAt(0) + lowerCaseName.substring(1);
-    private final String modId = "buildcraft" + lowerCaseName;
+    // private final String modId = "buildcraft" + lowerCaseName;
+    private final String modId = BUILDCRAFT + lowerCaseName;
     private boolean loaded;
 
     private static void checkLoadStatus() {
@@ -48,12 +51,14 @@ public enum BCModules implements IBuildCraftMod {
         if (hasChecked) {
             return;
         }
-        if (!Loader.instance().hasReachedState(LoaderState.PREINITIALIZATION)) {
+//        if (!Loader.instance().hasReachedState(LoaderState.PREINITIALIZATION))
+        if (ModLoadingContext.get().getActiveContainer().getCurrentState().ordinal() < ModLoadingStage.CONSTRUCT.ordinal()) {
             throw new RuntimeException("You can only use BCModules.isLoaded from pre-init onwards!");
         }
         List<BCModules> found = new ArrayList<>(), missing = new ArrayList<>();
         for (BCModules module : VALUES) {
-            module.loaded = Loader.isModLoaded(module.modId);
+            module.loaded = ModList.get().isLoaded(module.modId);
+
             if (module.loaded) {
                 found.add(module);
             } else {
@@ -104,10 +109,11 @@ public enum BCModules implements IBuildCraftMod {
     }
 
     public ModelResourceLocation createModelLocation(String path, String variant) {
-        return new ModelResourceLocation(getModId() + ":" + path + "#" + variant);
+        return new ModelResourceLocation(getModId(), path, variant);
     }
 
     public ModelResourceLocation createModelLocation(String pathAndVariant) {
-        return new ModelResourceLocation(getModId() + ":" + pathAndVariant);
+        String[] pathAndVariantArray = pathAndVariant.split("#");
+        return new ModelResourceLocation(getModId(), pathAndVariantArray[0], pathAndVariantArray[1]);
     }
 }

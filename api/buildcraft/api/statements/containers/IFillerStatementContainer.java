@@ -1,23 +1,22 @@
 package buildcraft.api.statements.containers;
 
-import javax.annotation.Nullable;
-
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-
 import buildcraft.api.core.IBox;
 import buildcraft.api.filler.IFillerPattern;
 import buildcraft.api.statements.IStatementContainer;
 import buildcraft.api.statements.IStatementParameter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+
+import javax.annotation.Nullable;
 
 public interface IFillerStatementContainer extends IStatementContainer {
 
     /** Unlike in {@link IStatementContainer} some containers might not be tile based (for example the volume box). */
     @Override
     @Nullable
-    TileEntity getTile();
+    BlockEntity getTile();
 
-    World getFillerWorld();
+    Level getFillerWorld();
 
     /** @return True if this filler has a non-zero sized box. */
     boolean hasBox();

@@ -1,23 +1,22 @@
 package buildcraft.api.core;
 
+import com.google.common.collect.Maps;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.NumericTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.util.StringRepresentable;
+
 import java.util.Locale;
 import java.util.Map;
 
-import com.google.common.collect.Maps;
-
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTPrimitive;
-import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IStringSerializable;
-
-public enum EnumPipePart implements IStringSerializable {
-    DOWN(EnumFacing.DOWN),
-    UP(EnumFacing.UP),
-    NORTH(EnumFacing.NORTH),
-    SOUTH(EnumFacing.SOUTH),
-    WEST(EnumFacing.WEST),
-    EAST(EnumFacing.EAST),
+public enum EnumPipePart implements StringRepresentable {
+    DOWN(Direction.DOWN),
+    UP(Direction.UP),
+    NORTH(Direction.NORTH),
+    SOUTH(Direction.SOUTH),
+    WEST(Direction.WEST),
+    EAST(Direction.EAST),
     /** CENTER, UNKNOWN and ALL are all valid uses of this. */
     CENTER(null);
 
@@ -25,22 +24,23 @@ public enum EnumPipePart implements IStringSerializable {
     public static final EnumPipePart[] FACES;
     public static final EnumPipePart[] HORIZONTALS;
 
-    private static final Map<EnumFacing, EnumPipePart> facingMap = Maps.newEnumMap(EnumFacing.class);
+    private static final Map<Direction, EnumPipePart> facingMap = Maps.newEnumMap(Direction.class);
     private static final Map<String, EnumPipePart> nameMap = Maps.newHashMap();
     private static final int MAX_VALUES = values().length;
 
-    public final EnumFacing face;
+    public final Direction face;
 
     static {
         for (EnumPipePart part : values()) {
             nameMap.put(part.name(), part);
             if (part.face != null) facingMap.put(part.face, part);
         }
-        FACES = fromFacingArray(EnumFacing.VALUES);
-        HORIZONTALS = fromFacingArray(EnumFacing.HORIZONTALS);
+        FACES = fromFacingArray(Direction.VALUES);
+//        HORIZONTALS = fromFacingArray(Direction.HORIZONTALS);
+        HORIZONTALS = fromFacingArray(Direction.BY_2D_DATA);
     }
 
-    private static EnumPipePart[] fromFacingArray(EnumFacing... faces) {
+    private static EnumPipePart[] fromFacingArray(Direction... faces) {
         EnumPipePart[] arr = new EnumPipePart[faces.length];
         for (int i = 0; i < faces.length; i++) {
             arr[i] = fromFacing(faces[i]);
@@ -48,11 +48,11 @@ public enum EnumPipePart implements IStringSerializable {
         return arr;
     }
 
-    public static int ordinal(EnumFacing face) {
+    public static int ordinal(Direction face) {
         return face == null ? 6 : face.ordinal();
     }
 
-    public static EnumPipePart fromFacing(EnumFacing face) {
+    public static EnumPipePart fromFacing(Direction face) {
         if (face == null) {
             return EnumPipePart.CENTER;
         }
@@ -70,17 +70,17 @@ public enum EnumPipePart implements IStringSerializable {
         return VALUES[meta];
     }
 
-    EnumPipePart(EnumFacing face) {
+    EnumPipePart(Direction face) {
         this.face = face;
     }
 
     public int getIndex() {
         if (face == null) return 6;
-        return face.getIndex();
+        return face.get3DDataValue();
     }
 
     @Override
-    public String getName() {
+    public String getSerializedName() {
         return name().toLowerCase(Locale.ROOT);
     }
 
@@ -110,16 +110,16 @@ public enum EnumPipePart implements IStringSerializable {
         return fromFacing(face.getOpposite());
     }
 
-    public static EnumPipePart readFromNBT(NBTBase base) {
+    public static EnumPipePart readFromNBT(Tag base) {
         if (base == null) {
             return CENTER;
         }
-        if (base instanceof NBTTagString) {
-            NBTTagString nbtString = (NBTTagString) base;
-            String string = nbtString.getString();
+        if (base instanceof StringTag) {
+            StringTag nbtString = (StringTag) base;
+            String string = nbtString.getAsString();
             return nameMap.getOrDefault(string, CENTER);
         } else {
-            byte ord = ((NBTPrimitive) base).getByte();
+            byte ord = ((NumericTag) base).getAsByte();
             if (ord < 0 || ord > 6) {
                 return CENTER;
             }
@@ -127,7 +127,7 @@ public enum EnumPipePart implements IStringSerializable {
         }
     }
 
-    public NBTBase writeToNBT() {
-        return new NBTTagString(name());
+    public Tag writeToNBT() {
+        return StringTag.valueOf(name());
     }
 }

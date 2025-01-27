@@ -4,10 +4,9 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.robots;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-
 import buildcraft.api.mj.MjAPI;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 public class AIRobot {
     public EntityRobotBase robot;
@@ -42,24 +41,24 @@ public class AIRobot {
     }
 
     /** This gets called when a delegate AI ends work naturally.
-     * 
+     *
      * @param ai The delegate AI which ended work. */
     public void delegateAIEnded(AIRobot ai) {
 
     }
 
     /** This gets called when a delegate AI is forcibly aborted.
-     * 
+     *
      * @param ai The delegate AI which was aborted. */
     public void delegateAIAborted(AIRobot ai) {
 
     }
 
-    public void writeSelfToNBT(NBTTagCompound nbt) {
+    public void writeSelfToNBT(CompoundTag nbt) {
 
     }
 
-    public void loadSelfFromNBT(NBTTagCompound nbt) {
+    public void loadSelfFromNBT(CompoundTag nbt) {
 
     }
 
@@ -155,30 +154,30 @@ public class AIRobot {
         return delegateAI;
     }
 
-    public final void writeToNBT(NBTTagCompound nbt) {
-        nbt.setString("aiName", RobotManager.getAIRobotName(getClass()));
+    public final void writeToNBT(CompoundTag nbt) {
+        nbt.putString("aiName", RobotManager.getAIRobotName(getClass()));
 
-        NBTTagCompound data = new NBTTagCompound();
+        CompoundTag data = new CompoundTag();
         writeSelfToNBT(data);
-        nbt.setTag("data", data);
+        nbt.put("data", data);
 
         if (delegateAI != null && delegateAI.canLoadFromNBT()) {
-            NBTTagCompound sub = new NBTTagCompound();
+            CompoundTag sub = new CompoundTag();
 
             delegateAI.writeToNBT(sub);
-            nbt.setTag("delegateAI", sub);
+            nbt.put("delegateAI", sub);
         }
     }
 
-    public final void loadFromNBT(NBTTagCompound nbt) {
-        loadSelfFromNBT(nbt.getCompoundTag("data"));
+    public final void loadFromNBT(CompoundTag nbt) {
+        loadSelfFromNBT(nbt.getCompound("data"));
 
-        if (nbt.hasKey("delegateAI")) {
-            NBTTagCompound sub = nbt.getCompoundTag("delegateAI");
+        if (nbt.contains("delegateAI")) {
+            CompoundTag sub = nbt.getCompound("delegateAI");
 
             try {
                 Class<?> aiRobotClass;
-                if (sub.hasKey("class")) {
+                if (sub.contains("class")) {
                     // Migration support for 6.4.x
                     aiRobotClass = RobotManager.getAIRobotByLegacyClassName(sub.getString("class"));
                 } else {
@@ -198,12 +197,12 @@ public class AIRobot {
         }
     }
 
-    public static AIRobot loadAI(NBTTagCompound nbt, EntityRobotBase robot) {
+    public static AIRobot loadAI(CompoundTag nbt, EntityRobotBase robot) {
         AIRobot ai = null;
 
         try {
             Class<?> aiRobotClass;
-            if (nbt.hasKey("class")) {
+            if (nbt.contains("class")) {
                 // Migration support for 6.4.x
                 aiRobotClass = RobotManager.getAIRobotByLegacyClassName(nbt.getString("class"));
             } else {

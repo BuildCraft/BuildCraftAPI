@@ -4,12 +4,11 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.transport.pipe;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
 import buildcraft.api.transport.IStripesActivator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public interface IPipeExtensionManager {
 
@@ -26,7 +25,7 @@ public interface IPipeExtensionManager {
      * @param stack   the pipe stack to use (Note: only uses one item and sends the rest back)
      * @return true on success, false otherwise
      */
-    boolean requestPipeExtension(World world, BlockPos pos, EnumFacing dir, IStripesActivator stripes, ItemStack stack);
+    boolean requestPipeExtension(Level world, BlockPos pos, Direction dir, IStripesActivator stripes, ItemStack stack);
 
     /**
      * Registers a pipe as a retraction trigger for pipe extension requests

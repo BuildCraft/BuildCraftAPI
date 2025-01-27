@@ -1,22 +1,23 @@
-
-// For those who want the bleeding edge
 buildscript {
     repositories {
-        jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
+        // These repositories are only for Gradle plugins, put any other repositories in the repository core further below
+        maven { url = 'https://maven.minecraftforge.net' }
+        mavenCentral()
     }
     dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        // Mixin
+        classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
-apply plugin: "net.minecraftforge.gradle.forge"
-
-if (gradle.startParameter.taskNames.contains("checkstyle")) {
-	apply plugin: "checkstyle"
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
 }
+apply plugin: 'net.minecraftforge.gradle'
 
 ext.configFile = file "build.properties"
 configFile.withReader {
@@ -27,64 +28,32 @@ configFile.withReader {
 }
 
 version = config.mod_version
-group= "com.mod-buildcraft.api" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "com.mod-buildcraft.api"
 archivesBaseName = "buildcraft-api" // the name that all artifacts will use as a base. artifacts names follow this pattern: [baseName]-[appendix]-[version]-[classifier].[extension]
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
-    version = config.mc_version + "-" + config.forge_version
-    runDir = "run"
+    // The mappings can be changed at any time and must be in the following format.
+    // Channel:   Version:
+    // official   MCVersion             Official field/method names from Mojang mapping files
+    // parchment  YYYY.MM.DD-MCVersion  Open community-sourced parameter names and javadocs layered on top of official
+    //
+    // You must be aware of the Mojang license when using the 'official' or 'parchment' mappings.
+    // See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
+    //
+    // Parchment is an unofficial project maintained by ParchmentMC, separate from MinecraftForge
+    // Additional setup is needed to use their mappings: https://github.com/ParchmentMC/Parchment/wiki/Getting-Started
+    //
+    // Use non-default mappings at your own risk. They may not always work.
+    // Simply re-run your setup task after changing the mappings to update your workspace.
+    mappings channel: config.mappings_channel, version: config.mappings_version
 
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not always work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = config.mappings_version
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-}
+    copyIdeResources = true
 
-sourceSets {
-    main {
-        java {
-            srcDir "api"
-        }
-    }
-}
-
-if (gradle.startParameter.taskNames.contains("checkstyle")) {
-	checkstyle {
-		configFile = file("guidelines/buildcraft.checkstyle")
-	}
-
-	task checkstyle {}
-	tasks["checkstyle"].dependsOn checkstyleApi
-	tasks["checkstyle"].dependsOn checkstyleMain
-
-	tasks["checkstyleApi"].enabled = gradle.startParameter.taskNames.contains("checkstyle")
-	tasks["checkstyleMain"].enabled = gradle.startParameter.taskNames.contains("checkstyle")
-}
-
-processResources
-{
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
+    accessTransformer = file('resources/accesstransformer.cfg')
 }
 
 compileJava {
@@ -102,10 +71,147 @@ javadoc {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+//    classifier = 'javadoc'
     from javadoc.destinationDir
+}
+
+// Include resources generated by data generators.
+sourceSets {
+    main {
+        java {
+            srcDir "api"
+        }
+        resources {
+        }
+    }
+}
+
+repositories {
+    // Put repositories for dependencies here
+    // ForgeGradle automatically adds the Forge maven and Maven Central for you
+
+    // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
+    // flatDir {
+    //     dir 'libs'
+    // }
+
+    maven {
+        name 'CurseMaven'
+        url 'https://www.cursemaven.com'
+        content {
+            includeGroup 'curse.maven'
+        }
+    }
+}
+
+dependencies {
+    // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
+    // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
+    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
+
+    minecraft "net.minecraftforge:forge:${config.mc_version}-${config.forge_version}"
+
+    // Examples using mod jars from ./libs
+
+    // For more info...
+    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
+    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+if (gradle.startParameter.taskNames.contains("checkstyle")) {
+    checkstyle {
+        configFile = file("guidelines/buildcraft.checkstyle")
+    }
+
+    task checkstyle {}
+    tasks["checkstyle"].dependsOn checkstyleApi
+    tasks["checkstyle"].dependsOn checkstyleMain
+
+    tasks["checkstyleApi"].enabled = gradle.startParameter.taskNames.contains("checkstyle")
+    tasks["checkstyleMain"].enabled = gradle.startParameter.taskNames.contains("checkstyle")
+}
+
+tasks.named('processResources', ProcessResources).configure {
+//    var replaceProperties = [
+//            minecraft_version      : config.mc_version,
+//            minecraft_version_range: minecraft_version_range,
+//            forge_version          : config.forge_version,
+//            forge_version_range    : forge_version_range,
+//            loader_version_range   : loader_version_range,
+//            mod_id                 : mod_id,
+//            mod_name               : mod_name,
+//            mod_license            : mod_license,
+//            mod_version            : mod_version,
+//            mod_authors            : mod_authors,
+//            mod_description        : mod_description,
+//    ]
+//    inputs.properties replaceProperties
+
+//    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+//        expand replaceProperties + [project: project]
+//    }
+//    // this will ensure that this task is redone when the versions change.
+//    inputs.property "version", project.version
+//    inputs.property "mcversion", config.mc_version + "-" + config.forge_version
+//
+//    // replace stuff in mcmod.info, nothing else
+//    from(sourceSets.main.resources.srcDirs) {
+//        include 'mcmod.info'
+//
+//        // replace version and mcversion
+//        expand 'version':project.version, 'mcversion':config.mc_version + "-" + config.forge_version
+//    }
+//
+//    // copy everything else, thats not the mcmod.info
+//    from(sourceSets.main.resources.srcDirs) {
+//        exclude 'mcmod.info'
+//    }
 }
 
 artifacts {
     archives javadocJar
 }
+
+// Example for how to get properties into the manifest for reading at runtime.
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                "Specification-Title"     : "BuildCraft",
+                "Specification-Vendor"    : "BuildCraft Team",
+                "Specification-Version"   : project.version,
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : project.jar.archiveVersion,
+                "Implementation-Vendor"   : "BuildCraft Team",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+    include '**/**/**/libs/*'
+}
+
+// Example configuration to allow publishing using the maven-publish plugin
+// This is the preferred method to reobfuscate your jar file
+jar.finalizedBy('reobfJar')
+// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
+// publish.dependsOn('reobfJar')
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+//            url "file://${project.projectDir}/mcmodsrepo"
+            url System.getenv("MAVEN_DIR") ?: "$projectDir/build/maven"
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+jar.enabled = true

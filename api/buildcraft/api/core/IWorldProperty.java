@@ -4,11 +4,11 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.core;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public interface IWorldProperty {
-    boolean get(World world, BlockPos pos);
+    boolean get(Level world, BlockPos pos);
 
     void clear();
 }

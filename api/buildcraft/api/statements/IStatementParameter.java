@@ -4,14 +4,13 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.statements;
 
-import javax.annotation.Nonnull;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketBuffer;
-
 import buildcraft.api.statements.StatementManager.IParamReaderBuf;
 import buildcraft.api.statements.StatementManager.IParameterReader;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
+
+import javax.annotation.Nonnull;
 
 public interface IStatementParameter extends IGuiSlot {
 
@@ -26,25 +25,25 @@ public interface IStatementParameter extends IGuiSlot {
 
     /** Return a non-null value to be set as the statement parameter if you handled the mouse click and do not want all
      * possible values to be shown, or null if you did nothing and wish to show all possible values.
-     * 
+     *
      * @see #getPossible(IStatementContainer) */
     IStatementParameter onClick(IStatementContainer source, IStatement stmt, ItemStack stack,
-        StatementMouseClick mouse);
+                                StatementMouseClick mouse);
 
-    void writeToNbt(NBTTagCompound nbt);
+    void writeToNbt(CompoundTag nbt);
 
-    /** Writes this parameter to the given {@link PacketBuffer}. The default implementation writes out the value of
-     * {@link #writeToNbt(NBTTagCompound)}, and that will be passed back into
-     * {@link IParameterReader#readFromNbt(NBTTagCompound)}.
+    /** Writes this parameter to the given {@link FriendlyByteBuf}. The default implementation writes out the value of
+     * {@link #writeToNbt(CompoundTag)}, and that will be passed back into
+     * {@link IParameterReader#readFromNbt(CompoundTag)}.
      * <p>
      * It is likely that implementors can write a more compact form of themselves, so they are encouraged to override
      * this and also register an {@link IParamReaderBuf} in
      * {@link StatementManager#registerParameter(String, IParamReaderBuf)} or
      * {@link StatementManager#registerParameter(IParameterReader, IParamReaderBuf)} */
-    default void writeToBuf(PacketBuffer buffer) {
-        NBTTagCompound nbt = new NBTTagCompound();
+    default void writeToBuf(FriendlyByteBuf buffer) {
+        CompoundTag nbt = new CompoundTag();
         writeToNbt(nbt);
-        buffer.writeCompoundTag(nbt);
+        buffer.writeNbt(nbt);
     }
 
     /** This returns the parameter after a left rotation. Used in particular in blueprints orientation. */

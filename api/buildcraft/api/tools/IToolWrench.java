@@ -4,10 +4,10 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.tools;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.HitResult;
 
 /*** Implement this interface on subclasses of Item to have that item work as a wrench for buildcraft */
 public interface IToolWrench {
@@ -20,7 +20,7 @@ public interface IToolWrench {
      * @param rayTrace - The object that is being wrenched
      *
      * @return true if wrenching is allowed, false if not */
-    boolean canWrench(EntityPlayer player, EnumHand hand, ItemStack wrench, RayTraceResult rayTrace);
+    boolean canWrench(Player player, InteractionHand hand, ItemStack wrench, HitResult rayTrace);
 
     /*** Callback after the wrench has been used. This can be used to decrease durability or for other purposes.
      *
@@ -28,5 +28,5 @@ public interface IToolWrench {
      * @param hand - Which hand was holding the wrench
      * @param wrench - The item stack that holds the wrench
      * @param rayTrace - The object that is being wrenched */
-    void wrenchUsed(EntityPlayer player, EnumHand hand, ItemStack wrench, RayTraceResult rayTrace);
+    void wrenchUsed(Player player, InteractionHand hand, ItemStack wrench, HitResult rayTrace);
 }

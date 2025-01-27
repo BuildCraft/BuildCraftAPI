@@ -1,36 +1,48 @@
 /** Copyright (c) 2011-2015, SpaceToad and the BuildCraft Team http://www.mod-buildcraft.com
  *
- * The BuildCraft API is distributed under the terms of the MIT License. Please check the contents of the license, which
- * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
+ * BuildCraft is distributed under the terms of the Minecraft Mod Public License 1.0, or MMPL. Please check the contents
+ * of the license located in http://www.mod-buildcraft.com/MMPL-1.0.txt */
 package buildcraft.api.fuels;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Collection;
 
-import net.minecraft.item.ItemStack;
-
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-
 public interface ICoolantManager {
-    ICoolant addCoolant(ICoolant coolant);
+    // IFluidCoolant addCoolant(IFluidCoolant coolant);
+    IFluidCoolant addUnregisteredFluidCoolant(IFluidCoolant coolant);
 
-    ICoolant addCoolant(FluidStack fluid, float degreesCoolingPerMb);
+    // IFluidCoolant addCoolant(FluidStack fluid, float degreesCoolingPerMb);
+    IFluidCoolant addCoolant(ResourceLocation id, FluidStack fluid, float degreesCoolingPerMb);
 
-    default ICoolant addCoolant(Fluid fluid, float degreesCoolingPerMb) {
-        return addCoolant(new FluidStack(fluid, 1), degreesCoolingPerMb);
+    // default IFluidCoolant addCoolant(Fluid fluid, float degreesCoolingPerMb)
+    default IFluidCoolant addCoolant(ResourceLocation id, Fluid fluid, float degreesCoolingPerMb) {
+//        return addCoolant(new FluidStack(fluid, 1), degreesCoolingPerMb);
+        return addCoolant(id, new FluidStack(fluid, 1), degreesCoolingPerMb);
     }
 
-    ISolidCoolant addSolidCoolant(ISolidCoolant solidCoolant);
+    // ISolidCoolant addSolidCoolant(ISolidCoolant solidCoolant);
+    ISolidCoolant addUnregisteredSolidCoolant(ISolidCoolant solidCoolant);
 
-    ISolidCoolant addSolidCoolant(ItemStack solid, FluidStack fluid, float multiplier);
+    // ISolidCoolant addSolidCoolant(ItemStack solid, FluidStack fluid, float multiplier);
+    ISolidCoolant addSolidCoolant(ResourceLocation id, ItemStack solid, FluidStack fluid, float multiplier);
 
-    Collection<ICoolant> getCoolants();
+    // Collection<IFluidCoolant> getCoolants();
+    Collection<IFluidCoolant> getCoolants(Level world);
 
-    Collection<ISolidCoolant> getSolidCoolants();
+    // Collection<ISolidCoolant> getSolidCoolants();
+    Collection<ISolidCoolant> getSolidCoolants(Level world);
 
-    ICoolant getCoolant(FluidStack fluid);
+    // IFluidCoolant getCoolant(FluidStack fluid);
+    IFluidCoolant getCoolant(Level world, FluidStack fluid);
 
-    float getDegreesPerMb(FluidStack fluid, float heat);
+    // float getDegreesPerMb(FluidStack fluid, float heat);
+    float getDegreesPerMb(Level world, FluidStack fluid, float heat);
 
-    ISolidCoolant getSolidCoolant(ItemStack solid);
+    // ISolidCoolant getSolidCoolant(ItemStack solid);
+    ISolidCoolant getSolidCoolant(Level world, ItemStack solid);
 }

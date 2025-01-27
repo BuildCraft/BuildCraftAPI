@@ -1,6 +1,6 @@
 package buildcraft.api.transport.pipe;
 
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 /** Fired when the state of a pipe's tile entity changes. Listen for subclasses, not this one! */
 public abstract class PipeEventTileState extends PipeEvent {
@@ -8,21 +8,21 @@ public abstract class PipeEventTileState extends PipeEvent {
         super(holder);
     }
 
-    /** Fired in {@link TileEntity#invalidate()} */
+    /** Fired in {@link BlockEntity#setRemoved()} */
     public static class Invalidate extends PipeEventTileState {
         public Invalidate(IPipeHolder holder) {
             super(holder);
         }
     }
 
-    /** Fired in {@link TileEntity#validate()} */
+    /** Fired in {@link BlockEntity#clearRemoved()} */
     public static class Validate extends PipeEventTileState {
         public Validate(IPipeHolder holder) {
             super(holder);
         }
     }
 
-    /** Fired in {@link TileEntity#onChunkUnload()} */
+    /** Fired in {@link BlockEntity#onChunkUnloaded()} */
     public static class ChunkUnload extends PipeEventTileState {
         public ChunkUnload(IPipeHolder holder) {
             super(holder);

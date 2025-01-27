@@ -9,5 +9,6 @@ public final class BuildcraftRecipeRegistry {
     public static IIntegrationRecipeRegistry integrationRecipes;
     public static IRefineryRecipeManager refineryRecipes;
 
-    private BuildcraftRecipeRegistry() {}
+    private BuildcraftRecipeRegistry() {
+    }
 }

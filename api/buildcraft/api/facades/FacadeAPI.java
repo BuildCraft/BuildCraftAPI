@@ -1,11 +1,13 @@
 package buildcraft.api.facades;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-
-import net.minecraftforge.fml.common.event.FMLInterModComms;
+import buildcraft.api.imc.BcImcMessage;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.registries.RegistryObject;
 
 public final class FacadeAPI {
     public static final String IMC_MOD_TARGET = "buildcraftsilicon";
@@ -15,7 +17,8 @@ public final class FacadeAPI {
     public static final String NBT_CUSTOM_BLOCK_META = "block_meta";
     public static final String NBT_CUSTOM_ITEM_STACK = "item_stack";
 
-    public static IFacadeItem facadeItem;
+    // public static IFacadeItem facadeItem;
+    public static RegistryObject<? extends IFacadeItem> facadeItem;
     public static IFacadeRegistry registry;
 
     private FacadeAPI() {
@@ -23,19 +26,22 @@ public final class FacadeAPI {
     }
 
     public static void disableBlock(Block block) {
-        FMLInterModComms.sendMessage(IMC_MOD_TARGET, IMC_FACADE_DISABLE, block.getRegistryName());
+//        FMLInterModComms.sendMessage(IMC_MOD_TARGET, IMC_FACADE_DISABLE, block.getRegistryName());
+        InterModComms.sendTo(IMC_MOD_TARGET, IMC_FACADE_DISABLE, () -> new BcImcMessage(block.builtInRegistryHolder().key().location()));
     }
 
-    public static void mapStateToStack(IBlockState state, ItemStack stack) {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setString(NBT_CUSTOM_BLOCK_REG_KEY, state.getBlock().getRegistryName().toString());
-        nbt.setInteger(NBT_CUSTOM_BLOCK_META, state.getBlock().getMetaFromState(state));
-        nbt.setTag(NBT_CUSTOM_ITEM_STACK, stack.serializeNBT());
-        FMLInterModComms.sendMessage(IMC_MOD_TARGET, IMC_FACADE_CUSTOM, nbt);
+    public static void mapStateToStack(BlockState state, ItemStack stack) {
+        CompoundTag nbt = new CompoundTag();
+        nbt.putString(NBT_CUSTOM_BLOCK_REG_KEY, state.getBlock().builtInRegistryHolder().key().location().toString());
+//        nbt.putInt(NBT_CUSTOM_BLOCK_META, state.getBlock().getMetaFromState(state));
+        nbt.put(NBT_CUSTOM_BLOCK_META, NbtUtils.writeBlockState(state));
+        nbt.put(NBT_CUSTOM_ITEM_STACK, stack.serializeNBT());
+//        FMLInterModComms.sendMessage(IMC_MOD_TARGET, IMC_FACADE_CUSTOM, nbt);
+        InterModComms.sendTo(IMC_MOD_TARGET, IMC_FACADE_CUSTOM, () -> new BcImcMessage(nbt));
     }
 
     public static boolean isFacadeMessageId(String id) {
         return IMC_FACADE_CUSTOM.equals(id) //
-            || IMC_FACADE_DISABLE.equals(id);
+                || IMC_FACADE_DISABLE.equals(id);
     }
 }

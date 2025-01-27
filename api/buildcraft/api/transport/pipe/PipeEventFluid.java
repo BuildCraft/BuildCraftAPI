@@ -1,14 +1,12 @@
 package buildcraft.api.transport.pipe;
 
+import net.minecraft.core.Direction;
+import net.minecraftforge.fluids.FluidStack;
+
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
-
-import javax.annotation.Nonnull;
-
-import net.minecraft.util.EnumFacing;
-
-import net.minecraftforge.fluids.FluidStack;
 
 public abstract class PipeEventFluid extends PipeEvent {
 
@@ -27,12 +25,12 @@ public abstract class PipeEventFluid extends PipeEvent {
     }
 
     public static class TryInsert extends PipeEventFluid {
-        public final EnumFacing from;
+        public final Direction from;
         /** The incoming fluidstack. Currently changing this does nothing. */
         @Nonnull
         public final FluidStack fluid;
 
-        public TryInsert(IPipeHolder holder, IFlowFluid flow, EnumFacing from, @Nonnull FluidStack fluid) {
+        public TryInsert(IPipeHolder holder, IFlowFluid flow, Direction from, @Nonnull FluidStack fluid) {
             super(true, holder, flow);
             this.from = from;
             this.fluid = fluid;
@@ -48,19 +46,19 @@ public abstract class PipeEventFluid extends PipeEvent {
         /** The maximum amount of fluid that the centre pipe could accept. */
         public final int totalAcceptable;
 
-        /** Array of {@link EnumFacing#getIndex()} to the maximum amount of fluid that a given side can offer. DO NOT
+        /** Array of {@link Direction#get3DDataValue()} to the maximum amount of fluid that a given side can offer. DO NOT
          * CHANGE THIS! */
         public final int[] totalOffered;
 
         // Used for checking the state
         private final int[] totalOfferedCheck;
 
-        /** Array of {@link EnumFacing#getIndex()} to the amount of fluid that the given side will actually offer to the
+        /** Array of {@link Direction#get3DDataValue()} to the amount of fluid that the given side will actually offer to the
          * centre. This should *never* be larger than */
         public final int[] actuallyOffered;
 
         public PreMoveToCentre(IPipeHolder holder, IFlowFluid flow, FluidStack fluid, int totalAcceptable,
-            int[] totalOffered, int[] actuallyOffered) {
+                               int[] totalOffered, int[] actuallyOffered) {
             super(holder, flow);
             this.fluid = fluid;
             this.totalAcceptable = totalAcceptable;
@@ -77,7 +75,7 @@ public abstract class PipeEventFluid extends PipeEvent {
                 }
                 if (actuallyOffered[i] > totalOffered[i]) {
                     return "actuallyOffered[" + i + "](=" + actuallyOffered[i]
-                        + ") shouldn't be greater than totalOffered[" + i + "](=" + totalOffered[i] + ")";
+                            + ") shouldn't be greater than totalOffered[" + i + "](=" + totalOffered[i] + ")";
                 }
             }
             return super.checkStateForErrors();
@@ -97,7 +95,7 @@ public abstract class PipeEventFluid extends PipeEvent {
         private final int[] fluidLeaveCheck, fluidEnterCheck;
 
         public OnMoveToCentre(IPipeHolder holder, IFlowFluid flow, FluidStack fluid, int[] fluidLeavingSide,
-            int[] fluidEnteringCentre) {
+                              int[] fluidEnteringCentre) {
             super(holder, flow);
             this.fluid = fluid;
             this.fluidLeavingSide = fluidLeavingSide;
@@ -111,15 +109,15 @@ public abstract class PipeEventFluid extends PipeEvent {
             for (int i = 0; i < fluidLeavingSide.length; i++) {
                 if (fluidLeavingSide[i] > fluidLeaveCheck[i]) {
                     return "fluidLeavingSide[" + i + "](=" + fluidLeavingSide[i]
-                        + ") shouldn't be bigger than its original value!(=" + fluidLeaveCheck[i] + ")";
+                            + ") shouldn't be bigger than its original value!(=" + fluidLeaveCheck[i] + ")";
                 }
                 if (fluidEnteringCentre[i] > fluidEnterCheck[i]) {
                     return "fluidEnteringCentre[" + i + "](=" + fluidEnteringCentre[i]
-                        + ") shouldn't be bigger than its original value!(=" + fluidEnterCheck[i] + ")";
+                            + ") shouldn't be bigger than its original value!(=" + fluidEnterCheck[i] + ")";
                 }
                 if (fluidEnteringCentre[i] > fluidLeavingSide[i]) {
                     return "fluidEnteringCentre[" + i + "](=" + fluidEnteringCentre[i]
-                        + ") shouldn't be bigger than fluidLeavingSide[" + i + "](=" + fluidLeavingSide[i] + ")";
+                            + ") shouldn't be bigger than fluidLeavingSide[" + i + "](=" + fluidLeavingSide[i] + ")";
                 }
             }
             return super.checkStateForErrors();
@@ -132,7 +130,7 @@ public abstract class PipeEventFluid extends PipeEvent {
         /** The priorities of each side. Stored inversely to the values given, so a higher priority will have a lower
          * value than a lower priority. */
         private final int[] priority = new int[6];
-        private final EnumSet<EnumFacing> allowed = EnumSet.allOf(EnumFacing.class);
+        private final EnumSet<Direction> allowed = EnumSet.allOf(Direction.class);
 
         public SideCheck(IPipeHolder holder, IFlowFluid flow, FluidStack fluid) {
             super(holder, flow);
@@ -142,23 +140,23 @@ public abstract class PipeEventFluid extends PipeEvent {
         /** Checks to see if a side if allowed. Note that this may return true even though a later handler might
          * disallow a side, so you should only use this to skip checking a side (for example a diamond pipe might not
          * check the filters for a specific side if its already been disallowed) */
-        public boolean isAllowed(EnumFacing side) {
+        public boolean isAllowed(Direction side) {
             return allowed.contains(side);
         }
 
         /** Disallows the specific side(s) from being a destination for the item. If no sides are allowed, then the
          * fluid will stay in the current pipe section. */
-        public void disallow(EnumFacing... sides) {
-            for (EnumFacing side : sides) {
+        public void disallow(Direction... sides) {
+            for (Direction side : sides) {
                 allowed.remove(side);
             }
         }
 
-        public void disallowAll(Collection<EnumFacing> sides) {
+        public void disallowAll(Collection<Direction> sides) {
             allowed.removeAll(sides);
         }
 
-        public void disallowAllExcept(EnumFacing side) {
+        public void disallowAllExcept(Direction side) {
             if (allowed.contains(side)) {
                 allowed.clear();
                 allowed.add(side);
@@ -167,7 +165,7 @@ public abstract class PipeEventFluid extends PipeEvent {
             }
         }
 
-        public void disallowAllExcept(EnumFacing... sides) {
+        public void disallowAllExcept(Direction... sides) {
             switch (sides.length) {
                 case 0: {
                     allowed.clear();
@@ -190,8 +188,8 @@ public abstract class PipeEventFluid extends PipeEvent {
                     return;
                 }
                 default: {
-                    EnumSet<EnumFacing> except = EnumSet.noneOf(EnumFacing.class);
-                    for (EnumFacing face : sides) {
+                    EnumSet<Direction> except = EnumSet.noneOf(Direction.class);
+                    for (Direction face : sides) {
                         except.add(face);
                     }
                     this.allowed.retainAll(except);
@@ -200,7 +198,7 @@ public abstract class PipeEventFluid extends PipeEvent {
             }
         }
 
-        public void disallowAllExcept(Collection<EnumFacing> sides) {
+        public void disallowAllExcept(Collection<Direction> sides) {
             allowed.retainAll(sides);
         }
 
@@ -208,30 +206,31 @@ public abstract class PipeEventFluid extends PipeEvent {
             allowed.clear();
         }
 
-        public void increasePriority(EnumFacing side) {
+        public void increasePriority(Direction side) {
             increasePriority(side, 1);
         }
 
-        public void increasePriority(EnumFacing side, int by) {
+        public void increasePriority(Direction side, int by) {
             priority[side.ordinal()] -= by;
         }
 
-        public void decreasePriority(EnumFacing side) {
+        public void decreasePriority(Direction side) {
             decreasePriority(side, 1);
         }
 
-        public void decreasePriority(EnumFacing side, int by) {
+        public void decreasePriority(Direction side, int by) {
             increasePriority(side, -by);
         }
 
-        public EnumSet<EnumFacing> getOrder() {
+        public EnumSet<Direction> getOrder() {
             if (allowed.isEmpty()) {
-                return EnumSet.noneOf(EnumFacing.class);
+                return EnumSet.noneOf(Direction.class);
             }
             if (allowed.size() == 1) {
                 return allowed;
             }
-            priority_search: {
+            priority_search:
+            {
                 int val = priority[0];
                 for (int i = 1; i < priority.length; i++) {
                     if (priority[i] != val) {
@@ -251,8 +250,8 @@ public abstract class PipeEventFluid extends PipeEvent {
                     continue;
                 }
                 last = current;
-                EnumSet<EnumFacing> set = EnumSet.noneOf(EnumFacing.class);
-                for (EnumFacing face : EnumFacing.VALUES) {
+                EnumSet<Direction> set = EnumSet.noneOf(Direction.class);
+                for (Direction face : Direction.VALUES) {
                     if (allowed.contains(face)) {
                         if (priority[face.ordinal()] == current) {
                             set.add(face);
@@ -263,7 +262,7 @@ public abstract class PipeEventFluid extends PipeEvent {
                     return set;
                 }
             }
-            return EnumSet.noneOf(EnumFacing.class);
+            return EnumSet.noneOf(Direction.class);
         }
     }
 }

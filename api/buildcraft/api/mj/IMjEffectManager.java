@@ -1,15 +1,15 @@
 package buildcraft.api.mj;
 
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 /** Various effects for showing power loss visibly, and for large amounts of power, causes some damage to nearby
  * entities. */
 public interface IMjEffectManager {
-    void createPowerLossEffect(World world, Vec3d center, long microJoulesLost);
+    void createPowerLossEffect(Level world, Vec3 center, long microJoulesLost);
 
-    void createPowerLossEffect(World world, Vec3d center, EnumFacing direction, long microJoulesLost);
+    void createPowerLossEffect(Level world, Vec3 center, Direction direction, long microJoulesLost);
 
-    void createPowerLossEffect(World world, Vec3d center, Vec3d direction, long microJoulesLost);
+    void createPowerLossEffect(Level world, Vec3 center, Vec3 direction, long microJoulesLost);
 }

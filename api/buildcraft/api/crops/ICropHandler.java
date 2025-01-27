@@ -1,12 +1,12 @@
 package buildcraft.api.crops;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
 
 public interface ICropHandler {
 
@@ -23,7 +23,7 @@ public interface ICropHandler {
      * @param seed
      * @param pos
      * @return true if the item can be planted at pos. */
-    boolean canSustainPlant(World world, ItemStack seed, BlockPos pos);
+    boolean canSustainPlant(Level world, ItemStack seed, BlockPos pos);
 
     /** Plant the item in the block. You can assume plantCrop() will only be called if canSustainPlant() returned true.
      *
@@ -32,7 +32,7 @@ public interface ICropHandler {
      * @param seed
      * @param pos
      * @return true if the item was planted at pos. */
-    boolean plantCrop(World world, EntityPlayer player, ItemStack seed, BlockPos pos);
+    boolean plantCrop(Level world, Player player, ItemStack seed, BlockPos pos);
 
     /** Check if a crop is mature and can be harvested.
      *
@@ -40,7 +40,7 @@ public interface ICropHandler {
      * @param state
      * @param pos
      * @return true if the block at pos is mature and can be harvested. */
-    boolean isMature(IBlockAccess blockAccess, IBlockState state, BlockPos pos);
+    boolean isMature(LevelAccessor blockAccess, BlockState state, BlockPos pos);
 
     /** Harvest the crop. You can assume harvestCrop() will only be called if isMature() returned true.
      *
@@ -48,6 +48,6 @@ public interface ICropHandler {
      * @param pos
      * @param drops a list to return the harvest's drops.
      * @return true if the block was successfully harvested. */
-    boolean harvestCrop(World world, BlockPos pos, NonNullList<ItemStack> drops);
+    boolean harvestCrop(Level world, BlockPos pos, NonNullList<ItemStack> drops);
 
 }

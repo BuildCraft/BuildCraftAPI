@@ -4,16 +4,16 @@
  * should be located as "LICENSE.API" in the BuildCraft source code distribution. */
 package buildcraft.api.boards;
 
-import java.util.Collection;
+import net.minecraft.nbt.CompoundTag;
 
-import net.minecraft.nbt.NBTTagCompound;
+import java.util.Collection;
 
 public abstract class RedstoneBoardRegistry {
 
     public static RedstoneBoardRegistry instance;
 
     /** Register a redstone board type.
-     * 
+     *
      * @param redstoneBoardNBT The RedstoneBoardNBT instance containing the board information.
      * @param microJoules MJ price of the board, in micro MJ. */
     public abstract void registerBoardType(RedstoneBoardNBT<?> redstoneBoardNBT, long microJoules);
@@ -22,7 +22,7 @@ public abstract class RedstoneBoardRegistry {
 
     public abstract RedstoneBoardRobotNBT getEmptyRobotBoard();
 
-    public abstract RedstoneBoardNBT<?> getRedstoneBoard(NBTTagCompound nbt);
+    public abstract RedstoneBoardNBT<?> getRedstoneBoard(CompoundTag nbt);
 
     public abstract RedstoneBoardNBT<?> getRedstoneBoard(String id);
 
