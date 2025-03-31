@@ -24,6 +24,7 @@ public final class PipeApi {
     public static PipeFlowType flowItems;
     public static PipeFlowType flowFluids;
     public static PipeFlowType flowPower;
+    public static PipeFlowType flowRf;
 
     /** The default transfer information used if a pipe definition has not been registered. Note that this is replaced
      * by BuildCraft Transport to config-defined values. */
@@ -33,8 +34,13 @@ public final class PipeApi {
      * by BuildCraft Transport to config-defined values. */
     public static PowerTransferInfo powerInfoDefault = PowerTransferInfo.createFromResistance(8 * MjAPI.MJ, MjAPI.MJ / 32, false);
 
+    /** The default transfer information used if a pipe definition has not been registered. Note that this is replaced
+     * by BuildCraft Transport to config-defined values. */
+    public static RedstoneFluxTransferInfo rfInfoDefault = new RedstoneFluxTransferInfo(80, false);
+
     public static final Map<PipeDefinition, FluidTransferInfo> fluidTransferData = new IdentityHashMap<>();
     public static final Map<PipeDefinition, PowerTransferInfo> powerTransferData = new IdentityHashMap<>();
+    public static final Map<PipeDefinition, RedstoneFluxTransferInfo> rfTransferData = new IdentityHashMap<>();
 
     @Nonnull
     public static final Capability<IPipeHolder> CAP_PIPE_HOLDER;
@@ -61,6 +67,15 @@ public final class PipeApi {
         PowerTransferInfo info = powerTransferData.get(def);
         if (info == null) {
             return powerInfoDefault;
+        } else {
+            return info;
+        }
+    }
+
+    public static RedstoneFluxTransferInfo getRfTransferInfo(PipeDefinition def) {
+        RedstoneFluxTransferInfo info = rfTransferData.get(def);
+        if (info == null) {
+            return rfInfoDefault;
         } else {
             return info;
         }
@@ -117,6 +132,16 @@ public final class PipeApi {
             this.transferPerTick = transferPerTick;
             this.lossPerTick = lossPerTick;
             this.resistancePerTick = resistancePerTick;
+            this.isReceiver = isReceiver;
+        }
+    }
+
+    public static class RedstoneFluxTransferInfo {
+        public final int transferPerTick;
+        public final boolean isReceiver;
+
+        public RedstoneFluxTransferInfo(int transferPerTick, boolean isReceiver) {
+            this.transferPerTick = transferPerTick;
             this.isReceiver = isReceiver;
         }
     }

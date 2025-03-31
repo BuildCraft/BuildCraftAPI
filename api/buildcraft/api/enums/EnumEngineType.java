@@ -8,7 +8,8 @@ public enum EnumEngineType implements IStringSerializable, IEngineType {
     WOOD("core", "wood"),
     STONE("energy", "stone"),
     IRON("energy", "iron"),
-    CREATIVE("energy", "creative");
+    CREATIVE("energy", "creative"),
+    RF("energy", "rf");
 
     public final String unlocalizedTag;
     public final String resourceLocation;
