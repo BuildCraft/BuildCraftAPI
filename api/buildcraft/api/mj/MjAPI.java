@@ -45,6 +45,14 @@ public class MjAPI {
         return MJ_DISPLAY_FORMAT.format(val);
     }
 
+    public static MjRfConversion getRfConversion() {
+        return IMjToRfStatus.get().getConversion();
+    }
+
+    public static boolean isRfAutoConversionEnabled() {
+        return IMjToRfStatus.get().isAutoconvertEnabled();
+    }
+
     // ########################################
     //
     // Null based classes
