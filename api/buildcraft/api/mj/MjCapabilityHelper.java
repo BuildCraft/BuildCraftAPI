@@ -97,7 +97,7 @@ public class MjCapabilityHelper implements ICapabilityProvider {
                     // (We need to actual accepted MJ to be some integer multiple of mjPerRf)
                     long excessMj = acceptedMj % mjPerRf;
                     // An MJ value that is an integer multiple of mjPerRf
-                    long exactAcceptableMj = maxReceiveMj - excessMj;
+                    long exactAcceptableMj = acceptedMj - excessMj;
 
                     if (exactAcceptableMj <= 0) {
                         return 0;
