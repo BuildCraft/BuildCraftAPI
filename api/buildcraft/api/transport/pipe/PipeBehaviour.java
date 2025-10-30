@@ -48,6 +48,11 @@ public abstract class PipeBehaviour implements ICapabilityProvider {
         return 0;
     }
 
+    /** Gets the texture data to use for the specified face. This may return null for the center, which indicates that
+     * the center of the pipe will use the face texture instead.
+     * 
+     * @param face Null indicates the center of the pipe.
+     * @return The texture data for the given face. This may be null, but only for the center! */
     public PipeFaceTex getTextureData(EnumFacing face) {
         return PipeFaceTex.get(getTextureIndex(face));
     }

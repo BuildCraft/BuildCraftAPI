@@ -3,8 +3,6 @@ package buildcraft.api.mj;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import io.netty.channel.RecvByteBufAllocator;
-
 import net.minecraft.util.EnumFacing;
 
 import net.minecraftforge.common.capabilities.Capability;
