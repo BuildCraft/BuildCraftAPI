@@ -81,7 +81,11 @@ public class MjToRfAutoConvertor implements IMjReadable {
     }
 
     long implGetPowerRequested() {
-        return (rf.getMaxEnergyStored() - rf.getEnergyStored()) * MjAPI.getRfConversion().mjPerRf;
+        int accepted = rf.receiveEnergy(Integer.MAX_VALUE, true);
+        if (accepted > 0) {
+            return accepted * MjAPI.getRfConversion().mjPerRf;
+        }
+        return 0;
     }
 
     /** @return excess */
